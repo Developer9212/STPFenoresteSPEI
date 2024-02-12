@@ -145,8 +145,12 @@ public class InServiceGeneral {
 								Auxiliar a = auxiliarService.buscarPorId(a_pk);
 								if(matriz.getIdorigen() == 30200){//CSN
 									valiResponse = validaReglasCsn(a.getAuxiliarPK(),in.getMonto(),in.getFechaOperacion(), 0);
+					    		}else if(matriz.getIdorigen() == 30300) {
+					    			valiResponse = validaReglasMitras(a_pk, in.getMonto(), in.getFechaOperacion());
+					    		}else if(matriz.getIdorigen() == 30500) {
+					    			valiResponse = validaReglasFama(a_pk, in.getMonto(), in.getFechaOperacion());
 					    		}else {
-					    			valiResponse.setId(999);
+					    			valiResponse.setCodigo(999);
 					    		}
 								
 								      	//obtenemos el opa que pertenece a la clabe
@@ -755,6 +759,7 @@ public class InServiceGeneral {
 
 		            String cadena = sB.toString();
 		            firmada = sign(cadena);
+		            log.info("La firma es:"+firmada);
 		} catch (Exception e) {
 			log.info("Error al firmar orden:"+e.getMessage());
 		}
@@ -767,7 +772,7 @@ public class InServiceGeneral {
 		// Direccion de mi keystore local
 		String fileName = ruta() + "fenoreste.jks";
 		String password = "fenoreste2023";
-		String alias = "fenoreste";
+		String alias = "siscoopcert";
 		try {
 			String data = cadena;
 			Signature firma = Signature.getInstance("SHA256withRSA");
