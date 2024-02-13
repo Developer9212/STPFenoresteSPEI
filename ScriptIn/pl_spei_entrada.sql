@@ -35,6 +35,7 @@ $$ language 'plpgsql';
 
 
 
+
 create or replace function
 sai_spei_entrada_aplica (integer, text,integer,text) returns integer as $$
 declare

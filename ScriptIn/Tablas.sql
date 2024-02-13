@@ -80,10 +80,6 @@ CREATE TABLE speirecibido(
  primary key(id)
  );
 
- /*
- alter table speirecibido add column 
- 
- */
 
 
 

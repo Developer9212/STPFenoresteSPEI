@@ -99,7 +99,8 @@ public class InServiceGeneral {
 	    resp.setMensaje("devolver");
 	    log.info(".......Peticion sendAbono:"+in);
 	    resp.setCodigo(400);
-	    if(abonoSpeiService.buscarPorId(in.getId()) == null) {	    
+	    if(abonoSpeiService.buscarPorId(in.getId()) == null) {	 
+	    	log.info("1.-1");
 	    //Vamos a registrar la operacion 
 	    AbonoSpei operacion = new AbonoSpei();	   
 	    operacion.setId(in.getId());
@@ -145,7 +146,7 @@ public class InServiceGeneral {
 								Auxiliar a = auxiliarService.buscarPorId(a_pk);
 								if(matriz.getIdorigen() == 30200){//CSN
 									valiResponse = validaReglasCsn(a.getAuxiliarPK(),in.getMonto(),in.getFechaOperacion(), 0);
-					    		}else if(matriz.getIdorigen() == 30300) {
+					    		}else if(matriz.getIdorigen() == 30300) {//Mitras
 					    			valiResponse = validaReglasMitras(a_pk, in.getMonto(), in.getFechaOperacion());
 					    		}else if(matriz.getIdorigen() == 30500) {
 					    			valiResponse = validaReglasFama(a_pk, in.getMonto(), in.getFechaOperacion());
@@ -232,9 +233,9 @@ public class InServiceGeneral {
 		                                if(matriz.getIdorigen() == 30200) {
 		                                	log.info("Vamos a depositar a la TDD Alestra");
 		                                	valiResponse = validaReglasCsn(a_pk, in.getMonto(),in.getFechaOperacion(),1);
-		                                }else {
+		                                }/*else {
 		                                	valiResponse = validaReglasMitras(a_pk, in.getMonto(),in.getFechaOperacion());
-		                                }
+		                                }*/
 		                              
 		                               
 		                                if(valiResponse.getId() == 999) {
@@ -442,7 +443,7 @@ public class InServiceGeneral {
 	    	resp.setId(2);
 	      }
 	    }else {
-	    	log.info("..............Operacion duplicada............"+in.getId());
+	    	log.info("..............Operacion duplicada1............"+in.getId());
 	    	resp.setId(1);
 	    }
 	    
