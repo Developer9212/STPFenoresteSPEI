@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fenoreste.spei.modelos.ConcResultadoVo;
+import fenoreste.spei.modelos.ConsultaSaldoPet;
+import fenoreste.spei.modelos.SaldoResultadoVo;
 import fenoreste.spei.service.InServiceGeneral;
-import jdk.internal.org.jline.utils.Log;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -46,5 +47,18 @@ public class ConciliacionController {
 			return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(conciliacion);
 	  }
 		
+	}
+	
+	
+	@GetMapping(value="/consultaSaldo")
+	public ResponseEntity<?> consultaSaldon(@RequestParam(name = "clabe",defaultValue = "0")String clabe,
+										  @RequestParam(name="fecha",defaultValue ="")String fecha) {
+		
+		SaldoResultadoVo consulta = inServiceGeneral.consultaSaldo(clabe,fecha);
+		if(consulta.getCodigo() == 200) {
+		   return ResponseEntity.status(HttpStatus.ACCEPTED).body(consulta);
+		}else {			
+			return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(consulta);
+	    } 
 	}
 }

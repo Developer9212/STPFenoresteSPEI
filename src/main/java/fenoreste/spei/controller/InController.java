@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import fenoreste.spei.modelos.request;
 import fenoreste.spei.modelos.response;
 import fenoreste.spei.service.InServiceGeneral;
-import jdk.internal.org.jline.utils.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController

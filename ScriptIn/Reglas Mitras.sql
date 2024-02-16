@@ -49,7 +49,10 @@ DELETE FROM tablas WHERE idtabla='stp' AND idelemento='empresa';
 INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('stp','empresa','CAJA_MITRAS');
 
 DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='stppath';
-INSERT INTO tablas(idtabla,idelemento,dato2) VALUES('conciliacon','stppath','https://efws-dev.stpmex.com/efws/API/V2')
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','stppath','/efws/API/V2','https://efws-dev.stpmex.com');
+
+DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='consulta_saldo_stppath';
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacon','consulta_saldo_stppath','/efws/API','https://efws-dev.stpmex.com');
 
 
  curl --header "Content-Type: application/json"    -H "Authorization: Basic $(echo -n 'speitest:speitest' | base64)"   --request POST   --data '{{

@@ -38,10 +38,11 @@ import fenoreste.spei.entity.Tarjeta;
 import fenoreste.spei.entity.Usuario;
 import fenoreste.spei.modelos.ConcPeticionVo;
 import fenoreste.spei.modelos.ConcResultadoVo;
+import fenoreste.spei.modelos.ConsultaSaldoPet;
+import fenoreste.spei.modelos.SaldoResultadoVo;
 import fenoreste.spei.modelos.request;
 import fenoreste.spei.modelos.response;
 import fenoreste.spei.stp.HttpMethods;
-import jdk.internal.org.jline.utils.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -154,24 +155,7 @@ public class InServiceGeneral {
 					    			valiResponse.setCodigo(999);
 					    		}
 								
-								      	//obtenemos el opa que pertenece a la clabe
-										//AuxiliarPK pk_clabe = clabe_registro.getAuxPk();
-								        //FolioTarjeta folioTarjeta = folioTarjetaService.buscarPorId(pk_clabe);
-								        //if(folioTarjeta != null) {
-								        	  //Buscamos registro para tarjeta
-								        	  //Tarjeta tarjetad = tarjetaService.buscarPorId(folioTarjeta.getIdtarjeta());
-								        	 //if(tarjeta != null) {
-								        		    //Validamos fecha de vencimiendo
-								        		    //if(tarjeta.getFecha_vencimiento().after(matriz.getFechatrabajo())) {
-								        		    	//Validamos monto maximo diario
-														/*tb_pk.setIdElemento("monto_maximo_diario");
-														Tabla tb_monto_maximo_diario = tablasService.buscarPorId(tb_pk);
-							                            List<AbonoSpei>abonos = abonoSpeiService.todasPorFecha(in.getFechaOperacion());
-							                            Double acumulado = 0.0;
-							                            for(int i=0;i<abonos.size();i++) {
-							                            	acumulado = acumulado + abonos.get(i).getMonto();
-							                            }*/
-							                            //if((acumulado + in.getMonto()) < new Double(tb_monto_maximo_diario.getDato1())) {
+								    
 							                            	//registramos los movimientos a temporal
 								log.info("................valid response..............."+valiResponse.getId());
 								if(valiResponse.getId() == 999) {
@@ -353,85 +337,39 @@ public class InServiceGeneral {
 			                            	resp.setMensaje("devolver");
 			                            	resp.setId(valiResponse.getId());
 		                                }
-		                               speiTemporalService.eliminar(temporal.getSesion(),in.getReferenciaNumerica());
-	                                }catch(Exception e){
+		                                speiTemporalService.eliminar(temporal.getSesion(),in.getReferenciaNumerica());
+	                                  }catch(Exception e){
 	                                	speiTemporalService.eliminar(temporal.getSesion(),in.getReferenciaNumerica());
 	                                	log.info("________________Error al procesar spei____________________:"+e.getMessage());
-	                                }				
-								}else {
-									operacion.setMensajeerror(resp.getMensaje());
-							    	operacion.setResponsecode(valiResponse.getId());
-							    	abonoSpeiService.guardar(operacion);
-	                            	resp.setMensaje("devolver");
-	                            	resp.setId(valiResponse.getId());
-								}
+	                                  }				
+								    }else {
+									 operacion.setMensajeerror(resp.getMensaje());
+							    	 operacion.setResponsecode(valiResponse.getId());
+							    	 abonoSpeiService.guardar(operacion);
+	                            	 resp.setMensaje("devolver");
+	                            	 resp.setId(valiResponse.getId());
+								    }
 								
-							                            				                            	
-							                            /*}else {
-							                            	//resp.setMensaje("Monto traspasa el permitido diario");
-							                            	log.info("..........Monto traspasa el permitido diario.........");
-							                            	operacion.setMensajeerror("Monto traspasa el permitido diario");
-													    	operacion.setResponsecode(20);
-													    	abonoSpeiService.guardar(operacion);
-							                            	resp.setMensaje("devolver");
-							                            	resp.setId(20);
-							                            }	*/
-								        		    //}							        	    	
-								        	  /*}else {
-								        	     //resp.setMensaje("No existen resgistros en tarjeta para:"+folioTarjeta.getIdtarjeta());
-								        		  log.info("........No existen resgistros en tarjetas para:"+folioTarjeta.getIdtarjeta()+".........");
-								        		  operacion.setMensajeerror("No existen registros en tarjetas para:"+folioTarjeta.getIdtarjeta());
-										    	  operacion.setResponsecode(14);
-										    	  abonoSpeiService.guardar(operacion);
-								        		  resp.setMensaje("devolver");
-								        	     resp.setId(1);
-								        	 }*/
-								        /*}else {
-								          //resp.setMensaje("No existen registros folio para clabe:"+clabe_registro.getClabe());
-								        	log.info(".........No existen registros folio para clabe:"+clabe_registro.getClabe()+".............");
-								        	operacion.setMensajeerror("No existen registros folio para clabe:"+clabe_registro.getClabe());
-								    		operacion.setResponsecode(14);
-								    		abonoSpeiService.guardar(operacion);
-								        	resp.setMensaje("devolver");	
-								          resp.setId(14);
-								        }dd*/
-							       }else {
+							     }else {
 								     //resp.setMensaje("No existen registros para la cuenta:"+in.getCuentaBeneficiario());
-							    	   log.info("........No existen registros para la cuenta:"+in.getCuentaBeneficiario()+".........");
-							    	   operacion.setMensajeerror("No existen registros para la cuenta:");
-						    		   operacion.setResponsecode(1);
-						    		   abonoSpeiService.guardar(operacion);
-							    	   resp.setMensaje("devolver");
-								     resp.setId(1);
-							     }
+							       log.info("........No existen registros para la cuenta clabe:"+in.getCuentaBeneficiario()+".........");
+							       operacion.setMensajeerror("No existen registros para la clabe:");
+						    	   operacion.setResponsecode(1);
+						    	   abonoSpeiService.guardar(operacion);
+							       resp.setMensaje("devolver");
+								   resp.setId(5);
+							    }
 							      break;
 					        	default:
 							      break;
-						}//Fin de switch
-	    			/*}else {
-	    				//resp.setMensaje("Monto mayor a lo permitido en el core");
-	    				log.info("............Monto mayor a lo permitido en el core...........");
-	    				operacion.setMensajeerror("Monto mayor a lo permitido en el core");
-		    			operacion.setResponsecode(25);
-		    			abonoSpeiService.guardar(operacion);
-	    				resp.setMensaje("devolver");
-	    				resp.setId(25);
-	    			}
-	    		}else {
-	    		   //resp.setMensaje("Monto menor a lo permitido en el core");
-	    			log.info("...........Monto menor a lo permitido en el core..........");
-	    			operacion.setMensajeerror("Monto menor a lo permitido en el core");
-	    			operacion.setResponsecode(25);
-	    			abonoSpeiService.guardar(operacion);
-	    			resp.setMensaje("devolver");
-	    		   resp.setId(25);
-	    		}*/	
+						}//Fin de switch	    			
+	    	
 	    	}else {
 	    		
 	    	  	//resp.setMensaje("Estatus no valido para operar para origen:"+origen_usuario.getIdorigen());
 	    		log.info(".............Estatus no valido para operar para origen:"+origen_usuario.getIdorigen()+"...........");
 	    		resp.setMensaje("devolver");
-	    	  	resp.setId(36);
+	    	  	resp.setId(3);
 	    	}
 	    }else {
 	    	//resp.setMensaje("Operacion fuera de horario");
@@ -463,7 +401,7 @@ public class InServiceGeneral {
         	conciliacionPet.setFecha(fecha);
         	if(tabla != null) {
         		conciliacionPet.setEmpresa(tabla.getDato1());
-        		String firma = firmaPeticion(conciliacionPet);
+        		String firma = firmaPeticion(1,conciliacionPet,null,"");
         		conciliacionPet.setFirma(firma);
         		
         		String peticion = json.toJson(conciliacionPet);
@@ -489,6 +427,43 @@ public class InServiceGeneral {
 	    
 		return null;
 	}
+	
+	public SaldoResultadoVo consultaSaldo(String clabe,String fecha) {
+		SaldoResultadoVo resultadoConsulta = new SaldoResultadoVo();
+		try {
+			log.info("Clabe:"+clabe+",fecha:"+fecha);
+			ClabeInterbancaria clabe_registro = clabeInterbancariaService.buscarPorClabe(clabe);
+			ConsultaSaldoPet peticion = new ConsultaSaldoPet();			
+		
+			if(clabe_registro != null) {
+				TablaPK tbPk = new TablaPK("stp","empresa");
+	        	Tabla tabla = tablasService.buscarPorId(tbPk);
+				peticion.setCuentaOrdenante(clabe);
+				peticion.setEmpresa(tabla.getDato1());
+        		String firma = firmaPeticion(2,null,peticion,fecha);
+        		peticion.setFirma(firma);
+        		
+        		String peticionHttp = json.toJson(peticion);
+        		String resultadoConsultaHttp  = httpMethods.consultaSaldo(peticionHttp);
+        		resultadoConsulta = json.fromJson(resultadoConsultaHttp,SaldoResultadoVo.class);
+        		if(resultadoConsulta.getEstado() == 0) {
+        			resultadoConsulta.setCodigo(200);
+        		}else {
+        			resultadoConsulta.setCodigo(400);
+        		}
+			}else {
+				log.info("...............Clabe no existe...............");
+				resultadoConsulta.setMensaje("Clabe no existe");
+				resultadoConsulta.setEstado(999);
+				resultadoConsulta.setCodigo(400);
+			}			
+		} catch (Exception e) {
+			log.info("Error al consultar saldo");
+			resultadoConsulta.setMensaje("Se produjo un error general");
+		}
+		return resultadoConsulta;
+	}
+	
 
     private response validaReglasCsn(AuxiliarPK opa,Double monto,Integer fechaOperacion,Integer tipoOperacion) {
 		response response = new response();
@@ -655,27 +630,27 @@ public class InServiceGeneral {
 								}else {
 									log.info("..........el monto operado hoy supera el permitido en el core..........");
 									response.setMensaje("El monto operado hoy supera el permitido en el core");
-									response.setId(25);									
+									response.setId(16);									
 								}
 							}else{
 									log.info("..........Producto configurado como abono en tablas no corresponde a vinculado en clabes..........");
 									response.setMensaje("Producto configurado como abono en tablas no corresponde a vinculado en clabes");
-									response.setId(25);
+									response.setId(15);
 							}
 						}else {
 							log.info("..........No existe configuracion de producto abono..........");
 							response.setMensaje("No existe configuracion de producto abono");
-							response.setId(25);
+							response.setId(14);
 						}
   	    			}else {
   	    				log.info(".........Monto es mayor al permitido en el core........");
   	    				response.setMensaje("Monto es mayor al permitido en el core");
-  	    				response.setId(25);
+  	    				response.setId(13);
   	    			}
   	    		}else {
   	    			log.info(".........Monto es menor al permitido en el core........");
   	    			response.setMensaje("Monto es menor al permitido en el core");
-  	    			response.setId(25);
+  	    			response.setId(6);
   	    		}
 		} catch (Exception e) {
 			log.info("....Error al validar reglas Mitras..."+e.getMessage());
@@ -749,18 +724,25 @@ public class InServiceGeneral {
 		return response;
 	}
  
-	private String firmaPeticion(ConcPeticionVo conciliacion) {
+	private String firmaPeticion(Integer operacion,ConcPeticionVo conciliacion,ConsultaSaldoPet consultaSaldo,String fecha) {
 		String firmada = "";
 		try {
 			 StringBuilder sB = new StringBuilder();
-		            sB.append("||");
-		            sB.append(conciliacion.getEmpresa()).append("|");
-		            sB.append(conciliacion.getTipoOrden()).append("|");
-		            sB.append("||");
-
-		            String cadena = sB.toString();
-		            firmada = sign(cadena);
-		            log.info("La firma es:"+firmada);
+			 if(operacion ==1 ) {
+				sB.append("||");
+		        sB.append(conciliacion.getEmpresa()).append("|");
+		        sB.append(conciliacion.getTipoOrden()).append("|");
+		        sB.append("||");
+			 }else if(operacion == 2) {
+				sB.append("||");
+			    sB.append(consultaSaldo.getEmpresa()).append("|");
+			    sB.append(consultaSaldo.getCuentaOrdenante()).append("|");
+			    sB.append(fecha).append("|");
+			    sB.append("||"); 
+			 }
+		     String cadena = sB.toString();
+		     firmada = sign(cadena);
+		     log.info("La firma es:"+firmada);
 		} catch (Exception e) {
 			log.info("Error al firmar orden:"+e.getMessage());
 		}
@@ -771,9 +753,9 @@ public class InServiceGeneral {
 	public String sign(String cadena) throws Exception {
 		String firmaCod;
 		// Direccion de mi keystore local
-		String fileName = ruta() + "fenoreste.jks";
-		String password = "fenoreste2023";
-		String alias = "siscoopcert";
+		String fileName = ruta() + "fenoreste.jks";//"/claves/cajamitras.jks";
+		String password = "fenoreste2023";//"12345678";//"fenoreste2023";
+		String alias = "fenoreste";
 		try {
 			String data = cadena;
 			Signature firma = Signature.getInstance("SHA256withRSA");
