@@ -314,6 +314,7 @@ public class InServiceGeneral {
 			                                		operacion.setAplicado(true);
 			                                		operacion.setFechaProcesada(new Date());
 											    	operacion.setResponsecode(000);
+											    	resp.setCodigo(200);
 											    	abonoSpeiService.guardar(operacion);
 				                                }
 		                                	 }else {		                                	    
@@ -737,8 +738,10 @@ public class InServiceGeneral {
 				sB.append("||");
 			    sB.append(consultaSaldo.getEmpresa()).append("|");
 			    sB.append(consultaSaldo.getCuentaOrdenante()).append("|");
-			    sB.append(fecha).append("|");
+			    sB.append(fecha);
 			    sB.append("||"); 
+			    
+			    log.info(sB.toString());
 			 }
 		     String cadena = sB.toString();
 		     firmada = sign(cadena);
