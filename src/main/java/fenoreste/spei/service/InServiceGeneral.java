@@ -683,21 +683,21 @@ public class InServiceGeneral {
 							//Validamos que el producto para abono configurado en tablas sea el mismo relacionado a la clabe
 							Producto producto_abono = productoService.buscarPorId(opa.getIdproducto());
 							if(producto_abono != null){
-								tb_pk.setIdElemento("monto_maximo_diario");
-								Tabla tb_monto_maximo_diario = tablasService.buscarPorId(tb_pk);
-								List<AbonoSpei>abonos = abonoSpeiService.todasPorFecha(fechaOperacion);
-								Double acumulado = 0.0;
-								for(int i=0;i<abonos.size();i++) {
-									acumulado = acumulado + abonos.get(i).getMonto();
-								}
-								if((acumulado + monto) < new Double(tb_monto_maximo_diario.getDato1())) {
+								//tb_pk.setIdElemento("monto_maximo_diario");
+								//Tabla tb_monto_maximo_diariod = tablasService.buscarPorId(tb_pk);
+								//List<AbonoSpei>abonos = abonoSpeiService.todasPorFecha(fechaOperacion);
+								//Double acumulado = 0.0;
+								//for(int i=0;i<abonos.size();i++) {
+									//acumulado = acumulado + abonos.get(i).getMonto();
+							//	}
+								//if((acumulado + monto) < new Double(tb_monto_maximo_diario.getDato1())) {
 									response.setMensaje("OK");
 									response.setId(999);
-								}else {
+							/*	}else {
 									log.info("..........el monto operado hoy supera el permitido en el core..........");
 									response.setMensaje("El monto operado hoy supera el permitido en el core");
 									response.setId(25);									
-								}
+								}*/
 							}else{
 									log.info("..........Producto configurado como abono en tablas no corresponde a vinculado en clabes..........");
 									response.setMensaje("Producto configurado como abono en tablas no corresponde a vinculado en clabes");
