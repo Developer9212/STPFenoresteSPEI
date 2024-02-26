@@ -701,22 +701,22 @@ public class InServiceGeneral {
 							}else{
 									log.info("..........Producto configurado como abono en tablas no corresponde a vinculado en clabes..........");
 									response.setMensaje("Producto configurado como abono en tablas no corresponde a vinculado en clabes");
-									response.setId(25);
+									response.setId(15);
 							}
 						}else {
 							log.info("..........No existe configuracion de producto abono..........");
 							response.setMensaje("No existe configuracion de producto abono");
-							response.setId(25);
+							response.setId(14);
 						}
   	    			}else {
   	    				log.info(".........Monto es mayor al permitido en el core........");
   	    				response.setMensaje("Monto es mayor al permitido en el core");
-  	    				response.setId(25);
+  	    				response.setId(13);
   	    			}
   	    		}else {
   	    			log.info(".........Monto es menor al permitido en el core........");
   	    			response.setMensaje("Monto es menor al permitido en el core");
-  	    			response.setId(25);
+  	    			response.setId(6);
   	    		}
 		} catch (Exception e) {
 			log.info("....Error al validar reglas Mitras..."+e.getMessage());
@@ -756,9 +756,9 @@ public class InServiceGeneral {
 	public String sign(String cadena) throws Exception {
 		String firmaCod;
 		// Direccion de mi keystore local
-		String fileName = ruta() + "fenoreste.jks";//"/claves/cajamitras.jks";
-		String password = "fenoreste2023";//"12345678";//"fenoreste2023";
-		String alias = "fenoreste";
+		String fileName = ruta() + "caja_mitras.jks";//"/claves/cajamitras.jks";
+		String password = "fenoreste2024";//"12345678";//"fenoreste2023";
+		String alias = "caja_mitras";
 		try {
 			String data = cadena;
 			Signature firma = Signature.getInstance("SHA256withRSA");
@@ -791,7 +791,7 @@ public class InServiceGeneral {
     public static String ruta() {
         String home = System.getProperty("user.home");
         String separador = System.getProperty("file.separator");
-        String actualRuta = home + separador + "emisor-adquiriente" + separador + "cert-properties" + separador;
+        String actualRuta = home + separador + "CaSpei" + separador;
         return actualRuta;
     }
 

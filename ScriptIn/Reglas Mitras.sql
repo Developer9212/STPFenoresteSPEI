@@ -10,7 +10,7 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','usuario','140
   2.- dato2 = password
 */
 DELETE FROM tablas WHERE idtabla = 'spei_entrada' AND idelemento='usuario_ws';
-INSERT INTO tablas(idtabla,idelemento,dato1,dato2)VALUES('spei_entrada','usuario_ws','CSNSPEI','8a7f7b066908ab460de64e3a1b131808');
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2)VALUES('spei_entrada','usuario_ws','mitrasspei_prod','mitrasspei_prod');
 
 /*Monto minimo a operar como entrada*/
 DELETE FROM tablas WHERE idtabla = 'spei_entrada' AND idelemento='monto_minimo';
@@ -54,7 +54,7 @@ INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','stppat
 DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='consulta_saldo_stppath';
 INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacon','consulta_saldo_stppath','/efws/API','https://efws-dev.stpmex.com');
 
-
+/*
  curl --header "Content-Type: application/json"    -H "Authorization: Basic $(echo -n 'speitest:speitest' | base64)"   --request POST   --data '{{
     "id": 56,
  "fechaOperacion": 20200127,
@@ -79,4 +79,7 @@ INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacon','consult
  "tipoPago":1,
  "tsLiquidacion": "1634919027297",
  "folioCodi": "f4c1111abd2b28a00abc"
-}' http://tuip:8086/spei/api/sendAbono
+}' http://tuip:8086/spei/api/sendAbono  
+
+
+*/
