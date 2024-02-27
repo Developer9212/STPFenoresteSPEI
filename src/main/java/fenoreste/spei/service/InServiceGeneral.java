@@ -225,7 +225,7 @@ public class InServiceGeneral {
 		                                if(valiResponse.getId() == 999) {
 		                                	//vamos a general poliza(cargo cuenta spei y abono tdd)
 		                                	Integer movs_aplicados = funcionesSaiService.aplica_movs(Integer.parseInt(tb_usuario.getDato1()), temporal.getSesion(),1,temporal.getReferencia());
-		                                	log.info("total aplicados");
+		                                	log.info("total aplicados:"+movs_aplicados);
 		                                	if(movs_aplicados > 0) {
 		                                		
 		                                		/*********************Comision************************/
