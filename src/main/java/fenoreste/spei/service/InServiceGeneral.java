@@ -627,8 +627,9 @@ public class InServiceGeneral {
 									acumulado = acumulado + abonos.get(i).getMonto();
 								}
 								if((acumulado + monto) < new Double(tb_monto_maximo_diario.getDato1())) {
-									Double totalMes = abonoSpeiService.totalMes(clabeBeneficiario,String.valueOf(fechaOperacion).substring(1,6));
-									System.out.println("Total acumulado en el mes:"+totalMes);
+									log.info(String.valueOf(fechaOperacion).substring(0,6));
+									Double totalMes = abonoSpeiService.totalMes(clabeBeneficiario,String.valueOf(fechaOperacion).substring(0,6));
+									System.out.println("Total acumulado en el mes:"+totalMes+",SELECT SUM(monto) FROM speirecibido WHERE LEFT(fechaoperacion::TEXT, 6) ="+String.valueOf(fechaOperacion).substring(1,6)+" AND cuentabeneficiario= "+clabeBeneficiario+" AND aplicado=true");
 									tb_pk.setIdElemento("maximo_mes");
 									Tabla tb_monto_maximo_mes = tablasService.buscarPorId(tb_pk);
 									if(totalMes <= Double.parseDouble(tb_monto_maximo_mes.getDato1())){

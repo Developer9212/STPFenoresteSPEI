@@ -11,6 +11,6 @@ public interface AbonoSpeiDao extends JpaRepository<AbonoSpei,Integer>{
    
 	public List<AbonoSpei> findByfechaOperacionAndAplicado(Integer fecha,boolean aplicado);
 
-	@Query(value = "SELECT SUM(monto) FROM speirecibido WHERE LEFT(fechaoperacion::TEXT, 6) = ?1 AND cuentabeneficiario= ?2 AND aplicado=true",nativeQuery = true)
+	@Query(value = "SELECT (CASE WHEN SUM(monto) IS NULL THEN 0 ELSE SUM(monto) END) FROM speirecibido WHERE LEFT(fechaoperacion::::TEXT, 6) = ?2 AND cuentabeneficiario= ?1 AND aplicado=true",nativeQuery = true)
 	public Double totalMes(String clabe,String periodo);
 }
