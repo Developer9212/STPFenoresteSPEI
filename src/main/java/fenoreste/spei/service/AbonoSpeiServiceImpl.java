@@ -33,5 +33,7 @@ public class AbonoSpeiServiceImpl implements IAbonoSpeiService{
 	public Double totalMes(String clabe, String periodo) {
 		return abonoSpeiDao.totalMes(clabe, periodo);
 	}
+	
+	//Modificado
 
 }
