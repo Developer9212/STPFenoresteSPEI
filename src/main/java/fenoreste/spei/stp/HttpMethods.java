@@ -32,9 +32,9 @@ public class HttpMethods {
 	
 	
 	private String path = "";
-	private String enpointRegistraOrden = "ordenPago/registra";
-	private String enpointConciliacion = "conciliacion";
-	private String enpointConsultaSaldo = "consultaSaldoCuenta";
+	private String endpointRegistraOrden = "ordenPago/registra";
+	private String endpointConciliacion = "conciliacion";
+	private String endpointConsultaSaldo = "consultaSaldoCuenta";
 	
 	Gson gson = new Gson();
 	
@@ -51,7 +51,7 @@ public class HttpMethods {
 				mediaType = MediaType.parse("application/json");
 				
 				body = RequestBody.create(mediaType,requestPeticion);
-				String url = formaUrl(1)+enpointRegistraOrden;
+				String url = formaUrl(1)+endpointRegistraOrden;
 				System.out.println("Url a consumir:"+url);
 				request = new Request.Builder()
 						.url(url)
@@ -77,7 +77,7 @@ public class HttpMethods {
 				log.info("Peticion conciliacion:"+requestPeticion);
 				mediaType = MediaType.parse("application/json");
 				body = RequestBody.create(mediaType,requestPeticion);
-				String url = formaUrl(2)+enpointConciliacion;
+				String url = formaUrl(2)+endpointConciliacion;
 				request = new Request.Builder()
 						.url(url)
 						.method("POST", body).addHeader("Content-Type", "application/json").build();
@@ -101,7 +101,8 @@ public class HttpMethods {
 				log.info("Peticion consulta saldo:"+requestPeticion);
 				mediaType = MediaType.parse("application/json");
 				body = RequestBody.create(mediaType,requestPeticion);
-				String url = formaUrl(3)+enpointConsultaSaldo;
+				String url = formaUrl(3)+endpointConsultaSaldo;
+				log.info("Consultando la URL:"+url);
 				request = new Request.Builder()
 						.url(url)
 						.method("POST", body).addHeader("Content-Type", "application/json").build();
@@ -109,7 +110,7 @@ public class HttpMethods {
 				resultado = response.body().string();			
 				log.info("Resultado STP:"+resultado);
 		} catch (Exception e) {
-			log.info("Error al consulta saldo:"+e.getMessage());
+			log.info("Error al consultar saldo:"+e.getMessage());
 		}
 		 return resultado;
 	 } 

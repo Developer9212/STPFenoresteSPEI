@@ -29,4 +29,9 @@ public class AbonoSpeiServiceImpl implements IAbonoSpeiService{
       abonoSpeiDao.save(abono);
 	}
 
+	@Override
+	public Double totalMes(String clabe, String periodo) {
+		return abonoSpeiDao.totalMes(clabe, periodo);
+	}
+
 }

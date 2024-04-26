@@ -148,7 +148,7 @@ public class InServiceGeneral {
 								if(matriz.getIdorigen() == 30200){//CSN
 									valiResponse = validaReglasCsn(a.getAuxiliarPK(),in.getMonto(),in.getFechaOperacion(), 0);
 					    		}else if(matriz.getIdorigen() == 30300) {//Mitras
-					    			valiResponse = validaReglasMitras(a_pk, in.getMonto(), in.getFechaOperacion());
+					    			valiResponse = validaReglasMitras(a_pk, in.getMonto(), in.getFechaOperacion(),operacion.getCuentaBeneficiario());
 					    		}else if(matriz.getIdorigen() == 30500) {
 					    			valiResponse = validaReglasFama(a_pk, in.getMonto(), in.getFechaOperacion());
 					    		}else {
@@ -429,17 +429,18 @@ public class InServiceGeneral {
 		return null;
 	}
 	
-	public SaldoResultadoVo consultaSaldo(String clabe,String fecha) {
+	public SaldoResultadoVo consultaSaldo(String clabes,String fecha) {
 		SaldoResultadoVo resultadoConsulta = new SaldoResultadoVo();
 		try {
-			log.info("Clabe:"+clabe+",fecha:"+fecha);
-			ClabeInterbancaria clabe_registro = clabeInterbancariaService.buscarPorClabe(clabe);
-			ConsultaSaldoPet peticion = new ConsultaSaldoPet();			
+			ConsultaSaldoPet peticion = new ConsultaSaldoPet();
+
+			TablaPK tbPk = new TablaPK("stp","cuenta_concentradora");
+			Tabla tablaCuentaConcentradora = tablasService.buscarPorId(tbPk);
 		
-			if(clabe_registro != null) {
-				TablaPK tbPk = new TablaPK("stp","empresa");
+			if(tablaCuentaConcentradora != null) {
+				tbPk = new TablaPK("stp","empresa");
 	        	Tabla tabla = tablasService.buscarPorId(tbPk);
-				peticion.setCuentaOrdenante(clabe);
+				peticion.setCuentaOrdenante(tablaCuentaConcentradora.getDato1().trim());
 				peticion.setEmpresa(tabla.getDato1());
         		String firma = firmaPeticion(2,null,peticion,fecha);
         		peticion.setFirma(firma);
@@ -596,7 +597,7 @@ public class InServiceGeneral {
 		return response;
 	}
  
-	private response validaReglasMitras(AuxiliarPK opa,Double monto,Integer fechaOperacion) {
+	private response validaReglasMitras(AuxiliarPK opa,Double monto,Integer fechaOperacion,String clabeBeneficiario) {
 		response response = new response();
 		response.setId(0);
 		response.setMensaje("Error General");
@@ -626,8 +627,18 @@ public class InServiceGeneral {
 									acumulado = acumulado + abonos.get(i).getMonto();
 								}
 								if((acumulado + monto) < new Double(tb_monto_maximo_diario.getDato1())) {
-									response.setMensaje("OK");
-									response.setId(999);
+									Double totalMes = abonoSpeiService.totalMes(clabeBeneficiario,String.valueOf(fechaOperacion).substring(1,6));
+									System.out.println("Total acumulado en el mes:"+totalMes);
+									tb_pk.setIdElemento("maximo_mes");
+									Tabla tb_monto_maximo_mes = tablasService.buscarPorId(tb_pk);
+									if(totalMes <= Double.parseDouble(tb_monto_maximo_mes.getDato1())){
+										response.setMensaje("OK");
+										response.setId(999);
+									}else{
+										log.info("..........Limite mensual alcanzado..........");
+										response.setMensaje("Ha alcanzado el limite mensual en el core : $"+tb_monto_maximo_mes.getDato1());
+										response.setId(17);
+									}
 								}else {
 									log.info("..........el monto operado hoy supera el permitido en el core..........");
 									response.setMensaje("El monto operado hoy supera el permitido en el core");
@@ -747,7 +758,7 @@ public class InServiceGeneral {
 		     firmada = sign(cadena);
 		     log.info("La firma es:"+firmada);
 		} catch (Exception e) {
-			log.info("Error al firmar orden:"+e.getMessage());
+			log.info("Error al firmar peticion:"+e.getMessage());
 		}
 		return firmada;
 	}
@@ -756,8 +767,8 @@ public class InServiceGeneral {
 	public String sign(String cadena) throws Exception {
 		String firmaCod;
 		// Direccion de mi keystore local
-		String fileName = ruta() + "caja_mitras.jks";//"/claves/cajamitras.jks";
-		String password = "fenoreste2024";//"12345678";//"fenoreste2023";
+		String fileName = ruta()+ System.getProperty("file.separator")+"mitras"+System.getProperty("file.separator")+ "caja_mitras.jks";//"/claves/cajamitras.jks";
+		String password =  "fenoreste2024";//"12345678";//"fenoreste2023";
 		String alias = "caja_mitras";
 		try {
 			String data = cadena;

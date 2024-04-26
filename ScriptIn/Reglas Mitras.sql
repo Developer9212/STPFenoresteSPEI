@@ -43,16 +43,24 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','cuenta_contab
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento = 'producto_abono';
 INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('spei_entrada','producto_abono','130');
 
+/*Maximo por Mes*/
+DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento = 'maximo_mes';
+INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('spei_entrada','maximo_mes','100');
+
 
 /*Datos para conciliacion*/
 DELETE FROM tablas WHERE idtabla='stp' AND idelemento='empresa';
 INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('stp','empresa','CAJA_MITRAS');
 
+/*Datos para consulta de saldo*/
+DELETE FROM tablas WHERE idtabla='stp' AND idelemento='cuenta_concentradora';
+INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('stp','cuenta_concentradora','646180518700000008');
+
 DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='stppath';
 INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','stppath','/efws/API/V2','https://efws-dev.stpmex.com');
 
 DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='consulta_saldo_stppath';
-INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacon','consulta_saldo_stppath','/efws/API','https://efws-dev.stpmex.com');
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','consulta_saldo_stppath','/efws/API','https://efws-dev.stpmex.com');
 
 /*
  curl --header "Content-Type: application/json"    -H "Authorization: Basic $(echo -n 'speitest:speitest' | base64)"   --request POST   --data '{{

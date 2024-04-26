@@ -10,4 +10,6 @@ public interface IAbonoSpeiService {
 	public List<AbonoSpei>todasPorFecha(Integer fecha);
 
 	public void guardar(AbonoSpei abono);
+
+	public Double totalMes(String clabe,String periodo);
 }
