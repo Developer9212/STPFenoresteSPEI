@@ -30,7 +30,10 @@ import fenoreste.spei.entity.AuxiliarPK;
 import fenoreste.spei.entity.ClabeInterbancaria;
 import fenoreste.spei.entity.FolioTarjeta;
 import fenoreste.spei.entity.Origen;
+import fenoreste.spei.entity.Persona;
+import fenoreste.spei.entity.PersonaPK;
 import fenoreste.spei.entity.Producto;
+import fenoreste.spei.entity.Sopar;
 import fenoreste.spei.entity.SpeiTemporal;
 import fenoreste.spei.entity.Tabla;
 import fenoreste.spei.entity.TablaPK;
@@ -83,6 +86,12 @@ public class InServiceGeneral {
 	
 	@Autowired
 	private IProductoService productoService;
+	
+	@Autowired
+	private IPersonaService personaService;
+	
+	@Autowired
+	private ISoparService soparService;
 	
 	@Autowired
 	private ConsumoCsnTDD consumoCsnTDD;
@@ -148,7 +157,7 @@ public class InServiceGeneral {
 								if(matriz.getIdorigen() == 30200){//CSN
 									valiResponse = validaReglasCsn(a.getAuxiliarPK(),in.getMonto(),in.getFechaOperacion(), 0);
 					    		}else if(matriz.getIdorigen() == 30300) {//Mitras
-					    			valiResponse = validaReglasMitras(a_pk, in.getMonto(), in.getFechaOperacion(),operacion.getCuentaBeneficiario());
+					    			valiResponse = validaReglasMitras(a, in.getMonto(), in.getFechaOperacion(),operacion.getCuentaBeneficiario());
 					    		}else if(matriz.getIdorigen() == 30500) {
 					    			valiResponse = validaReglasFama(a_pk, in.getMonto(), in.getFechaOperacion());
 					    		}else {
@@ -597,74 +606,101 @@ public class InServiceGeneral {
 		return response;
 	}
  
-	private response validaReglasMitras(AuxiliarPK opa,Double monto,Integer fechaOperacion,String clabeBeneficiario) {
+	private response validaReglasMitras(Auxiliar a,Double monto,Integer fechaOperacion,String clabeBeneficiario) {
 		response response = new response();
 		response.setId(0);
 		response.setMensaje("Error General");
 		response.setCodigo(400);
 		try {
-		       	//Buscamos minimo y maximo a operar
-  	    		TablaPK tb_pk= new TablaPK(idtabla,"monto_minimo");
-  	    		Tabla tb_minimo = tablasService.buscarPorId(tb_pk);
-  	    		tb_pk.setIdElemento("monto_maximo");
-  	    		Tabla tb_maximo = tablasService.buscarPorId(tb_pk);
-  	    		Double monto_minimo = new Double(tb_minimo.getDato1());
-  	    		Double monto_maximo = new Double(tb_maximo.getDato1());
-  	    		if(monto >= monto_minimo) {
-  	    			if(monto <= monto_maximo) {
-  	    			  //Buscamos la configuracion de producto para abono
-						tb_pk.setIdElemento("producto_abono");
-						Tabla tabla_producto_abono = tablasService.buscarPorId(tb_pk);
-						if(tabla_producto_abono != null){
-							//Validamos que el producto para abono configurado en tablas sea el mismo relacionado a la clabe
-							Producto producto_abono = productoService.buscarPorId(opa.getIdproducto());
-							if(producto_abono != null){
-								tb_pk.setIdElemento("monto_maximo_diario");
-								Tabla tb_monto_maximo_diario = tablasService.buscarPorId(tb_pk);
-								List<AbonoSpei>abonos = abonoSpeiService.todasPorFecha(fechaOperacion);
-								Double acumulado = 0.0;
-								for(int i=0;i<abonos.size();i++) {
-									acumulado = acumulado + abonos.get(i).getMonto();
-								}
-								if((acumulado + monto) < new Double(tb_monto_maximo_diario.getDato1())) {
-									log.info(String.valueOf(fechaOperacion).substring(0,6));
-									Double totalMes = abonoSpeiService.totalMes(clabeBeneficiario,String.valueOf(fechaOperacion).substring(0,6));
-									System.out.println("Total acumulado en el mes:"+totalMes+",SELECT SUM(monto) FROM speirecibido WHERE LEFT(fechaoperacion::TEXT, 6) ="+String.valueOf(fechaOperacion).substring(1,6)+" AND cuentabeneficiario= "+clabeBeneficiario+" AND aplicado=true");
-									tb_pk.setIdElemento("maximo_mes");
-									Tabla tb_monto_maximo_mes = tablasService.buscarPorId(tb_pk);
-									if(totalMes <= Double.parseDouble(tb_monto_maximo_mes.getDato1())){
-										response.setMensaje("OK");
-										response.setId(999);
-									}else{
-										log.info("..........Limite mensual alcanzado..........");
-										response.setMensaje("Ha alcanzado el limite mensual en el core : $"+tb_monto_maximo_mes.getDato1());
-										response.setId(17);
+			    //Validamos que la persona se encuentre en los grupos validos
+			    PersonaPK personaPk = new PersonaPK(a.getIdorigen(),a.getIdgrupo(),a.getIdsocio());
+			    Persona persona = personaService.buscarPorId(personaPk);
+			    
+			    if(persona.getPk().getIdgrupo() == 10 || persona.getPk().getIdgrupo() == 12) {
+			    	//buscamos si esta en elgrupo 88 personas 
+			    	persona = personaService.buscarPorCurpGrupo(persona.getCurp(),88);
+			    	if(persona == null) {
+			    		//Confirmamo que siga bloqueado en sopar
+			    		Sopar sopar = soparService.buscarPorIdTipo(personaPk, "lista_personas_bloqueadas_cnbv");
+			    		if(sopar == null) {
+			    			//Buscamos minimo y maximo a operar
+			  	    		TablaPK tb_pk= new TablaPK(idtabla,"monto_minimo");
+			  	    		Tabla tb_minimo = tablasService.buscarPorId(tb_pk);
+			  	    		tb_pk.setIdElemento("monto_maximo");
+			  	    		Tabla tb_maximo = tablasService.buscarPorId(tb_pk);
+			  	    		Double monto_minimo = new Double(tb_minimo.getDato1());
+			  	    		Double monto_maximo = new Double(tb_maximo.getDato1());
+			  	    		
+			  	    		if(monto >= monto_minimo) {
+			  	    			if(monto <= monto_maximo) {
+			  	    			  //Buscamos la configuracion de producto para abono
+									tb_pk.setIdElemento("producto_abono");
+									Tabla tabla_producto_abono = tablasService.buscarPorId(tb_pk);
+									if(tabla_producto_abono != null){
+										//Validamos que el producto para abono configurado en tablas sea el mismo relacionado a la clabe
+										Producto producto_abono = productoService.buscarPorId(a.getAuxiliarPK().getIdproducto());
+										
+										if(producto_abono != null){
+											tb_pk.setIdElemento("monto_maximo_diario");
+											Tabla tb_monto_maximo_diario = tablasService.buscarPorId(tb_pk);
+											List<AbonoSpei>abonos = abonoSpeiService.todasPorFecha(fechaOperacion);
+											Double acumulado = 0.0;
+											for(int i=0;i<abonos.size();i++) {
+												acumulado = acumulado + abonos.get(i).getMonto();
+											}
+											if((acumulado + monto) < new Double(tb_monto_maximo_diario.getDato1())) {
+												log.info(String.valueOf(fechaOperacion).substring(0,6));
+												Double totalMes = abonoSpeiService.totalMes(clabeBeneficiario,String.valueOf(fechaOperacion).substring(0,6));
+												System.out.println("Total acumulado en el mes:"+totalMes+",SELECT SUM(monto) FROM speirecibido WHERE LEFT(fechaoperacion::TEXT, 6) ="+String.valueOf(fechaOperacion).substring(1,6)+" AND cuentabeneficiario= "+clabeBeneficiario+" AND aplicado=true");
+												tb_pk.setIdElemento("maximo_mes");
+												Tabla tb_monto_maximo_mes = tablasService.buscarPorId(tb_pk);
+												if(totalMes <= Double.parseDouble(tb_monto_maximo_mes.getDato1())){
+													response.setMensaje("OK");
+													response.setId(999);
+												}else{
+													log.info("..........Limite mensual alcanzado..........");
+													response.setMensaje("Ha alcanzado el limite mensual en el core : $"+tb_monto_maximo_mes.getDato1());
+													response.setId(17);
+												}
+											}else {
+												log.info("..........el monto operado hoy supera el permitido en el core..........");
+												response.setMensaje("El monto operado hoy supera el permitido en el core");
+												response.setId(16);									
+											}
+										}else{
+												log.info("..........Producto configurado como abono en tablas no corresponde a vinculado en clabes..........");
+												response.setMensaje("Producto configurado como abono en tablas no corresponde a vinculado en clabes");
+												response.setId(15);
+										}
+									}else {
+										log.info("..........No existe configuracion de producto abono..........");
+										response.setMensaje("No existe configuracion de producto abono");
+										response.setId(14);
 									}
-								}else {
-									log.info("..........el monto operado hoy supera el permitido en el core..........");
-									response.setMensaje("El monto operado hoy supera el permitido en el core");
-									response.setId(16);									
-								}
-							}else{
-									log.info("..........Producto configurado como abono en tablas no corresponde a vinculado en clabes..........");
-									response.setMensaje("Producto configurado como abono en tablas no corresponde a vinculado en clabes");
-									response.setId(15);
-							}
-						}else {
-							log.info("..........No existe configuracion de producto abono..........");
-							response.setMensaje("No existe configuracion de producto abono");
-							response.setId(14);
-						}
-  	    			}else {
-  	    				log.info(".........Monto es mayor al permitido en el core........");
-  	    				response.setMensaje("Monto es mayor al permitido en el core");
-  	    				response.setId(13);
-  	    			}
-  	    		}else {
-  	    			log.info(".........Monto es menor al permitido en el core........");
-  	    			response.setMensaje("Monto es menor al permitido en el core");
-  	    			response.setId(6);
-  	    		}
+			  	    			}else {
+			  	    				log.info(".........Monto es mayor al permitido en el core........");
+			  	    				response.setMensaje("Monto es mayor al permitido en el core");
+			  	    				response.setId(13);
+			  	    			}
+			  	    		}else {
+			  	    			log.info(".........Monto es menor al permitido en el core........");
+			  	    			response.setMensaje("Monto es menor al permitido en el core");
+			  	    			response.setId(6);
+			  	    		}
+			    		}else {
+			    			log.info(".........Socio bloqueado por CNBV........");
+		  	    			response.setMensaje("Socio bloqueado por CNBV");
+		  	    			response.setId(18);
+			    		}
+			    	}else {			    	
+			    		log.info("Socio bloqueado,grupo 88");
+			    	}
+			    }else {
+			    	log.info(".........Grupo para socio no permitido en el core........");
+  	    			response.setMensaje("Socio perteneciente a grupo no permitido en el core");
+  	    			response.setId(19);
+			    }
+			    
 		} catch (Exception e) {
 			log.info("....Error al validar reglas Mitras..."+e.getMessage());
 			response.setMensaje("Error al validar reglas Mitras");

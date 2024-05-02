@@ -18,6 +18,11 @@ public class PersonaServiceImpl implements IPersonaService{
 	public Persona buscarPorId(PersonaPK pk) {
 		return personaRepository.getById(pk);
 	}
+
+	@Override
+	public Persona buscarPorCurpGrupo(String curp, Integer idgrupo) {
+		return personaRepository.findByCurpIdgrupo(curp, idgrupo);
+	}
 	
 	
 	

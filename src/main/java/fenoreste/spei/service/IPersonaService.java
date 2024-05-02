@@ -11,5 +11,7 @@ import fenoreste.spei.entity.PersonaPK;
 public interface IPersonaService {
 	
 	public Persona buscarPorId(PersonaPK pk);
+	//AplicaMitras
+	public Persona buscarPorCurpGrupo(String curp,Integer idgrupo);
 }
  

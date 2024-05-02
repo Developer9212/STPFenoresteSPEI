@@ -1,5 +1,6 @@
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/service/IFuncionesSaiService.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/service/ITablaService.java
+/home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/service/ISoparService.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/modelos/STPOrderVo.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/util/FicheroConexion.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/modelos/EstadoVo.java
@@ -34,6 +35,7 @@
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/entity/ClabeInterbancaria.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/modelos/STPDispersionVo.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/modelos/Conciliacion.java
+/home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/entity/Sopar.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/dao/SpeiTemporalDao.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/entity/PersonaPK.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/service/IFolioTarjetaService.java
@@ -41,6 +43,7 @@
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/service/BancoServiceImplements.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/modelos/ConcResultadoVo.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/modelos/STPResultado.java
+/home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/dao/SoparDao.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/entity/Auxiliar.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/dao/FolioTarjetaDao.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/modelos/OrdenVo.java
@@ -63,6 +66,7 @@
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/service/IAbonoSpeiService.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/service/IClabeInterbancariaService.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/entity/SpeiTemporal.java
+/home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/service/SoparServiceImpl.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/controller/ConciliacionController.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/dao/FuncionDao.java
 /home/wilmer/git/STPFenoresteSPEI/src/main/java/fenoreste/spei/stp/MethodTest.java
