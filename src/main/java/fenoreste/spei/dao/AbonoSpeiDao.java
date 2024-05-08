@@ -4,8 +4,9 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import fenoreste.spei.entity.AbonoSpei;
 import org.springframework.data.jpa.repository.Query;
+
+import fenoreste.spei.entity.AbonoSpei;
 
 public interface AbonoSpeiDao extends JpaRepository<AbonoSpei,Integer>{
    

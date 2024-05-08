@@ -13,6 +13,7 @@ import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -114,7 +115,7 @@ public class InServiceGeneral {
 	    //Vamos a registrar la operacion 
 	    AbonoSpei operacion = new AbonoSpei();	   
 	    operacion.setId(in.getId());
-	    operacion.setFechaOperacion(in.getFechaOperacion());
+	    operacion.setFechaOperacion(fechaOperacion());//in.getFechaOperacion());
 	    operacion.setInstitucionOrdenante(in.getInstitucionOrdenante());
 	    operacion.setInstitucionBeneficiaria(in.getInstitucionBeneficiaria());
 	    operacion.setClaveRastreo(in.getClaveRastreo());
@@ -475,7 +476,6 @@ public class InServiceGeneral {
 		return resultadoConsulta;
 	}
 	
-
     private response validaReglasCsn(AuxiliarPK opa,Double monto,Integer fechaOperacion,Integer tipoOperacion) {
 		response response = new response();
 		response.setId(0);
@@ -707,8 +707,7 @@ public class InServiceGeneral {
 		}
 		return response;
 	}
-	
-	
+		
 	private response validaReglasFama(AuxiliarPK opa,Double monto,Integer fechaOperacion) {
 		response response = new response();
 		response.setId(0);
@@ -799,7 +798,6 @@ public class InServiceGeneral {
 		}
 		return firmada;
 	}
-	
 	// Consigo mi firma
 	public String sign(String cadena) throws Exception {
 		String firmaCod;
@@ -834,7 +832,6 @@ public class InServiceGeneral {
 		}
 		return privateKey;
 	}
-
 	//Parao obtener la ruta del servidor
     public static String ruta() {
         String home = System.getProperty("user.home");
@@ -842,7 +839,22 @@ public class InServiceGeneral {
         String actualRuta = home + separador + "CaSpei" + separador;
         return actualRuta;
     }
-
+    
+    private Integer fechaOperacion() {
+    	Integer fechaOp = 0;
+    	try {
+			Date fecha = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			fechaOp = Integer.parseInt(sdf.format(fecha)); 
+			log.info("Fecha formateada es:"+fechaOp);		
+		} catch (Exception e) {
+			log.info("Error al formatear fecha:"+e.getMessage());
+		}
+    	return fechaOp;
+    }
+    
+   
+    
 	
 	
 }
