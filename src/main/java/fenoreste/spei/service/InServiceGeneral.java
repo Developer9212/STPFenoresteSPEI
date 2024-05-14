@@ -654,7 +654,7 @@ public class InServiceGeneral {
 												System.out.println("Total acumulado en el mes:"+totalMes+",SELECT SUM(monto) FROM speirecibido WHERE LEFT(fechaoperacion::TEXT, 6) ="+String.valueOf(fechaOperacion).substring(1,6)+" AND cuentabeneficiario= "+clabeBeneficiario+" AND aplicado=true");
 												tb_pk.setIdElemento("maximo_mes");
 												Tabla tb_monto_maximo_mes = tablasService.buscarPorId(tb_pk);
-												if(totalMes <= Double.parseDouble(tb_monto_maximo_mes.getDato1())){
+												if((totalMes + monto) <= Double.parseDouble(tb_monto_maximo_mes.getDato1())){
 													response.setMensaje("OK");
 													response.setId(999);
 												}else{
