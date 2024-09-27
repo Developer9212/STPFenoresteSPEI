@@ -29,6 +29,7 @@ D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\util\EliminarArchi
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\ConsultaSaldoPet.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\AuxiliarServiceImpl.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\IPersonaService.java
+D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\util\SSLUtil.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\stp\HttpMethods.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\IFolioTarjetaService.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\STPOrderVo.java
@@ -80,6 +81,7 @@ D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\AbonoSpeiS
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\ServletInitializer.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\Origen.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\ProductoServiceImpl.java
+D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\Ejec.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\ConcResultadoVo.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\UsuarioServiceImpl.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\OutServiceGeneral.java

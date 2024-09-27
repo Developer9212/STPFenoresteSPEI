@@ -20,8 +20,8 @@ public class AbonoSpeiServiceImpl implements IAbonoSpeiService{
 	}
 
 	@Override
-	public List<AbonoSpei> todasPorFecha(Integer fecha) {
-		return abonoSpeiDao.findByfechaOperacionAndAplicado(fecha,true);
+	public Double montoDiario(Integer fecha,String cuenta) {
+		return abonoSpeiDao.montodiario(fecha,cuenta);
 	}
 
 	@Override

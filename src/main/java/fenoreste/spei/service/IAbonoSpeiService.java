@@ -7,7 +7,7 @@ import fenoreste.spei.entity.AbonoSpei;
 public interface IAbonoSpeiService {
     
 	public AbonoSpei buscarPorId(Integer id);
-	public List<AbonoSpei>todasPorFecha(Integer fecha);
+	public Double montoDiario(Integer fecha,String cuenta);
 
 	public void guardar(AbonoSpei abono);
 

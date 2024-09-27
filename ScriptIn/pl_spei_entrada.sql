@@ -1,4 +1,6 @@
 
+
+
 create or replace function
 spei_entrada_servicio_activo_inactivo () returns boolean as $$
 declare
@@ -90,9 +92,13 @@ begin
   WHERE  idusuario = p_idusuario;
 
   if(i_tp_pol = 1) THEN 
-     t_concepto := 'SPEI Entrada';
+     t_concepto := (select concepto_mov
+          from   spei_entrada_temporal_cola_guardado
+          where  idusuario = p_idusuario and sesion = p_sesion and i_tp_pol = p_tipopoliza ORDER by fecha_inserta DESC LIMIT 1); --'SPEI Entrada';
      ELSE 
-     t_concepto := 'Comision SPEI Entrada';
+     t_concepto := (select concepto_mov
+          from   spei_entrada_temporal_cola_guardado
+          where  idusuario = p_idusuario and sesion = p_sesion and i_tp_pol = p_tipopoliza ORDER by fecha_inserta DESC LIMIT 1); --'Comision SPEI Entrada';
    END IF; 
 
   
@@ -107,9 +113,10 @@ begin
   where  idusuario = p_idusuario and sesion = p_sesion;
   
   -- DELETE FROM al "termporal"
-  DELETE FROM temporal WHERE idusuario = p_idusuario AND sesion = p_sesion;
-  DELETE FROM spei_entrada_temporal_cola_guardado WHERE sesion = p_sesion AND idusuario = p_idusuario AND referencia = p_referencia;
+ DELETE FROM temporal WHERE idusuario = p_idusuario AND sesion = p_sesion;
+ --ELETE FROM spei_entrada_temporal_cola_guardado WHERE sesion = p_sesion AND idusuario = p_idusuario AND referencia = p_referencia;
   
   return i_movs;
 end;
 $$ language 'plpgsql';
+

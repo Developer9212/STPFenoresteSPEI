@@ -20,7 +20,7 @@ public class ClabeInterbancariaServiceImpl implements IClabeInterbancariaService
 
 	@Override
 	public ClabeInterbancaria buscarPorClabe(String clabe) {
-		return clabeInterbancariaDao.findByClabe(clabe);
+		return clabeInterbancariaDao.clabeInterbancariaActiva(clabe);
 	}
 
 }

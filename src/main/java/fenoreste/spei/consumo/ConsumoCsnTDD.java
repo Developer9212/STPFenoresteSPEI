@@ -3,11 +3,7 @@ package fenoreste.spei.consumo;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -39,7 +35,7 @@ public class ConsumoCsnTDD{
 	public boolean retirarSaldo(String url,String idtarjeta,Double monto) {
 		boolean bandera= false;
 		ResponseEntity<String> requisition = null;
-		/*try {			
+		/*try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<String> entity = new HttpEntity<String>("", headers);
@@ -52,13 +48,13 @@ public class ConsumoCsnTDD{
 		} catch (Exception e) {
 			System.out.println("Error al realizar retiro de tarjeta:"+idtarjeta+"," + e.getMessage());
 		}*/
-		return true;//bandera;
+		return true;// bandera;
 	}
 	
 	public boolean depositarSaldo(String url,String idtarjeta,Double monto) {
 		ResponseEntity<String> requisition = null;
-		boolean bandera = false;
-		/*try {			
+		/*boolean bandera = false;
+		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<String> entity = new HttpEntity<String>("", headers);
@@ -67,13 +63,12 @@ public class ConsumoCsnTDD{
 		    	bandera =  true;
 		    }else {
 		    	System.out.println("Aqui se dio error");
-		    	bandera = false;
 		    }
 		} catch (Exception e) {
 			System.out.println("Error al deposito de tarjeta:"+idtarjeta+"," + e.getMessage());
 			
 		}*/
-		
+
 		return true;//bandera;
 	}
 	

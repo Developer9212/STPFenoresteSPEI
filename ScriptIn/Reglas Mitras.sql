@@ -26,15 +26,15 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_minimo'
 
  /*Producto para abonar la comision*/
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='producto_comision';
-INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','producto_comision','0');
+INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','producto_comision','5040');
 
  /*Producto para abonar iva de comision*/
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='producto_iva_comision';
-INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','producto_iva_comision','0');
+INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','producto_iva_comision','20407090101004');
 
 /*Monto para comision*/
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='monto_comision';
-INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_comision','0');
+INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_comision','5.00');
 
 /*Cuenta contable cargos*/
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='cuenta_contable';

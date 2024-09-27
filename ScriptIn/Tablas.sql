@@ -73,10 +73,12 @@ CREATE TABLE speirecibido(
  empresa                  text,
  fechaentrada             timestamp without time zone,
  responsecode             integer,
- mensajeerror             text,
+ mensaje_core             text,
  aplicado                 boolean default false,
  fechaprocesada           timestamp without time zone,
- 
+ retardo                  boolean default false,
+ stp_ok                   boolean default false,
+  
  primary key(id)
  );
 

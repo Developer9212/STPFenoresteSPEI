@@ -1,13 +1,14 @@
 package fenoreste.spei.modelos;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 import lombok.Data;
 
 @Data
 public class Conciliacion implements Serializable {
 
-	private Integer idEF;
+	private BigInteger idEF;
 	private String claveRastreo;
 	private String claveRastreoDevolucion;
 	private String conceptoPago;
@@ -31,8 +32,8 @@ public class Conciliacion implements Serializable {
 	private Integer tipoCuentaBeneficiario;
 	private Integer tipoCuentaOrdenante;
 	private Integer tipoPago;
-	private Integer tsCaptura;
-	private Integer tsLiquidacion;
+	private BigInteger tsCaptura;
+	private BigInteger tsLiquidacion;
 	private String causaDevolucion;
 	private String urlCEP;
 	

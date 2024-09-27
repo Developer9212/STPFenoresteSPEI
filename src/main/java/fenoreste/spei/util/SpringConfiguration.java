@@ -35,7 +35,7 @@ public class SpringConfiguration {
     public DataSource conexion() {		
     	DriverManagerDataSource datasource = new DriverManagerDataSource(); 
        try {
-    		datasource.setUrl("jdbc:postgresql://"+fichero.getHost()+":5432/"+fichero.getDatabase().trim());
+    		datasource.setUrl("jdbc:postgresql://"+fichero.getHost()+":5432/"+fichero.getDatabase().trim()+"?serverTimezone=America/Mexico_City");
         	datasource.setUsername(env.getProperty("spring.datasource.username"));
         	datasource.setPassword(env.getProperty("spring.datasource.password"));
         	datasource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));

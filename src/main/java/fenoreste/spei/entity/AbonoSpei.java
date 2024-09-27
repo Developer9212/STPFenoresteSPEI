@@ -40,9 +40,11 @@ public class AbonoSpei implements Serializable {
 	 private String  empresa;
 	 private Date fechaentrada;
 	 private Integer responsecode;
-	 private String mensajeerror;
+	 private String mensaje_core;
 	 private boolean aplicado;
 	 private Date fechaProcesada;
+	 private boolean retardo;
+	 private boolean stp_ok;
 	 
 	 private static final long serialVersionUID = 1L;
 }

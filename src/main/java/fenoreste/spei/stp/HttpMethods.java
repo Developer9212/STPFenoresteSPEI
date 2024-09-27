@@ -1,6 +1,7 @@
 package fenoreste.spei.stp;
 
 
+import fenoreste.spei.util.SSLUtil;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class HttpMethods {
       
 	@Autowired
 	private ITablaService tablaService;
+
+	@Autowired
+	private SSLUtil sslUtil;
 	
 	OkHttpClient client = null;
 	MediaType mediaType = null;
@@ -70,6 +74,9 @@ public class HttpMethods {
 		 String resultado = "";
 		 try {
 			 JSONObject json = new JSONObject();
+
+			 sslUtil.disableSSLCertificateChecking();
+
 				client = new OkHttpClient.Builder()
 		                .connectTimeout(20, java.util.concurrent.TimeUnit.SECONDS) // Tiempo de espera para establecer la conexión
 		                .readTimeout(20, java.util.concurrent.TimeUnit.SECONDS)    // Tiempo de espera para la lectura de datos
