@@ -1,6 +1,7 @@
 package fenoreste.spei.stp;
 
 
+import fenoreste.spei.modelos.STPResultadoVo;
 import fenoreste.spei.util.SSLUtil;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class HttpMethods {
 						.url(url)
 						.method("PUT", body).addHeader("Content-Type", "application/json").build();
 				response = client.newCall(request).execute();
-				resultado = response.body().string();			
+				resultado = response.body().string();
 				log.info("Resultado STP:"+resultado);
 		} catch (Exception e) {
 			log.info("Error al enviar orden spei:"+e.getMessage());
@@ -130,7 +131,8 @@ public class HttpMethods {
 			switch (opcion) {
 			case 1:
 				PkUrl = new TablaPK(idtabla, "stppath");
-				tablaUrl = tablaService.buscarPorId(PkUrl);	
+				tablaUrl = tablaService.buscarPorId(PkUrl);
+				url = tablaUrl.getDato2().trim()+"/";
 				break;
 			case 2:
 				PkUrl = new TablaPK("conciliacion", "stppath");

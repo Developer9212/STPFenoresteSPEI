@@ -22,7 +22,7 @@ public class ClabeInterbancaria implements Serializable{
      
 	 @EmbeddedId
 	 AuxiliarPK auxPk;
-	 private String  clabe;
+	 private String clabe;
 	 @Temporal(TemporalType.TIMESTAMP)
 	 private Date fecha_hora; 
 	 private boolean asignada;

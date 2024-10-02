@@ -34,7 +34,7 @@ public class InController {
 	public ResponseEntity<?>sendAbono(@RequestBody request inData){
 		response responseSendAbono = new response();
 		try {
-			responseSendAbono = serviceGeneral.response(inData);
+			responseSendAbono = serviceGeneral.sendAbono(inData);
 			if(responseSendAbono.getCodigo() == 200) {
 				return ResponseEntity.status(200).body(responseSendAbono);	
 			}else {
