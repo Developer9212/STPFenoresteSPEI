@@ -38,6 +38,8 @@ $$ language 'plpgsql';
 
 
 
+
+
 create or replace function
 sai_spei_entrada_aplica (integer, text,integer,text) returns integer as $$
 declare
@@ -60,7 +62,8 @@ begin
   -- Tipo poliza:
   i_tp_pol := p_tipopoliza;
 
-  
+
+   RAISE NOTICE 'El valor de la variable es: %', i_tp_pol;
   insert
   into   temporal
          (idusuario,sesion,idorigen,idgrupo,idsocio,idorigenp,idproducto,idauxiliar,esentrada,acapital,io_pag,io_cal,im_pag,im_cal,aiva,
@@ -99,8 +102,7 @@ begin
      t_concepto := (select concepto_mov
           from   spei_entrada_temporal_cola_guardado
           where  idusuario = p_idusuario and sesion = p_sesion and i_tp_pol = p_tipopoliza ORDER by fecha_inserta DESC LIMIT 1); --'Comision SPEI Entrada';
-   END IF; 
-
+   END IF;
   
   
 
@@ -113,10 +115,48 @@ begin
   where  idusuario = p_idusuario and sesion = p_sesion;
   
   -- DELETE FROM al "termporal"
- DELETE FROM temporal WHERE idusuario = p_idusuario AND sesion = p_sesion;
+
+   DELETE FROM temporal WHERE idusuario = p_idusuario AND sesion = p_sesion;
  --ELETE FROM spei_entrada_temporal_cola_guardado WHERE sesion = p_sesion AND idusuario = p_idusuario AND referencia = p_referencia;
   
   return i_movs;
 end;
 $$ language 'plpgsql';
+
+
+
+CREATE OR REPLACE FUNCTION funcion_activa() 
+RETURNS BOOLEAN AS $$
+DECLARE
+    funcion_activa BOOLEAN;
+BEGIN
+    LOOP
+        -- Consulta si la función está activa en pg_stat_activity
+
+        SELECT EXISTS (
+            SELECT 1
+            FROM pg_stat_activity
+            WHERE current_query LIKE '%sai_spei_entrada_aplica%'  -- Quita la condición state
+        ) INTO funcion_activa;
+
+       RAISE NOTICE 'La función aactiva:%',funcion_activa;    
+
+        -- Si no está activa, sale del bucle y continúa
+        IF NOT funcion_activa THEN
+            EXIT;
+        END IF;
+
+        -- Si está activa, espera 15 segundos antes de volver a verificar
+        PERFORM pg_sleep(15);
+    END LOOP;
+
+    -- Aquí coloca el código que deseas ejecutar cuando la función termine
+    RAISE NOTICE 'La función ha terminado su ejecución. Continuando...';
+
+    -- Retorno final de la función
+    RETURN funcion_activa;  -- O FALSE, según el caso
+END;
+$$ LANGUAGE plpgsql;
+
+
 

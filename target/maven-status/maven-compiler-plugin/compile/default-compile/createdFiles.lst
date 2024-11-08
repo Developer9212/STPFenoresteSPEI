@@ -1,4 +1,5 @@
 fenoreste\spei\service\ITarjetaService.class
+fenoreste\spei\dao\CargospeiDao.class
 fenoreste\spei\service\InServiceGeneral.class
 fenoreste\spei\entity\Banco.class
 fenoreste\spei\entity\Persona.class
@@ -11,9 +12,11 @@ fenoreste\spei\controller\ConciliacionController.class
 fenoreste\spei\entity\ClabeInterbancaria.class
 fenoreste\spei\service\SpeiTemporalServiceImpl.class
 fenoreste\spei\dao\UsuarioDao.class
+fenoreste\spei\service\CargoSpeiServiceImpl.class
 fenoreste\spei\entity\Producto.class
 fenoreste\spei\dao\BancoDao.class
 fenoreste\spei\service\TarjetaServiceImpl.class
+fenoreste\spei\consumo\SMSCsn.class
 fenoreste\spei\util\EliminarArchivosThread$1.class
 fenoreste\spei\service\OutServiceGeneral.class
 fenoreste\spei\consumo\ConsumoCsnTDD.class
@@ -43,6 +46,7 @@ fenoreste\spei\service\ISpeiTemporalService.class
 fenoreste\spei\dao\SpeiTemporalDao.class
 fenoreste\spei\entity\TablaPK.class
 fenoreste\spei\entity\Tarjeta.class
+fenoreste\spei\service\ICargoSpeiService.class
 fenoreste\spei\entity\SpeiTemporal.class
 fenoreste\spei\modelos\ConsultaSaldoPet.class
 fenoreste\spei\modelos\OgsDTO.class
@@ -93,4 +97,5 @@ fenoreste\spei\dao\TarjetaDao.class
 fenoreste\spei\entity\Auxiliar.class
 fenoreste\spei\service\IFolioTarjetaService.class
 fenoreste\spei\service\IUsuarioService.class
+fenoreste\spei\modelos\EstadoOrdenVo.class
 fenoreste\spei\service\ITablaService.class

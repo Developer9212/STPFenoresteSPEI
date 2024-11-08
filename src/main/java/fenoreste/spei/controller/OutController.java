@@ -1,5 +1,7 @@
 package fenoreste.spei.controller;
 
+import fenoreste.spei.modelos.EstadoOrdenVo;
+import fenoreste.spei.modelos.ResponseLocalDispersionVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,14 +27,16 @@ public class OutController {
 	@PostMapping(value = "/sendOrder",consumes = {MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?>sendOrder(@RequestBody RequestLocalDispersionVo inData){
 		log.info("::::::::::::::Vamos a enviar una orden SPEI::::::::::::::::::::::"+inData);
-
-		return ResponseEntity.status(200).body(outServiceGeneral.sendOrder(inData));
+		ResponseLocalDispersionVo response = outServiceGeneral.sendOrder(inData);
+		return ResponseEntity.status(200).body(response);
 		
 	}
-	
-	/*@PostMapping(value = "/changeStatus",consumes = {MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?>actualizaEstado(@RequestBody EstadoVo estatus){
-		return ResponseEntity.status(200).body(outServiceGeneral.sendOrder(inData));
+
+	/*
+	@PostMapping(value = "/actualizarEstado",consumes = {MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?>actualizaEstado(@RequestBody EstadoOrdenVo estatus){
+		log.info(":::::::::::::::Vamos a actualizar el estado de una orden:"+estatus.getId()+"::::::::::::::");
+		return ResponseEntity.status(200).body(outServiceGeneral.sendOrder(estatus));
 		
 	}*/
 	

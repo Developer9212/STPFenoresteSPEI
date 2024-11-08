@@ -19,6 +19,9 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_maximo'
 DELETE FROM tablas where idtabla='spei_entrada' AND idelemento='monto_maximo_diario';
 INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_maximo_diario','200000');
 
+DELETE FROM tablas where idtabla='spei_entrada' AND idelemento='cuenta_contable';
+INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','cuenta_contable','10703070101054');
+
 /*SOLO PARA CSN
 1.- dato1 = 1 activar 0 desactivar
 2.- dato2 = URLTDD
@@ -39,3 +42,15 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','producto_iva_
 /*Monto para comision*/
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='monto_comision';
 INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_comision','5.00');
+
+
+/*SMS abono*/
+DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='sms_notificacion';
+INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_entrada','sms_notificacion','Se abono un total de @total@ a la @nombreproducto@ el dia @fecha@');
+
+/*Servicio SMS*/
+DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='servicio_sms';
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2)VALUES('spei_entrada','servicio_sms','1','http://192.168.15.50/CSNsms/action.php?mensaje=_mensaje&numero=_numero');
+
+
+

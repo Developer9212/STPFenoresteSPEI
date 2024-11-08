@@ -14,14 +14,14 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import fenoreste.spei.consumo.SMSCsn;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -114,7 +114,7 @@ public class InServiceGeneral {
     Origen matriz = null;
     response valiResponse = new response();
     SpeiTemporal temporal = new SpeiTemporal();
-
+    ZonedDateTime fecha = ZonedDateTime.now(ZoneId.of("America/Monterrey"));
     public response sendAbono(request in) throws InterruptedException {
 
         /*Variables para determinar el tiempo para iniciar la operacion*/
@@ -211,7 +211,7 @@ public class InServiceGeneral {
                                         }
                                         if (ok_comision) {
 
-                                          //  Thread.sleep(31000); //30000 para el retardo
+                                            //Thread.sleep(19100); //30000 para el retardo
                                             long endTime = System.currentTimeMillis(); //fin tiempo correr operacion
                                             Instant instant2 = Instant.ofEpochMilli(endTime);
                                             // Convertir el Instant a LocalDateTime usando la zona horaria del sistema
@@ -221,8 +221,9 @@ public class InServiceGeneral {
                                             // Obtiene los segundos de la duración
                                             long segundos = duration.getSeconds();
                                             log.info(":::::::Total Segundos en finalizar operacion:::::::" + segundos);
+                                            boolean exit = false;
                                             if (valiResponse.getId() == 999) {
-                                                if (segundos < 14) {
+                                                if (segundos < 15) {
                                                     resp.setMensaje("confirmar");
                                                     operacion.setAplicado(true);
                                                     operacion.setFechaProcesada(new Date());
@@ -230,28 +231,50 @@ public class InServiceGeneral {
                                                     operacion.setMensaje_core("Terminado con exito");
                                                     resp.setCodigo(200);
                                                     abonoSpeiService.guardar(operacion);
-                                                } else if (segundos >= 14 && segundos < 30) { // Si tarda más de 40 segundos (40000 ms)
-                                                    log.info("::::::::::::::Aplicado con retado:::::::::::::::");
+                                                    exit = true;
+                                                } else if (segundos >= 15 && segundos <= 20) { // Si tarda más de 40 segundos (40000 ms)
+                                                    log.info("::::::::::::::Aplicado con retardo:::::::::::::::");
                                                     operacion.setRetardo(true);
                                                     operacion.setAplicado(true);
                                                     operacion.setMensaje_core("Aplicado con retardo...");
                                                     operacion.setFechaProcesada(new Date());
                                                     resp.setMensaje("confirmar");
                                                     resp.setCodigo(200);
+                                                    resp.setId(000);
                                                     abonoSpeiService.guardar(operacion);
+                                                    exit = true;
                                                 } else {
                                                     log.info(":::::::::::::::Hacer poliza de retroceso::::::::::");
-                                                    speiTemporalService.eliminar(sesion, String.valueOf(in.getReferenciaNumerica()));
+                                                    try {
+                                                        speiTemporalService.eliminar(sesion, String.valueOf(in.getReferenciaNumerica()));
+                                                    }catch(Exception e){
+                                                        log.error("::::::::Sucedio un error al intentar eliminar registros 1::::::::::::"+e.getMessage());
+                                                    }
+
                                                     operacion.setRetardo(false);
                                                     operacion.setAplicado(false);
                                                     operacion.setMensaje_core("Rechazado por timeout");
                                                     resp.setId(35);
                                                     resp.setMensaje("devolver");
-
                                                     realizarTransferencia(a, in, 2);
-                                                    speiTemporalService.eliminar(sesion, String.valueOf(in.getReferenciaNumerica()));
+
+                                                    try {
+                                                        speiTemporalService.eliminar(sesion, String.valueOf(in.getReferenciaNumerica()));
+                                                    }catch(Exception e){
+                                                        log.error("::::::::Sucedio un error al intentar eliminar registros 2:::::::::::"+e.getMessage());
+                                                    }
+
                                                     realizarTransferenciaComision(a, in, 2);
                                                     abonoSpeiService.guardar(operacion);
+
+                                                    log.info("::::::::::::::Poliza retroceso generada con exito::::::::::::::");
+                                                }
+
+                                                if (exit){
+                                                    //Vamos a enviar SMS CSN
+                                                    if(matriz.getIdorigen() == 30200){
+                                                        validaReglasCsn(a,null,in.getMonto(),null,3);
+                                                    }
                                                 }
                                                 log.info("Termino operacion");
 
@@ -340,7 +363,12 @@ public class InServiceGeneral {
 
         }
 
-        speiTemporalService.eliminar(sesion, String.valueOf(in.getReferenciaNumerica()));
+        try {
+            speiTemporalService.eliminar(sesion, String.valueOf(in.getReferenciaNumerica()));
+        }catch(Exception e){
+            log.error("Error al eliminar registros:"+e.getMessage());
+        }
+
 
         return resp;
 
@@ -814,7 +842,30 @@ public class InServiceGeneral {
                             log.info("Asegurate de activar los servicios de Tarjeta de Debito");
                         }
                         break;
+                    case 3:
+                        log.info("Enviar sms");
+                        //buscamos la parametrizacion servicio SMS
+                        tbpk = new TablaPK(idtabla, "servicio_sms");
+                        tabla = tablasService.buscarPorId(tbpk);
+                        String url = tabla.getDato2();
+                        if (tabla.getDato1().equals("1")) {
+                            //Buscamos parametrizacion notificacion SMS
+                            tbpk = new TablaPK(idtabla, "sms_notificacion");
+                            tabla = tablasService.buscarPorId(tbpk);
+                            Producto producto = productoService.buscarPorId(opa.getAuxiliarPK().getIdproducto());
 
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy HH:mm:ss z", new Locale("es", "MX"));
+
+                            // Formatear la fecha
+                            String fechaFormateada = fecha.format(formatter);
+
+                            String mensaje = tabla.getDato2().replace("@total@", String.valueOf(monto)).replace("@nombreproducto@", producto.getNombre()).replace("@fecha@",fechaFormateada);
+                            System.out.println("Mensaje formado:" + mensaje);
+
+                            String respuesta_sms = new SMSCsn().enviarSMS(url, persona.getCelular(), mensaje);
+                            System.out.println("Respuesta de sms:" + respuesta_sms);
+                        }
+                        break;
                 }
 
             } else {

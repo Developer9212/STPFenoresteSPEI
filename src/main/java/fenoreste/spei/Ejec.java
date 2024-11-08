@@ -3,6 +3,7 @@ package fenoreste.spei;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class Ejec {
@@ -23,9 +24,13 @@ public class Ejec {
 	        
 	        // Obtiene los segundos de la duración
 	        long segundos = duration.getSeconds();
-	        
-	        // Imprime el resultado
-	        System.out.println("Segundos entre las dos fechas: " + segundos);
+
+			ZonedDateTime fecha = ZonedDateTime.now(ZoneId.of("America/Monterrey"));
+
+
+			// Imprime el resultado
+	        System.out.println("Segundos entre las dos fechas: " + ZonedDateTime.now(ZoneId.of("America/Monterrey")));
+	        System.out.println("Segundos entre las dos fechas: " + new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 	    }
 	
 }

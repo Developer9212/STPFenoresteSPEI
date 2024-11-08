@@ -67,6 +67,7 @@ public class HttpMethods {
 		} catch (Exception e) {
 			log.info("Error al enviar orden spei:"+e.getMessage());
 		}
+
 		 return resultado;
 	 }
 	

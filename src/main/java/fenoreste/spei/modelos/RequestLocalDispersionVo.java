@@ -14,6 +14,7 @@ public class RequestLocalDispersionVo implements Serializable{
 	private String rfcCurpBeneficiario;
 	private String conceptoPago;
 	private String cuentaBeneficiario;
+	private String location;
 	
 	private static final long serialVersionUID = 1L;
 }

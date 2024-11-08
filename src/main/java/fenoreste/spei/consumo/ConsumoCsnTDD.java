@@ -18,7 +18,7 @@ public class ConsumoCsnTDD{
 	private static String basePath = "/api/cards/";
 	
 	public String obtenerSaldo(String url,String idtarjeta) {
-		JSONObject json = null;
+		JSONObject json = new JSONObject();
 		ResponseEntity<String> requisition = null;
 		try {			
 			HttpHeaders headers = new HttpHeaders();
@@ -26,16 +26,19 @@ public class ConsumoCsnTDD{
 			HttpEntity<String> entity = new HttpEntity<String>("", headers);
 			requisition =  restTemplate.exchange(url+basePath + "/getBalanceQuery/idcard="+idtarjeta, HttpMethod.GET, entity,String.class);
 			json = new JSONObject(requisition.getBody());
+
+			//json.put("availableAmount","20000.00");
 		} catch (JSONException e) {
 			System.out.println("Error al obtener saldo de cuenta:"+idtarjeta+","+ e.getMessage());
 		}
-		return json.toString();
+
+		return  json.toString();
 	}
 	
 	public boolean retirarSaldo(String url,String idtarjeta,Double monto) {
 		boolean bandera= false;
-		ResponseEntity<String> requisition = null;
-		/*try {
+		/*ResponseEntity<String> requisition = null;
+		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<String> entity = new HttpEntity<String>("", headers);
@@ -48,7 +51,7 @@ public class ConsumoCsnTDD{
 		} catch (Exception e) {
 			System.out.println("Error al realizar retiro de tarjeta:"+idtarjeta+"," + e.getMessage());
 		}*/
-		return true;// bandera;
+		return true;//bandera;
 	}
 	
 	public boolean depositarSaldo(String url,String idtarjeta,Double monto) {

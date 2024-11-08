@@ -6,6 +6,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import java.time.ZoneId;
+import java.util.Date;
+
 @SpringBootApplication
 @ComponentScan({"fenoreste.spei.controller",
 	            "fenoreste.spei.service",
@@ -19,6 +22,7 @@ public class SpeiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpeiApplication.class, args);
+		new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
 
 }
