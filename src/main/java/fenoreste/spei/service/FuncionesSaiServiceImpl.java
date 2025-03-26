@@ -31,8 +31,8 @@ public class FuncionesSaiServiceImpl implements IFuncionesSaiService {
 	}
 
 	@Override
-	public Integer aplica_movs(Integer idusuario, String sesion,Integer tipopoliza,String referencia) {
-		return funcionesDao.movs_aplicados(idusuario, sesion,tipopoliza,referencia);
+	public Integer aplica_movs(Integer idusuario, String sesion,Integer tipopoliza,String referencia,String idop) {
+		return funcionesDao.movs_aplicados(idusuario, sesion,tipopoliza,referencia,idop);
 	}
 
 	@Override
@@ -66,6 +66,17 @@ public class FuncionesSaiServiceImpl implements IFuncionesSaiService {
 	@Override
 	public void eliminaTemporal(Integer idusuario, String sesion) {
 		funcionesDao.EliminarTemporal(idusuario, sesion);
+	}
+
+	@Override
+	public String sai_bankingly_prestamo_cuanto(AuxiliarPK opa, Date fecha, Integer tipoamortizacion, String saiAuxiliar) {
+		return funcionesDao.sai_prestamo_cuanto(opa.getIdorigenp(),
+				                                opa.getIdproducto(),
+				                                opa.getIdauxiliar(),
+				                                fecha,
+				                                tipoamortizacion,
+												saiAuxiliar
+		                          );
 	}
 
 

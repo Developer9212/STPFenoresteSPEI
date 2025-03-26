@@ -52,5 +52,5 @@ INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_entrada','sms_notificac
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='servicio_sms';
 INSERT INTO tablas(idtabla,idelemento,dato1,dato2)VALUES('spei_entrada','servicio_sms','1','http://192.168.15.50/CSNsms/action.php?mensaje=_mensaje&numero=_numero');
 
-
+/*Ultima actualizacion 08/11/2024*/
 

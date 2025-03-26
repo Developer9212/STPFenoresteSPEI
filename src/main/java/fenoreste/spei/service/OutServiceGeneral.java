@@ -20,7 +20,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Random;
 
-import com.google.gson.JsonObject;
 import fenoreste.spei.consumo.ConsumoCsnTDD;
 import fenoreste.spei.entity.*;
 import fenoreste.spei.modelos.*;
@@ -33,8 +32,6 @@ import com.google.gson.Gson;
 
 import fenoreste.spei.stp.HttpMethods;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.persistence.EntityManager;
 
 @Service
 @Slf4j
@@ -505,20 +502,20 @@ public class OutServiceGeneral {
             temporal.setIdorigen(opa.getIdorigen());
             temporal.setIdgrupo(opa.getIdgrupo());
             temporal.setIdsocio(opa.getIdsocio());
-            temporal.setIdorigenp(opa.getAuxiliarPK().getIdorigenp());
-            temporal.setIdproducto(opa.getAuxiliarPK().getIdproducto());
-            temporal.setIdauxiliar(opa.getAuxiliarPK().getIdauxiliar());
-            temporal.setReferencia(String.valueOf(referencia));
+            //temporal.setIdorigenp(opa.getAuxiliarPK().getIdorigenp());
+            //temporal.setIdproducto(opa.getAuxiliarPK().getIdproducto());
+            //temporal.setIdauxiliar(opa.getAuxiliarPK().getIdauxiliar());
+            //temporal.setReferencia(String.valueOf(referencia));
             if (tipoop == 1) {
                 temporal.setConcepto_mov("SPEI ENTRADA");
-                temporal.setEsentrada(false);
+              //  temporal.setEsentrada(false);
             } else if (tipoop == 2) {
                 temporal.setConcepto_mov("SPEI SALIDA: Retroceso por timeout");
-                temporal.setEsentrada(true);
+                //temporal.setEsentrada(true);
             } else if (tipoop == 3) {
                 log.info("Error poliza de retroceso");
                 temporal.setConcepto_mov("SPEI ENTRADA: Retroceso por falla general");
-                temporal.setEsentrada(false);
+                //temporal.setEsentrada(false);
             }
             temporal.setAcapital(orden.getMonto());
             temporal.setIdusuario(Integer.parseInt(tb_usuario.getDato1()));
@@ -544,13 +541,13 @@ public class OutServiceGeneral {
             System.out.println("sigue");
             if (tipoop == 1) {
                 temporal.setConcepto_mov("SPEI SALIDA");
-                temporal.setEsentrada(true);
+                //temporal.setEsentrada(true);
             } else if (tipoop == 2) {
                 temporal.setConcepto_mov("SPEI SALIDA: Retroceso por timeout");
-                temporal.setEsentrada(false);
+                //temporal.setEsentrada(false);
             } else if (tipoop == 3) {
                 temporal.setConcepto_mov("SPEI ENTRADA: Retroceso por falla general");
-                temporal.setEsentrada(true);
+                //temporal.setEsentrada(true);
             }
             temporal.setAcapital(orden.getMonto());
             temporal.setReferencia(String.valueOf(referencia));
@@ -577,7 +574,7 @@ public class OutServiceGeneral {
 
             if (valiResponse.getId() == 999) {
                 // vamos a generar poliza(cargo cuenta spei y abono tdd)
-                aplicados = funcionesSaiService.aplica_movs(Integer.parseInt(tb_usuario.getDato1()), temporal.getSesion(), temporal.getTipopoliza(), temporal.getReferencia());
+                aplicados = 0;//funcionesSaiService.aplica_movs(Integer.parseInt(tb_usuario.getDato1()), temporal.getSesion(), temporal.getTipopoliza(), temporal.getReferencia());
                 log.info("total aplicados transferencia spei:" + aplicados);
                 if (aplicados <= 0) {
                     //Si falla lo aplicado y el origen es CSN retiramos nuevamente de TDD

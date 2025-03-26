@@ -37,7 +37,7 @@ public class ConsumoCsnTDD{
 	
 	public boolean retirarSaldo(String url,String idtarjeta,Double monto) {
 		boolean bandera= false;
-		/*ResponseEntity<String> requisition = null;
+		ResponseEntity<String> requisition = null;
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
@@ -50,13 +50,15 @@ public class ConsumoCsnTDD{
 			}
 		} catch (Exception e) {
 			System.out.println("Error al realizar retiro de tarjeta:"+idtarjeta+"," + e.getMessage());
-		}*/
-		return true;//bandera;
+		}
+
+
+		return bandera;
 	}
 	
 	public boolean depositarSaldo(String url,String idtarjeta,Double monto) {
 		ResponseEntity<String> requisition = null;
-		/*boolean bandera = false;
+		boolean bandera = false;
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
@@ -70,9 +72,9 @@ public class ConsumoCsnTDD{
 		} catch (Exception e) {
 			System.out.println("Error al deposito de tarjeta:"+idtarjeta+"," + e.getMessage());
 			
-		}*/
+		}
 
-		return true;//bandera;
+		return bandera;
 	}
 	
       

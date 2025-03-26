@@ -33,10 +33,14 @@ public class SpeiTemporalServiceImpl implements ISpeiTemporalService{
 		System.out.println("total aplicados:"+todasAplicado);
 		for(int i = 0;i<todasAplicado.size();i++) {
 			SpeiTemporal spei = todasAplicado.get(i);
-			speiTemporalDao.delete(spei);  
+			speiTemporalDao.delete(spei);
 		}
 	}
-	
-	
+
+	@Override
+	public void eliminarTodos() {
+		speiTemporalDao.deleteAll();
+	}
+
 
 }

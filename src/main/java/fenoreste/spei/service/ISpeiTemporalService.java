@@ -6,4 +6,5 @@ public interface ISpeiTemporalService {
     
 	public void guardar(SpeiTemporal mov);
 	public void eliminar(String sesion,String referencia);
+	public void eliminarTodos();
 }

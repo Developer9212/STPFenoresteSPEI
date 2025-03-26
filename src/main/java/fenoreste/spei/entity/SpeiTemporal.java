@@ -1,13 +1,10 @@
 package fenoreste.spei.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 import lombok.AllArgsConstructor;
@@ -21,20 +18,14 @@ import lombok.NoArgsConstructor;
 @Data
 public class SpeiTemporal implements Serializable{
 	 
-	   @Id
-	   @GeneratedValue(generator="sec_spei_temporal") 
-	   @SequenceGenerator(name="sec_spei_temporal",sequenceName="sec_spei_temporal", allocationSize=1)
-	   private Integer id;	    
+	   @EmbeddedId
+	   private SpeiTemporalPK speiTemporalPK;
        private boolean aplicado;    
 	   private Integer idusuario;   
 	   private String sesion;       
 	   private Integer idorigen;    
 	   private Integer idgrupo;     
-	   private Integer idsocio;     
-	   private Integer idorigenp = 0;
-	   private Integer idproducto = 0;
-	   private Integer idauxiliar = 0;  
-	   private boolean esentrada;   
+	   private Integer idsocio;
 	   private Double acapital;     
 	   private Double io_pag = 0.0;       
 	   private Double io_cal = 0.0;  
@@ -59,10 +50,10 @@ public class SpeiTemporal implements Serializable{
 	   private String fe_nom_archivo;
 	   private String fe_xml;
 	   private String sai_aux = "";
-	  private String poliza_generada;
+	   private String poliza_generada;
 	   private Date fecha_aplicado;
 	   private Integer tipopoliza;
-	   
+
 	private static final long serialVersionUID = 1L;
 
 }

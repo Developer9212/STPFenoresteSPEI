@@ -92,7 +92,7 @@ public class HttpMethods {
 						.method("POST", body).addHeader("Content-Type", "application/json").build();
 				response = client.newCall(request).execute();
 				resultado = response.body().string();			
-				log.info("Resultado STP:"+resultado);
+				//log.info("Resultado STP:"+resultado);
 		} catch (Exception e) {
 			log.info("Error al consumir concilicacion:"+e.getMessage());
 		}

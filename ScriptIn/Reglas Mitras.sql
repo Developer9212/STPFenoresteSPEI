@@ -39,6 +39,7 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_comisio
 /*Cuenta contable cargos*/
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='cuenta_contable';
 INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','cuenta_contable','10703070101054');
+
 /*Producto a donde se mandara el dinero*/
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento = 'producto_abono';
 INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('spei_entrada','producto_abono','130');

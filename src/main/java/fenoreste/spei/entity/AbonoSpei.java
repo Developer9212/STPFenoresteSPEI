@@ -3,10 +3,7 @@ package fenoreste.spei.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,13 +16,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class AbonoSpei implements Serializable {
 	
-	 @Id
-	 @Column(name="id", nullable = false, unique = true)
-	 private Integer id;
+	 @EmbeddedId
+	 private AbonoSpeiPK abonoSpeiPK;
 	 private Integer fechaOperacion;
 	 private Integer  institucionOrdenante;
 	 private Integer institucionBeneficiaria;
-	 private String  claveRastreo;
 	 private Double  monto;
 	 private String  nombreOrdenante;
 	 private Integer  tipocuentaOrdenante;

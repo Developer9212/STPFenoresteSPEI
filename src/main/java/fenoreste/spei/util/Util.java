@@ -1,6 +1,6 @@
 package fenoreste.spei.util;
 
-import fenoreste.spei.entity.OpaDTO;
+import fenoreste.spei.modelos.OpaDTO;
 import fenoreste.spei.modelos.OgsDTO;
 import org.springframework.stereotype.Service;
 

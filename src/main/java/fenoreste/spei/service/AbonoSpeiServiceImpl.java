@@ -2,6 +2,9 @@ package fenoreste.spei.service;
 
 import java.util.List;
 
+import fenoreste.spei.dao.AbonoSpeiDuplicadoDao;
+import fenoreste.spei.entity.AbonoSpeiDuplicado;
+import fenoreste.spei.entity.AbonoSpeiPK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +16,12 @@ public class AbonoSpeiServiceImpl implements IAbonoSpeiService{
     
 	@Autowired
 	private AbonoSpeiDao abonoSpeiDao;
+	@Autowired
+	private AbonoSpeiDuplicadoDao abonoSpeiDuplicadoDao;
 	
 	@Override
-	public AbonoSpei buscarPorId(Integer id) {
+	public AbonoSpei buscarPorId(AbonoSpeiPK id)
+	{
 		return abonoSpeiDao.findById(id).orElse(null);
 	}
 
@@ -33,7 +39,12 @@ public class AbonoSpeiServiceImpl implements IAbonoSpeiService{
 	public Double totalMes(String clabe, String periodo) {
 		return abonoSpeiDao.totalMes(clabe, periodo);
 	}
-	
+
+	@Override
+	public void guardarDuplicado(AbonoSpeiDuplicado abono) {
+		abonoSpeiDuplicadoDao.save(abono);
+	}
+
 	//Modificado
 
 }

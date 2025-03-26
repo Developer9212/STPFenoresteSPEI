@@ -16,12 +16,12 @@ INSERT INTO tablas(idtabla,idelemento,dato1,dato2)VALUES('spei_entrada','usuario
 DELETE FROM tablas WHERE idtabla = 'spei_entrada' AND idelemento='monto_minimo';
 INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_minimo','1000');
 
-/*Monto maximo a operar como entrada*/
- DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='monto_maximo';
- INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_maximo','200000');
+/*Prestamos abono*/
+DELETE FROM tablas WHERE idtabla = 'spei_entrada' AND idelemento='productos_abono';
+INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_entrada','productos_abono','30202|3023|30304');
 
 
- /*Producto para abonar la comision*/
+/*Producto para abonar la comision*/
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='producto_comision';
 INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','producto_comision','526');
 

@@ -11,7 +11,7 @@ public class MethodTest {
 
 
     public static void main(String[] args) {
-        // URL del servicio REST
+        /*// URL del servicio REST
         String url = "https://demo.stpmex.com:7024/speiws/rest/ordenPago/registra";
 
         // Cuerpo de la solicitud (puedes ajustar esto según tus necesidades)
@@ -42,6 +42,6 @@ public class MethodTest {
         } else {
             // Imprimir el código de respuesta en caso de error
             System.err.println("Error en la solicitud. Código de respuesta: " + responseEntity.getStatusCodeValue());
-        }
+        }*/
     }
 }
