@@ -1094,10 +1094,7 @@ public class InServiceGeneral {
             // Buscamos minimo y maximo a operar
             TablaPK tb_pk = new TablaPK(idtabla, "monto_minimo");
             Tabla tb_minimo = tablasService.buscarPorId(tb_pk);
-            tb_pk.setIdElemento("monto_maximo");
-            Tabla tb_maximo = tablasService.buscarPorId(tb_pk);
             Double monto_minimo = new Double(tb_minimo.getDato1());
-            Double monto_maximo = new Double(tb_maximo.getDato1());
             if (monto >= monto_minimo) {
                     // Buscamos la configuracion de producto para abono
                     tb_pk.setIdElemento("productos_abono");
