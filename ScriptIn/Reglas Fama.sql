@@ -18,7 +18,7 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_minimo'
 
 /*Prestamos abono*/
 DELETE FROM tablas WHERE idtabla = 'spei_entrada' AND idelemento='productos_abono';
-INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_entrada','productos_abono','30202|3023|30304');
+INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_entrada','productos_abono','30303|3023|30304');
 
 
 /*Producto para abonar la comision*/
@@ -31,20 +31,12 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','producto_iva_
 
 /*Monto para comision*/
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='monto_comision';
-
-
-
-
-
-
 INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_comision','0');
 
 /*Cuenta contable cargos*/
 DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='cuenta_contable';
-INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','cuenta_contable','10102020102016');
-/*Producto a donde se mandara el dinero*/
-DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento = 'productos_abono';
-INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('spei_entrada','producto_abono','130|');
+INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','cuenta_contable','10102010102001');
+
 
 
 /*Datos para conciliacion*/

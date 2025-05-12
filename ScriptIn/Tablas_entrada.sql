@@ -98,7 +98,7 @@ CREATE TABLE transferencias_spei_curso
     cuentaordenante text,
     ok_saicoop      boolean,
     monto           numeric,
-    cargabono       integer
+    cargoabono       integer
 );
 
 
