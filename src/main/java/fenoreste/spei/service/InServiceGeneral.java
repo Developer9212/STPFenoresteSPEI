@@ -151,7 +151,6 @@ public class InServiceGeneral {
             if (funcionesSaiService.horario_actividad()) {
                 // Obtenemos origen Matriz
                 matriz = origenesService.buscarMatriz();
-                // Buscamos el usuario para operar abonos
 
                 // Obtenemos el estatus de origen al que pertenece el usuario
                 tb_pk = new TablaPK(idtabla, "usuario");
