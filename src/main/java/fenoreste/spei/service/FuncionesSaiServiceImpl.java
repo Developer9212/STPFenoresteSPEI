@@ -43,6 +43,7 @@ public class FuncionesSaiServiceImpl implements IFuncionesSaiService {
 	@Override
 	public Date dateServidorBase(){
        return dateServidor(funcionesDao.dateServidorBase());
+
 	}
 
 

@@ -48,11 +48,12 @@ create table spei_entrada_temporal_cola_guardado
 
 
 
+/*
 create index spei_entrada_temporal_cola_guardado_idx
     on spei_entrada_temporal_cola_guardado
         (fecha_inserta);
 
-create index spei_entrada_temporal_cola_guardado_idx on spei_entrada_temporal_cola_guardado (fecha_inserta);
+create index spei_entrada_temporal_cola_guardado_idx on spei_entrada_temporal_cola_guardado (fecha_inserta);*/
 
 
 
@@ -83,8 +84,9 @@ CREATE TABLE speirecibido
     fechaprocesada          timestamp without time zone,
     retardo                 boolean default false,
     stp_ok                  boolean default false,
+    tsliquidacion           text,
 
-    primary key (id,claverastreo)
+    primary key (id,claverastreo,tsliquidacion)
 );
 
 

@@ -38,6 +38,7 @@ public class AbonoSpei implements Serializable {
 	 private String mensaje_core;
 	 private boolean aplicado;
 	 private Date fechaProcesada;
+	 private String tsliquidacion;
 	 private boolean retardo;
 	 private boolean stp_ok;
 	 

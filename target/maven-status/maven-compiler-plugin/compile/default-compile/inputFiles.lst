@@ -15,12 +15,14 @@ D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\STPOrderRe
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\EstadoOrdenVo.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\controller\InController.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\TransferenciaCursoPK.java
+D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\IRegistroTemporalService.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\SpeiApplication.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\SpeiTemporal.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\util\EliminarArchivosThread.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\AuxiliarServiceImpl.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\util\SSLUtil.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\stp\HttpMethods.java
+D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\TemporalPk.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\IFolioTarjetaService.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\Auxiliar.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\STPDispersionResponseVo.java
@@ -37,6 +39,7 @@ D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\controller\OutCont
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\dao\TransferenciasCursoDao.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\OgsDTO.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\dao\ProductoDao.java
+D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\util\AppConfig.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\ConcHisPeticion.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\ResponseLocalDispersionVo.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\dao\FolioTarjetaDao.java
@@ -51,6 +54,7 @@ D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\ServletInitializer
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\CargoSpei.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\IPolizaService.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\UsuarioServiceImpl.java
+D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\util\PingService.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\OutServiceGeneral.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\ICargoSpeiService.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\dao\OrigenDao.java
@@ -59,6 +63,7 @@ D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\TablaPK.jav
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\dao\AuxiliarDao.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\dao\CargospeiDao.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\RequestLocalDispersionVo.java
+D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\RegistroTemporal.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\CargoSpeiServiceImpl.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\dao\AbonoSpeiDuplicadoDao.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\IProductoService.java
@@ -76,6 +81,7 @@ D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\OpaDTO.jav
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\consumo\SMSCsn.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\ConsultaSaldoPet.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\IPersonaService.java
+D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\RegistroTemporalServiceImpl.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\Poliza.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\stp\MethodTest.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\Persona.java
@@ -101,6 +107,7 @@ D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\util\FicheroConexi
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\modelos\ConcPeticionVo.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\ITarjetaService.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\dao\FuncionDao.java
+D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\dao\RegistroTemporalDao.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\entity\Usuario.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\util\SpringConfiguration.java
 D:\Proyectos_Fenoreste\SPEI\Spei\src\main\java\fenoreste\spei\service\ITransferenciaCursoService.java

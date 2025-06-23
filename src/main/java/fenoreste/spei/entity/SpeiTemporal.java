@@ -41,7 +41,7 @@ public class SpeiTemporal implements Serializable{
 	   private Double ivaim_cal = 0.0;        
 	   private Integer mov = 0;             
 	   private Integer tipomov = 0;
-	   private String referencia;
+
 	   private Integer diasvencidos = 0;
 	   private Double montovencido = 0.0;
 	   private Integer idorigena = 0;
@@ -54,6 +54,8 @@ public class SpeiTemporal implements Serializable{
 	   private Date fecha_aplicado;
 	   private Integer tipopoliza;
 
+
+	private boolean esentrada;
 	private static final long serialVersionUID = 1L;
 
 }

@@ -550,7 +550,7 @@ public class OutServiceGeneral {
                 //temporal.setEsentrada(true);
             }
             temporal.setAcapital(orden.getMonto());
-            temporal.setReferencia(String.valueOf(referencia));
+            //temporal.setReferencia(String.valueOf(referencia));
             temporal.setIdusuario(Integer.parseInt(tb_usuario.getDato1()));
             temporal.setSesion(funcionesSaiService.session());
             temporal.setMov(2);
