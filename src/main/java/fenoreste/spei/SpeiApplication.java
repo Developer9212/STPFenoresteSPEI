@@ -17,7 +17,8 @@ import java.util.Date;
 	            "fenoreste.spei.util",
 	            "fenoreste.spei.stp",
 	            "fenoreste.spei.consumo",
-	            "fenoreste.spei.security"})
+	            "fenoreste.spei.security",
+		        "fenoreste.spei.colaProcesor"})
 @EntityScan("fenoreste.spei.entity")
 @EnableJpaRepositories("fenoreste.spei.dao")
 @EnableScheduling

@@ -7,6 +7,8 @@ import fenoreste.spei.entity.TransferenciaCursoPK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class TransferenciaCursoServiceImpl implements ITransferenciaCursoService {
 
@@ -19,11 +21,13 @@ public class TransferenciaCursoServiceImpl implements ITransferenciaCursoService
     }
 
     @Override
+    @Transactional
     public TemporalTranferenciaCurso guardarMovimiento(TemporalTranferenciaCurso temp) {
         return transferenciaCursoDao.save(temp);
     }
 
     @Override
+    @Transactional
     public void eliminar() {
         transferenciaCursoDao.deleteAll();
     }

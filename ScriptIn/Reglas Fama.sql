@@ -4,7 +4,7 @@ INSERT INTO tablas(idtabla,idelemento,dato1,dato2,dato3)VALUES('spei_entrada','h
 
 /*Usuario para operar spei entrada*/
 DELETE FROM tablas WHERE idtabla = 'spei_entrada' AND idelemento='usuario';
-INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','usuario','999');
+INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','usuario','500');
 /*Usuario para usar ws
   1.- dato 1 = username
   2.- dato2 = password
@@ -18,7 +18,7 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','monto_minimo'
 
 /*Prestamos abono*/
 DELETE FROM tablas WHERE idtabla = 'spei_entrada' AND idelemento='productos_abono';
-INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_entrada','productos_abono','30303|3023|30304');
+INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_entrada','productos_abono','30102|30112|30122|30202|30212|30222|30302|30303|30304|30402|30412|30502|30602|30702|30803|30804|31302|32302|33202|33212|33302|33312|33402|33602|33612|33702|33712');
 
 
 /*Producto para abonar la comision*/

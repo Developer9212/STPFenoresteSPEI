@@ -5,6 +5,8 @@ import fenoreste.spei.entity.CargoSpei;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class CargoSpeiServiceImpl implements ICargoSpeiService{
 
@@ -17,6 +19,7 @@ public class CargoSpeiServiceImpl implements ICargoSpeiService{
     }
 
     @Override
+    @Transactional
     public CargoSpei guardarCargoSpei(CargoSpei cargo) {
         return cargospeiDao.save(cargo);
     }
