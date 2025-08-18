@@ -99,7 +99,8 @@ public class InServiceGeneral {
     private PingService pingService;
 
     @Autowired
-    private TransferenciaQueueProcessor queueProcessor;;
+    private TransferenciaQueueProcessor queueProcessor;
+    ;
 
 
     Gson json = new Gson();
@@ -165,6 +166,7 @@ public class InServiceGeneral {
                 log.info("Abono:" + abono);
                 if (abono.isAplicado() && abono.isStp_ok()) {
                     log.info(":::::::::::::::Es la misma pero ya fue aplicada,nada por hacer::::::::::::::::::");
+                    resp.setId(1);
                 } else {
                     r = r + 1;
                     log.info(":::::::::::Esto es un reintento para la operacion con llave:" + abono.getAbonoSpeiPK() + "\n nreintentos:" + r + "::::");
@@ -181,6 +183,7 @@ public class InServiceGeneral {
                             operar = true;
                         } else {
                             log.info(":::::::::La operacion ya esta aplicada con rechazo por timeout:::::::::::::::");
+                            resp.setId(1);
                         }
                     }
                 }
@@ -210,158 +213,162 @@ public class InServiceGeneral {
                         case 40:
                             ClabeInterbancaria clabe_registro = clabeInterbancariaService.buscarPorClabe(in.getCuentaBeneficiario().trim());
                             if (clabe_registro != null) {
-                                AuxiliarPK a_pk = new AuxiliarPK(clabe_registro.getAuxPk().getIdorigenp(),
-                                        clabe_registro.getAuxPk().getIdproducto(),
-                                        clabe_registro.getAuxPk().getIdauxiliar());
+                                AuxiliarPK a_pk = new AuxiliarPK(clabe_registro.getAuxPk().getIdorigenp(), clabe_registro.getAuxPk().getIdproducto(), clabe_registro.getAuxPk().getIdauxiliar());
                                 Auxiliar a = auxiliarService.buscarPorId(a_pk);
-                                if (matriz.getIdorigen() == 30200) {// CSN
-                                    if (a.getEstatus() == 2) {
+                                if (a.getEstatus() == 2) {
+                                    if (matriz.getIdorigen() == 30200) {// CSN
                                         valiResponse = validaReglasCsn(a, in.getCuentaBeneficiario(), in.getMonto(), in.getFechaOperacion(), 0);
-                                    }
-                                } else if (matriz.getIdorigen() == 30300) {// Mitras
-                                    valiResponse = validaReglasMitras(a, in.getMonto(), in.getFechaOperacion(), operacion.getCuentaBeneficiario());
-                                } else if (matriz.getIdorigen() == 30500) {
-                                    valiResponse = validaReglasFama(a_pk, in.getMonto(), in.getFechaOperacion(), in.getCuentaBeneficiario());
-                                } else {
-                                    valiResponse.setCodigo(999);
-                                }
-
-
-                                log.info("................valid response..............." + valiResponse.getId());
-                                if (valiResponse.getId() == 999) {
-                                    boolean ok_comision = true;
-                                    //Realizamos la transferencia abono(clabe-opa) cargo a cuenta spei
-
-                                   // transferenciaSpei = realizarTransferencia(a, in, 1, 1);
-                                    CompletableFuture<Integer> future = queueProcessor.enqueue(a, in, 1, 1);
-                                    int resultado = future.get();//20,TimeUnit.SECONDS);
-                                    log.info("::::::::::::::::::::::::Resultado operacion:::::::::::::"+resultado);
-                                    transferenciaSpei = resultado;
-
-                                    if (transferenciaSpei > 0) {
-                                        //Vamos a depositar la comision
-                                        // Buscamos tabla para comision
-                                        TablaPK tb_pk_comision = new TablaPK(idtabla, "monto_comision");
-                                        Tabla tb_comision = tablasService.buscarPorId(tb_pk_comision);
-                                        if (Double.parseDouble(tb_comision.getDato1()) > 0) {
-                                            int transferenciaSpeiComision = realizarTransferenciaComision(a, in, 1);
-                                            //Si falla el proceso de operacion comision retrocedemos
-
-                                            if (transferenciaSpeiComision <= 0) {
-                                                ok_comision = false;
-                                            }
-                                        }
-                                        if (ok_comision) {
-                                            if (in.getMonto() == 11) {
-                                                Thread.sleep(15000); //(19100),30000 para el retardo
-                                            }
-
-
-                                            long endTime = System.currentTimeMillis(); //fin tiempo correr operacion
-                                            Instant instant2 = Instant.ofEpochMilli(endTime);
-                                            // Convertir el Instant a LocalDateTime usando la zona horaria del sistema
-                                            LocalDateTime timeEnd = LocalDateTime.ofInstant(instant2, ZoneId.systemDefault());
-                                            //ccc
-                                            Duration duration = Duration.between(timeStart, timeEnd);
-                                            // Obtiene los segundos de la duración
-                                            long segundos = duration.getSeconds();
-                                            log.info(":::::::Total Segundos en finalizar operacion:::::::" + segundos);
-                                            boolean exit = false;
-                                            if (valiResponse.getId() == 999) {
-                                                if (segundos < 15) {
-                                                    resp.setMensaje("confirmar");
-                                                    operacion.setAplicado(true);
-                                                    operacion.setStp_ok(true);//Modificado el 22/01/2025
-                                                    operacion.setFechaProcesada(new Date());
-                                                    operacion.setResponsecode(000);
-                                                    operacion.setMensaje_core("Terminado con exito");
-                                                    resp.setCodigo(200);
-                                                    abonoSpeiService.guardar(operacion);
-                                                    exit = true;
-                                                } else if (segundos >= 15 && segundos <= 20) { // Si tarda más de 40 segundos (40000 ms)
-                                                    log.info("::::::::::::::Aplicado con retardo:::::::::::::::");
-                                                    operacion.setRetardo(true);
-                                                    operacion.setAplicado(true);
-                                                    operacion.setMensaje_core("Aplicado con retardo...");
-                                                    operacion.setFechaProcesada(new Date());
-                                                    resp.setMensaje("confirmar");
-                                                    resp.setCodigo(200);
-                                                    operacion.setResponsecode(000);
-                                                    abonoSpeiService.guardar(operacion);
-                                                    exit = true;
-                                                } else {
-                                                    operacion.setRetardo(false);
-                                                    operacion.setAplicado(false);
-                                                    operacion.setMensaje_core("Rechazado por timeout");
-                                                    resp.setId(20);
-                                                    resp.setMensaje("devolver");
-                                                    int operacionesEfectuada = realizarTransferencia(a, in, 2, 0);
-
-                                                    if (operacionesEfectuada > 0) {
-                                                        if (Double.parseDouble(tb_comision.getDato1()) > 0) {
-                                                            realizarTransferenciaComision(a, in, 2);
-                                                        }
-                                                        abonoSpeiService.guardar(operacion);
-
-                                                        log.info("::::::::::::::Poliza retroceso generada con exito::::::::::::::");
-                                                    }
-                                                }
-
-                                                if (exit) {
-                                                    //Vamos a enviar SMS CSN
-                                                    if (matriz.getIdorigen() == 30200) {
-                                                        validaReglasCsn(a, null, in.getMonto(), null, 3);
-                                                    }
-                                                }
-                                                log.info("Termino operacion");
-
-                                            }
-                                        } else {
-                                            //al operar la comision
-                                            //funcionesSaiService.eliminaTemporal(1111,sesion);
-                                            //speiTemporalService.eliminar(sesion,in.getReferenciaNumerica());
-                                            realizarTransferencia(a, in, 3, 0);//Poliza retroceso
-                                            operacion.setMensaje_core("Falla al procesar en SAICoop(Comision)");
-                                            operacion.setResponsecode(21);
-                                            abonoSpeiService.guardar(operacion);
-                                            resp.setId(21);
-                                            resp.setMensaje("devolver");
-                                        }
-
+                                    } else if (matriz.getIdorigen() == 30300) {// Mitras
+                                        valiResponse = validaReglasMitras(a, in.getMonto(), in.getFechaOperacion(), operacion.getCuentaBeneficiario());
+                                    } else if (matriz.getIdorigen() == 30500) {
+                                        valiResponse = validaReglasFama(a_pk, in.getMonto(), in.getFechaOperacion(), in.getCuentaBeneficiario());
                                     } else {
-                                        // bandera =
-                                        // consumoCsnTDD.retirarSaldo(tb_url_tdd.getDato2(),tarjeta.getIdtarjeta(),in.getMonto());
-                                        log.info("::::::::::::::::::::::::::::::::::::::::::::::_________aplicado:" + transferenciaSpei);
-                                        if (transferenciaSpei == -1) {
-                                            log.info("Entrooooooooo");
-                                            operacion.setMensaje_core("Error por registro duplicado en temporal");
-                                            operacion.setResponsecode(26);
-                                            abonoSpeiService.guardar(operacion);
-                                            resp.setId(21);
-                                            resp.setMensaje("devolver");
-                                        } else {
-                                            operacion.setMensaje_core("Falla al procesar en SAICoop");
-                                            operacion.setResponsecode(21);
-                                            abonoSpeiService.guardar(operacion);
-                                            resp.setId(21);
-                                            resp.setMensaje("devolver");
-                                        }
-
+                                        valiResponse.setCodigo(999);
                                     }
+
+
+                                    log.info("................valid response..............." + valiResponse.getId());
+                                    if (valiResponse.getId() == 999) {
+                                        boolean ok_comision = true;
+                                        //Realizamos la transferencia abono(clabe-opa) cargo a cuenta spei
+
+                                        // transferenciaSpei = realizarTransferencia(a, in, 1, 1);
+                                        CompletableFuture<Integer> future = queueProcessor.enqueue(a, in, 1, 1);
+                                        int resultado = future.get();//20,TimeUnit.SECONDS);
+                                        log.info("::::::::::::::::::::::::Resultado operacion:::::::::::::" + resultado);
+                                        transferenciaSpei = resultado;
+
+                                        if (transferenciaSpei > 0) {
+                                            //Vamos a depositar la comision
+                                            // Buscamos tabla para comision
+                                            TablaPK tb_pk_comision = new TablaPK(idtabla, "monto_comision");
+                                            Tabla tb_comision = tablasService.buscarPorId(tb_pk_comision);
+                                            if (Double.parseDouble(tb_comision.getDato1()) > 0) {
+                                                int transferenciaSpeiComision = realizarTransferenciaComision(a, in, 1);
+                                                //Si falla el proceso de operacion comision retrocedemos
+
+                                                if (transferenciaSpeiComision <= 0) {
+                                                    ok_comision = false;
+                                                }
+                                            }
+                                            if (ok_comision) {
+                                                if (in.getMonto() == 11) {
+                                                    Thread.sleep(15000); //(19100),30000 para el retardo
+                                                }
+
+
+                                                long endTime = System.currentTimeMillis(); //fin tiempo correr operacion
+                                                Instant instant2 = Instant.ofEpochMilli(endTime);
+                                                // Convertir el Instant a LocalDateTime usando la zona horaria del sistema
+                                                LocalDateTime timeEnd = LocalDateTime.ofInstant(instant2, ZoneId.systemDefault());
+                                                //ccc
+                                                Duration duration = Duration.between(timeStart, timeEnd);
+                                                // Obtiene los segundos de la duración
+                                                long segundos = duration.getSeconds();
+                                                log.info(":::::::Total Segundos en finalizar operacion:::::::" + segundos);
+                                                boolean exit = false;
+                                                if (valiResponse.getId() == 999) {
+                                                    if (segundos < 15) {
+                                                        resp.setMensaje("confirmar");
+                                                        operacion.setAplicado(true);
+                                                        operacion.setStp_ok(true);//Modificado el 22/01/2025
+                                                        operacion.setFechaProcesada(new Date());
+                                                        operacion.setResponsecode(0);
+                                                        operacion.setMensaje_core("Terminado con exito");
+                                                        resp.setCodigo(200);
+                                                        abonoSpeiService.guardar(operacion);
+                                                        exit = true;
+                                                    } else if (segundos >= 15 && segundos <= 20) { // Si tarda más de 40 segundos (40000 ms)
+                                                        log.info("::::::::::::::Aplicado con retardo:::::::::::::::");
+                                                        operacion.setRetardo(true);
+                                                        operacion.setAplicado(true);
+                                                        operacion.setMensaje_core("Aplicado con retardo...");
+                                                        operacion.setFechaProcesada(new Date());
+                                                        resp.setMensaje("confirmar");
+                                                        resp.setCodigo(200);
+                                                        operacion.setResponsecode(0);
+                                                        abonoSpeiService.guardar(operacion);
+                                                        exit = true;
+                                                    } else {
+                                                        operacion.setRetardo(false);
+                                                        operacion.setAplicado(false);
+                                                        operacion.setMensaje_core("Rechazado por timeout");
+                                                        resp.setId(20);
+                                                        resp.setMensaje("devolver");
+                                                        int operacionesEfectuada = realizarTransferencia(a, in, 2, 0);
+
+                                                        if (operacionesEfectuada > 0) {
+                                                            if (Double.parseDouble(tb_comision.getDato1()) > 0) {
+                                                                realizarTransferenciaComision(a, in, 2);
+                                                            }
+                                                            abonoSpeiService.guardar(operacion);
+
+                                                            log.info("::::::::::::::Poliza retroceso generada con exito::::::::::::::");
+                                                        }
+                                                    }
+
+                                                    if (exit) {
+                                                        //Vamos a enviar SMS CSN
+                                                        if (matriz.getIdorigen() == 30200) {
+                                                            validaReglasCsn(a, null, in.getMonto(), null, 3);
+                                                        }
+                                                    }
+                                                    log.info("Termino operacion");
+
+                                                }
+                                            } else {
+                                                //al operar la comision
+                                                //funcionesSaiService.eliminaTemporal(1111,sesion);
+                                                //speiTemporalService.eliminar(sesion,in.getReferenciaNumerica());
+                                                realizarTransferencia(a, in, 3, 0);//Poliza retroceso
+                                                operacion.setMensaje_core("Falla al procesar en SAICoop(Comision)");
+                                                operacion.setResponsecode(21);
+                                                abonoSpeiService.guardar(operacion);
+                                                resp.setId(21);
+                                                resp.setMensaje("devolver");
+                                            }
+
+                                        } else {
+                                            // bandera =
+                                            // consumoCsnTDD.retirarSaldo(tb_url_tdd.getDato2(),tarjeta.getIdtarjeta(),in.getMonto());
+                                            log.info("::::::::::::::::::::::::::::::::::::::::::::::_________aplicado:" + transferenciaSpei);
+                                            if (transferenciaSpei == -1) {
+                                                log.info("Entrooooooooo");
+                                                operacion.setMensaje_core("Error por registro duplicado en temporal");
+                                                operacion.setResponsecode(26);
+                                                abonoSpeiService.guardar(operacion);
+                                                resp.setId(21);
+                                                resp.setMensaje("devolver");
+                                            } else {
+                                                operacion.setMensaje_core("Falla al procesar en SAICoop");
+                                                operacion.setResponsecode(21);
+                                                abonoSpeiService.guardar(operacion);
+                                                resp.setId(21);
+                                                resp.setMensaje("devolver");
+                                            }
+
+                                        }
+                                    } else {
+                                        operacion.setMensaje_core(resp.getMensaje());
+                                        operacion.setResponsecode(valiResponse.getId());
+                                        abonoSpeiService.guardar(operacion);
+                                        resp.setMensaje("devolver");
+                                        resp.setId(valiResponse.getId());
+                                    }
+
                                 } else {
-                                    operacion.setMensaje_core(resp.getMensaje());
-                                    operacion.setResponsecode(valiResponse.getId());
+                                    log.info("........Producto no esta activo:" + a.getAuxiliarPK() + ".........");
+                                    operacion.setMensaje_core("Producto no esta activo:" + a.getAuxiliarPK().getIdorigenp() + "-" + a.getAuxiliarPK().getIdproducto() + "-" + a.getAuxiliarPK().getIdorigenp());
+                                    operacion.setResponsecode(5);
                                     abonoSpeiService.guardar(operacion);
                                     resp.setMensaje("devolver");
-                                    resp.setId(valiResponse.getId());
+                                    resp.setId(5);
                                 }
-
                             } else {
                                 // resp.setMensaje("No existen registros para la
                                 // cuenta:"+in.getCuentaBeneficiario());
-                                log.info("........No existen registros para la cuenta clabe:" + in.getCuentaBeneficiario()
-                                        + ".........");
-                                operacion.setMensaje_core("No existen registros para la clabe:");
+                                log.info("........No existen registros para la cuenta clabe:" + in.getCuentaBeneficiario() + ".........");
+                                operacion.setMensaje_core("No existen registros para la clabe:" + in.getCuentaBeneficiario());
                                 operacion.setResponsecode(5);
                                 abonoSpeiService.guardar(operacion);
                                 resp.setMensaje("devolver");
@@ -376,8 +383,7 @@ public class InServiceGeneral {
 
                     // resp.setMensaje("Estatus no valido para operar para
                     // origen:"+origen_usuario.getIdorigen());
-                    log.info(".............Estatus no valido para operar para origen:" + origen_usuario.getIdorigen()
-                            + "...........");
+                    log.info(".............Estatus no valido para operar para origen:" + origen_usuario.getIdorigen() + "...........");
                     resp.setMensaje("devolver");
                     resp.setId(3);
                 }
@@ -442,20 +448,23 @@ public class InServiceGeneral {
                 temporal.setIdorigen(opa.getIdorigen());
                 temporal.setIdgrupo(opa.getIdgrupo());
                 temporal.setIdsocio(opa.getIdsocio());
-
+                temporal.setTipopoliza(1);
                 if (tipoop == 1) {
                     temporal.setConcepto_mov("SPEI ENTRADA REF:" + abono.getClaveRastreo());
                     temporal.setEsentrada(true);
                     //temporal.setEsentrada(true);
+
                 } else if (tipoop == 2) {
                     temporal.setConcepto_mov("SPEI ENTRADA: Retroceso por timeout,REF:" + abono.getClaveRastreo());
                     //temporal.setEsentrada(false);
                     temporal.setEsentrada(false);
+
                 } else if (tipoop == 3) {
                     log.info("Error poliza de retroceso");
                     temporal.setConcepto_mov("SPEI ENTRADA: Retroceso por falla general");
                     //temporal.setEsentrada(false);
                     temporal.setEsentrada(false);
+
                 }
                 temporal.setSpeiTemporalPK(temporalPK);
                 temporal.setAcapital(abono.getMonto());
@@ -465,7 +474,7 @@ public class InServiceGeneral {
                 //String sai = funcionesSaiService.sai_auxiliar(new AuxiliarPK(temporal.getIdorigenp(),temporal.getIdproducto(), temporal.getIdauxiliar()));
                 //temporal.setSai_aux(sai);
                 temporal.setMov(1);
-                temporal.setTipopoliza(1);
+                //temporal.setTipopoliza(1);
                 speiTemporalService.guardar(temporal);
 
 
@@ -482,15 +491,17 @@ public class InServiceGeneral {
                 temporal.setIdorigen(opa.getIdorigen());
                 temporal.setIdgrupo(opa.getIdgrupo());
                 temporal.setIdsocio(opa.getIdsocio());
-
+                temporal.setTipopoliza(1);
                 if (tipoop == 1) {
                     temporal.setConcepto_mov("SPEI ENTRADA REF:" + abono.getClaveRastreo());
                     //temporal.setEsentrada(false);
                     temporal.setEsentrada(false);
+
                 } else if (tipoop == 2) {
                     temporal.setConcepto_mov("SPEI ENTRADA: Retroceso por timeout,REF:" + abono.getClaveRastreo());
                     //temporal.setEsentrada(true);
                     temporal.setEsentrada(true);
+
                 } else if (tipoop == 3) {
                     temporal.setConcepto_mov("SPEI ENTRADA: Retroceso por falla general");
                     //temporal.setEsentrada(true);
@@ -502,7 +513,7 @@ public class InServiceGeneral {
                 temporal.setIdusuario(Integer.parseInt(tb_usuario.getDato1()));
                 temporal.setSesion(sesion);
                 temporal.setMov(2);
-                temporal.setTipopoliza(1);
+
                 speiTemporalService.guardar(temporal);
 
                 // Vamos a abonar a TDD si el cliente es CSN
@@ -536,15 +547,10 @@ public class InServiceGeneral {
                     // vamos a generar poliza(cargo cuenta spei y abono tdd)
                     try {
                         log.info(":::::::::::::::Generando poliza a SAICoop para opa :::::::::::::::::" + opa.getAuxiliarPK());
-                        log.info("::::::::::::::::::::::::Ejecutando funcion para procesar registros de:" + tb_usuario.getDato1()+",sesion:"+sesion,temporalPK.getReferencia(), abono.getId());
+                        log.info("::::::::::::::::::::::::Ejecutando funcion para procesar registros de:" + tb_usuario.getDato1() + ",sesion:" + sesion, temporalPK.getReferencia(), abono.getId());
 
                         Thread.sleep(1);
-                        aplicados = funcionesSaiService.aplica_movs(
-                                Integer.parseInt(tb_usuario.getDato1()),
-                                temporal.getSesion(),
-                                1,
-                                temporal.getSpeiTemporalPK().getReferencia(),
-                                String.valueOf(abono.getId()));
+                        aplicados = funcionesSaiService.aplica_movs(Integer.parseInt(tb_usuario.getDato1()), temporal.getSesion(), 1, temporal.getSpeiTemporalPK().getReferencia(), String.valueOf(abono.getId()));
                         log.info("__________total aplicados transferencia spei___________:" + aplicados);
 
                     } catch (Exception e) {
@@ -1048,9 +1054,7 @@ public class InServiceGeneral {
                             Producto producto = productoService.buscarPorId(opa.getAuxiliarPK().getIdproducto());
 
                             Date fechaActual = new Date();
-                            LocalDateTime fechaLocal = fechaActual.toInstant()
-                                    .atZone(ZoneId.systemDefault())
-                                    .toLocalDateTime();
+                            LocalDateTime fechaLocal = fechaActual.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss");
                             String fechaFormateada = fechaLocal.format(formatter);
 
@@ -1109,16 +1113,14 @@ public class InServiceGeneral {
                                 if (tabla_producto_abono != null) {
                                     // Validamos que el producto para abono configurado en tablas sea el mismo
                                     // relacionado a la clabe
-                                    Producto producto_abono = productoService
-                                            .buscarPorId(a.getAuxiliarPK().getIdproducto());
+                                    Producto producto_abono = productoService.buscarPorId(a.getAuxiliarPK().getIdproducto());
 
                                     if (producto_abono != null) {
                                         tb_pk.setIdElemento("monto_maximo_diario");
                                         Tabla tb_monto_maximo_diario = tablasService.buscarPorId(tb_pk);
                                         log.info("El total maximo diario es:" + tb_monto_maximo_diario.getDato1());
                                         log.info("Fecha operacion:" + fechaOperacion);
-                                        Double acumulado = abonoSpeiService.montoDiario(fechaOperacion,
-                                                clabeBeneficiario);
+                                        Double acumulado = abonoSpeiService.montoDiario(fechaOperacion, clabeBeneficiario);
 
                                         log.info("Total acumulado:" + acumulado);
 
@@ -1127,37 +1129,27 @@ public class InServiceGeneral {
                                         if ((acumulado + monto) < new Double(tb_monto_maximo_diario.getDato1())) {
                                             log.info("Accedio aqui");
                                             log.info(String.valueOf(fechaOperacion).substring(0, 6));
-                                            Double totalMes = abonoSpeiService.totalMes(clabeBeneficiario,
-                                                    String.valueOf(fechaOperacion).substring(0, 6));
-                                            System.out.println("Total acumulado en el mes:" + totalMes
-                                                    + ",SELECT SUM(monto) FROM speirecibido WHERE LEFT(fechaoperacion::TEXT, 6) ="
-                                                    + String.valueOf(fechaOperacion).substring(1, 6)
-                                                    + " AND cuentabeneficiario= " + clabeBeneficiario
-                                                    + " AND aplicado=true");
+                                            Double totalMes = abonoSpeiService.totalMes(clabeBeneficiario, String.valueOf(fechaOperacion).substring(0, 6));
+                                            System.out.println("Total acumulado en el mes:" + totalMes + ",SELECT SUM(monto) FROM speirecibido WHERE LEFT(fechaoperacion::TEXT, 6) =" + String.valueOf(fechaOperacion).substring(1, 6) + " AND cuentabeneficiario= " + clabeBeneficiario + " AND aplicado=true");
                                             tb_pk.setIdElemento("maximo_mes");
                                             Tabla tb_monto_maximo_mes = tablasService.buscarPorId(tb_pk);
-                                            if ((totalMes + monto) <= Double
-                                                    .parseDouble(tb_monto_maximo_mes.getDato1())) {
+                                            if ((totalMes + monto) <= Double.parseDouble(tb_monto_maximo_mes.getDato1())) {
                                                 response.setMensaje("OK");
                                                 response.setId(999);
 
                                             } else {
                                                 log.info("..........Limite mensual alcanzado..........");
-                                                response.setMensaje("Ha alcanzado el limite mensual en el core : $"
-                                                        + tb_monto_maximo_mes.getDato1());
+                                                response.setMensaje("Ha alcanzado el limite mensual en el core : $" + tb_monto_maximo_mes.getDato1());
                                                 response.setId(17);
                                             }
                                         } else {
-                                            log.info(
-                                                    "..........el monto operado hoy supera el permitido en el core..........");
+                                            log.info("..........el monto operado hoy supera el permitido en el core..........");
                                             response.setMensaje("El monto operado hoy supera el permitido en el core");
                                             response.setId(16);
                                         }
                                     } else {
-                                        log.info(
-                                                "..........Producto configurado como abono en tablas no corresponde a vinculado en clabes..........");
-                                        response.setMensaje(
-                                                "Producto configurado como abono en tablas no corresponde a vinculado en clabes");
+                                        log.info("..........Producto configurado como abono en tablas no corresponde a vinculado en clabes..........");
+                                        response.setMensaje("Producto configurado como abono en tablas no corresponde a vinculado en clabes");
                                         response.setId(15);
                                     }
                                 } else {
@@ -1224,8 +1216,7 @@ public class InServiceGeneral {
                         response.setMensaje("OK");
                         response.setId(999);
                     } else {
-                        log.info(
-                                "..........Prestamo no apto para recibir pagos spei..........");
+                        log.info("..........Prestamo no apto para recibir pagos spei..........");
                         response.setMensaje("Prestamo no apto para recibir pagos spei");
                         response.setId(15);
                     }
@@ -1284,11 +1275,13 @@ public class InServiceGeneral {
     // Consigo mi firma
     public String sign(String cadena) throws Exception {
         String firmaCod;
+        TablaPK tbPk = new TablaPK(idtabla, "datos_firma");
+        Tabla tabla = tablasService.buscarPorId(tbPk);
+
         // Direccion de mi keystore local
-        String fileName = ruta() + System.getProperty("file.separator") + "mitras"
-                + System.getProperty("file.separator") + "caja_mitras.jks";// "/claves/cajamitras.jks";
-        String password = "fenoreste2024";// "12345678";//"fenoreste2023";
-        String alias = "caja_mitras";
+        String fileName = ruta() + System.getProperty("file.separator") + System.getProperty("file.separator") + tabla.getDato3();// "/claves/caja_mitras.jks";caja_mitras.jks para mitras
+        String password = tabla.getDato2();//"fenoreste2024";// "12345678";//"fenoreste2023";  fenoreste2024. para mitras
+        String alias = tabla.getDato1();//"caja_mitras"; //caja_mitras el alias para mitras
         try {
             String data = cadena;
             Signature firma = Signature.getInstance("SHA256withRSA");
@@ -1310,8 +1303,8 @@ public class InServiceGeneral {
             KeyStore keystore = KeyStore.getInstance("JKS");
             keystore.load(new FileInputStream(keystoreFilename), password.toCharArray());
             privateKey = (RSAPrivateKey) keystore.getKey(alias, password.toCharArray());
-        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException
-                 | CertificateException ex) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException |
+                 CertificateException ex) {
             throw new Exception("Exception" + ex.getMessage(), ex.getCause());
         }
         return privateKey;
@@ -1324,7 +1317,6 @@ public class InServiceGeneral {
         String actualRuta = home + separador + "CaSpei" + separador;
         return actualRuta;
     }
-
 
 
 }

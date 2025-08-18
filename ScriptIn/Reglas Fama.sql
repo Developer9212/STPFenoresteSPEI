@@ -41,13 +41,32 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','cuenta_contab
 
 /*Datos para conciliacion*/
 DELETE FROM tablas WHERE idtabla='stp' AND idelemento='empresa';
-INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('stp','empresa','CAJA_MITRAS');
+INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('stp','empresa','CAJA_FAMA');
 
 DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='stppath';
 INSERT INTO tablas(idtabla,idelemento,dato2) VALUES('conciliacon','stppath','https://efws-dev.stpmex.com/efws/API/V2')
 
 
- curl --header "Content-Type: application/json"    -H "Authorization: Basic $(echo -n 'speitest:speitest' | base64)"   --request POST   --data '{{
+DELETE FROM TABLAS WHERE idtabla='spei_entrada' AND idelemento='datos_firma';
+INSERT INTO TABLAS(idtabla,idelemento,dato1,dato2,dato3) VALUES('spei_entrada','datos_firma','fama_spei','fenoreste2025.','fenoreste.jks');
+
+/*Datos para consulta de saldo*/
+DELETE FROM tablas WHERE idtabla='stp' AND idelemento='cuenta_concentradora';
+INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('stp','cuenta_concentradora','646180522900000001');
+
+DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='stppath';
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','stppath','/efws/API/V2','https://efws-dev.stpmex.com');
+
+DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='consulta_saldo_stppath';
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','consulta_saldo_stppath','/efws/API','https://efws-dev.stpmex.com');
+
+DELETE FROM tablas WHERE idtabla='spei_entrada' AND idelemento='producto_resumidero';
+INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','producto_resumidero','115');
+
+
+----OJO para conciliacion descarga el certificado de la url y ponla en carts.jks y keystore.jks del glassfish para que no halla errror de consumo
+
+    curl --header "Content-Type: application/json"    -H "Authorization: Basic $(echo -n 'speitest:speitest' | base64)"   --request POST   --data '{{
     "id": 56,
  "fechaOperacion": 20200127,
  "institucionOrdenante": 846,

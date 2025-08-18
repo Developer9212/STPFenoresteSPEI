@@ -15,10 +15,9 @@ select * from ws_siscoop_clabe_interbancaria where idorigenp=30223 and idproduct
 
 
 
-delete from speirecibido
-select * from speirecibido order by fechaentrada desc
-select * from transferencias_spei_curso
-delete from transferencias_spei_curso
+
+
+
 
 delete from temporal
 select idusuario,sesion,referencia,aplicado from temporal
@@ -97,16 +96,6 @@ select * from tablas where idtabla='bankingly_banca_movil'
 
 
 
-DROP TABLE IF EXISTS transferencias_spei_curso;
-CREATE TABLE transferencias_spei_curso(
-    clabe text,
-    claverastreo text,
-    cuentaordenante text,
-    ok_saicoop boolean,
-    monto numeric
-);
-
-
 select * from tablas WHERE idtabla='tasas' and idelemento like '2%' order by idelemento;
 
 
@@ -124,128 +113,89 @@ delete from speirecibido
 
 select * from tablas where idtabla='spei_entrada'
 
+select * from transferencias_spei_curso
+select * from speirecibido order by aplicado
+select count(*) from speirecibido
+select count(*) from speirecibido where aplicado = true
+select * from spei_entrada_temporal_cola_guardado order by sesion
+
+SELECT pid, state, wait_event_type, wait_event, query
+FROM pg_stat_activity
+WHERE datname = 'sannicolasdb';
 
 
 
+delete from spei_entrada_temporal_cola_guardado;
+delete from transferencias_spei_curso;
+delete from speirecibido;
+
+delete from temporal
+
+SELECT count(*) FROM pg_stat_activity;
+SELECT * FROM pg_stat_activity WHERE state != 'idle';
+SELECT pid, datname, usename, client_addr, application_name, state, query
+FROM pg_stat_activity;
+
+SELECT pg_terminate_backend(pid)
+FROM pg_stat_activity
+WHERE state = 'idle' AND now() - state_change > interval '5 minutes';
+
+SELECT pid, datname, usename, application_name, client_addr, state, query
+FROM pg_stat_activity
+ORDER BY state;
+
+
+
+
+select sai_spei_entrada_aplica()
 
 
 drop table if exists spei_entrada_temporal_cola_guardado cascade;
-create table spei_entrada_temporal_cola_guardado
-(
-    id                integer,
-    fecha_inserta     timestamp             not null default clock_timestamp(),
-    aplicado          boolean                        default false,
-    idusuario         integer,
-    sesion            character varying(20),
-    idorigen          integer,
-    idgrupo           integer,
-    idsocio           integer,
-    idorigenp         integer,
-    idproducto        integer,
-    idauxiliar        integer,
-    esentrada         boolean,
-    acapital          numeric(12, 2)        not null default 0.00,
-    io_pag            numeric(10, 2)        not null default 0.00,
-    io_cal            numeric(10, 2)        not null default 0.00,
-    im_pag            numeric(10, 2)        not null default 0.00,
-    im_cal            numeric(10, 2)        not null default 0.00,
-    aiva              numeric(10, 2)        not null default 0.00,
-    saldodiacum       numeric(12, 2)        not null default 0.00,
-    abonifio          numeric(10, 2)        not null default 0.00,
-    idcuenta          character varying(20) not null default '0',
-    ivaio_pag         numeric(10, 2)        not null default 0.00,
-    ivaio_cal         numeric(10, 2)        not null default 0.00,
-    ivaim_pag         numeric(10, 2)        not null default 0.00,
-    ivaim_cal         numeric(10, 2)        not null default 0.00,
-    mov               integer,
-    tipomov           integer               not null default 0,
-    referencia        text,
-    diasvencidos      integer               not null default 0,
-    montovencido      numeric(12, 2)        not null default 0,
-    idorigena         integer               not null default 0,
-    huella_valida     boolean                        default false,
-    concepto_mov      text,
-    fe_nom_archivo    text,
-    fe_xml            text,
-    sai_aux           text,
-    fecha_hora_system timestamp                      default now(),
-    poliza_generada   text,
-    fecha_aplicado    timestamp,
-    tipopoliza        integer,
-    idoperacion       int8,
-    query             text,
-    primary key (idorigenp, idproducto, idauxiliar, referencia, idoperacion)
+create table spei_entrada_temporal_cola_guardado (
+  id                 integer,
+  fecha_inserta      timestamp              not null  default clock_timestamp(),
+  aplicado           boolean                          default false,
+  idusuario          integer,
+  sesion             character varying(20),
+  idorigen           integer,
+  idgrupo            integer,
+  idsocio            integer,
+  idorigenp          integer,
+  idproducto         integer,
+  idauxiliar         integer,
+  esentrada          boolean,
+  acapital           numeric(12,2)          not null  default 0.00,
+  io_pag             numeric(10,2)          not null  default 0.00,
+  io_cal             numeric(10,2)          not null  default 0.00,
+  im_pag             numeric(10,2)          not null  default 0.00,
+  im_cal             numeric(10,2)          not null  default 0.00,
+  aiva               numeric(10,2)          not null  default 0.00,
+  saldodiacum        numeric(12,2)          not null  default 0.00,
+  abonifio           numeric(10,2)          not null  default 0.00,
+  idcuenta           character varying(20)  not null  default '0',
+  ivaio_pag          numeric(10,2)          not null  default 0.00,
+  ivaio_cal          numeric(10,2)          not null  default 0.00,
+  ivaim_pag          numeric(10,2)          not null  default 0.00,
+  ivaim_cal          numeric(10,2)          not null  default 0.00,
+  mov                integer,
+  tipomov            integer                not null  default 0,
+  referencia         text,
+  diasvencidos       integer                not null  default 0,
+  montovencido       numeric(12,2)          not null  default 0,
+  idorigena          integer                not null  default 0,
+  huella_valida      boolean                          default false,
+  concepto_mov       text,
+  fe_nom_archivo     text,
+  fe_xml             text,
+  sai_aux            text,
+  fecha_hora_system  timestamp                        default now(),
+  poliza_generada    text,
+  fecha_aplicado     timestamp,
+  tipopoliza         integer,
+  idoperacion        int8,
+  query              text,
+  primary key (idorigenp,idproducto,idauxiliar,referencia,idoperacion)
 );
-
-
-select * from spei_entrada_temporal_cola_guardado
-
-
-
-DROP TABLE IF EXISTS speireibido_duplicados;
-CREATE TABLE speirecibido_duplicados(
-     id                      Integer,
-     fechaoperacion          Integer,
-     institucionordenante    Integer,
-     institucionbeneficiaria Integer,
-     claverastreo            text,
-     monto                   numeric,
-     nombreordenante         text,
-     cuentaordenante         text,
-     nombrebeneficiario      text,
-     cuentabeneficiario      text,
-     rfcCurpbeneficiario     text,
-     conceptopago            text,
-     referencianumerica      Integer,
-     fechaentrada            timestamp without time zone,
-     responsecode            integer,
-     mensaje_core            text
-
-);
-
-
-
-
-DROP TABLE IF EXISTS transferencias_spei_curso;
-CREATE TABLE transferencias_spei_curso
-(
-    id              integer,
-    clabe           text,
-    claverastreo    text,
-    cuentaordenante text,
-    ok_saicoop      boolean,
-    monto           numeric
-);
-
-
-drop table if exists speirecibido;
-create table speirecibido (
-id                      integer,
-fechaoperacion          integer,
-institucionordenante    integer,
-institucionbeneficiaria integer,
-claverastreo            text,
-monto                   numeric,
-nombreordenante         text,
-tipocuentaordenante     integer,
-cuentaordenante         text,
-rfccurpordenante        text,
-nombrebeneficiario      text,
-tipocuentabeneficiario  integer,
-cuentabeneficiario      text,
-rfccurpbeneficiario     text,
-conceptopago            text,
-referencianumerica      integer,
-empresa                 text,
-fechaentrada            timestamp without time zone,
-responsecode            integer,
-mensaje_core            text,
-aplicado                boolean default false,
-fechaprocesada          timestamp without time zone,
-retardo                 boolean default false,
-stp_ok                  boolean default false,
-tsliquidacion           text,
-primary key (id,claverastreo,tsliquidacion));
 
 
 create or replace function
@@ -325,13 +275,13 @@ begin
             abonifio,idcuenta,ivaio_pag,ivaio_cal,ivaim_pag,ivaim_cal,mov,tipomov,referencia,diasvencidos,montovencido,
             idorigena,huella_valida,concepto_mov,fe_nom_archivo,fe_xml,sai_aux,fecha_hora_system
      from   spei_entrada_temporal_cola_guardado
-     where  idusuario = p_idusuario and sesion = p_sesion);
+     where  idusuario = p_idusuario and sesion = p_sesion and referencia = p_referencia and idoperacion = p_idop::bigint);
 
   t_periodo := trim(to_char(d_fecha_hoy,'yyyymm'));
 
   i_idpoliza = sai_folio(TRUE,'pol'||t_periodo||trim(to_char(i_idorigen_ap,'099999'))||i_tp_pol::text);
 
-  lock table usuarios in row exclusive mode;
+  --lock table usuarios in row exclusive mode;
 
   UPDATE usuarios
   SET    ticket = ticket + 1
@@ -351,25 +301,31 @@ begin
   t_poliza_generada := i_idorigen_ap||'-'||t_periodo||'-'||i_tp_pol::text||'-'||i_idpoliza::text;
 
   i_movs := sai_temporal_procesa(p_idusuario,p_sesion,d_fecha_hoy,i_idorigen_ap,i_idpoliza,i_tp_pol,t_concepto,FALSE,FALSE);
-
-  update spei_entrada_temporal_cola_guardado
-  set    poliza_generada = t_poliza_generada, aplicado = TRUE, fecha_aplicado = d_fecha_hoy + clock_timestamp()::time
-  where  idusuario = p_idusuario and sesion = p_sesion;
+  
+RAISE NOTICE 'Mensaje: %', i_movs;
 
   -- DELETE FROM al "termporal"
-  DELETE FROM temporal WHERE idusuario = p_idusuario AND sesion = p_sesion AND referencia =p_referencia;
+   DELETE FROM temporal WHERE idusuario = p_idusuario AND sesion = p_sesion AND referencia = p_referencia;
+/*
+  update spei_entrada_temporal_cola_guardado
+  set    poliza_generada  = t_poliza_generada,
+         aplicado         = TRUE,
+         fecha_aplicado   = d_fecha_hoy + clock_timestamp()::time,
+         query            = 'DELETE FROM spei_entrada_temporal_cola_guardado WHERE sesion = '||
+                            p_sesion||' AND idusuario ='||p_idusuario||' AND referencia ='||p_referencia||
+                            ' AND idoperacion ='||p_idop
+  where  idusuario = p_idusuario and sesion = p_sesion;*/
+
+
+  DELETE FROM spei_entrada_temporal_cola_guardado
+  WHERE sesion = p_sesion AND idusuario = p_idusuario AND referencia = p_referencia AND idoperacion = p_idop::bigint;
   
-  --  NOTA: Wilmer manipula en su codigo...
-
-  query_delete := 'DELETE FROM spei_entrada_temporal_cola_guardado WHERE sesion = '||p_sesion||' AND idusuario ='||p_idusuario||' AND referencia ='||p_referencia||' AND idoperacion ='||p_idop;
-
- -- update spei_entrada_temporal_cola_guardado
- -- set query = query_delete
-  --WHERE sesion = p_sesion AND idusuario = p_idusuario AND referencia = p_referencia and idoperacion = p_idop::bigint;
-
- --DELETE FROM spei_entrada_temporal_cola_guardado
- --WHERE sesion = p_sesion AND idusuario = p_idusuario AND referencia = p_referencia AND idoperacion = p_idop::bigint;
-
+  /*IF (i_movs > 0) THEN  
+     DELETE FROM spei_entrada_temporal_cola_guardado
+     WHERE sesion = p_sesion AND idusuario = p_idusuario AND referencia = p_referencia AND idoperacion = p_idop::bigint;
+  END IF;*/
+  
+    
   return i_movs;
 end;
 $$ language 'plpgsql';
