@@ -93,7 +93,10 @@ public class InServiceGeneral {
     private ITransferenciaCursoService transferenciaCursoService;
 
     @Autowired
-    IRegistroTemporalService registroTemporalService;
+    private IRegistroTemporalService registroTemporalService;
+
+    @Autowired
+    private IAmortizacionService amortizacionService;
 
     @Autowired
     private PingService pingService;
@@ -179,9 +182,12 @@ public class InServiceGeneral {
                         resp.setMensaje("confirmar");
                         resp.setCodigo(200);
                     } else {
+                        System.out.println("ssisiss");
                         if (!abono.getMensaje_core().replace(" ", "").trim().equalsIgnoreCase("RECHAZADOPORTIMEOUT")) {
+                            System.out.println("siisisisis2");
                             operar = true;
                         } else {
+                            System.out.println("::elseddd");
                             log.info(":::::::::La operacion ya esta aplicada con rechazo por timeout:::::::::::::::");
                             resp.setId(1);
                         }
@@ -199,7 +205,9 @@ public class InServiceGeneral {
 
         if (operar) {
             // validamos el horario de actividad
-            if (funcionesSaiService.horario_actividad()) {
+            boolean horario = funcionesSaiService.horario_actividad();
+            log.info("::::::::::Horario actividad es:"+horario);
+            if (horario) {
                 // Obtenemos origen Matriz
                 matriz = origenesService.buscarMatriz();
                 // Obtenemos el estatus de origen al que pertenece el usuario
@@ -233,6 +241,7 @@ public class InServiceGeneral {
                                         //Realizamos la transferencia abono(clabe-opa) cargo a cuenta spei
 
                                         // transferenciaSpei = realizarTransferencia(a, in, 1, 1);
+
                                         CompletableFuture<Integer> future = queueProcessor.enqueue(a, in, 1, 1);
                                         int resultado = future.get();//20,TimeUnit.SECONDS);
                                         log.info("::::::::::::::::::::::::Resultado operacion:::::::::::::" + resultado);
@@ -252,9 +261,9 @@ public class InServiceGeneral {
                                                 }
                                             }
                                             if (ok_comision) {
-                                                if (in.getMonto() == 11) {
+                                                /*if (in.getMonto() == 11) {
                                                     Thread.sleep(15000); //(19100),30000 para el retardo
-                                                }
+                                                }*/
 
 
                                                 long endTime = System.currentTimeMillis(); //fin tiempo correr operacion
@@ -415,9 +424,11 @@ public class InServiceGeneral {
             TemporalTranferenciaCurso curso = transferenciaCursoService.buscarPorId(pk);
 
             if (curso != null) {
+                log.info(":::::::::::::::::Entro aqui::::::::::");
                 System.out.println("::::::::::::::Operacion registrada con anterioridad::::::::::::::");
                 aplicados = 1009;
             } else {
+
                 temporal = new SpeiTemporal();
                 curso = new TemporalTranferenciaCurso();
                 curso.setPk(pk);
@@ -438,7 +449,6 @@ public class InServiceGeneral {
                 temporalPK.setIdproducto(opa.getAuxiliarPK().getIdproducto());
                 temporalPK.setIdauxiliar(opa.getAuxiliarPK().getIdauxiliar());
                 temporalPK.setReferencia(referencia);
-
                 //Vamos a buscar si no esta el registro en la tabla temporal
                 // SpeiTemporal temporalTabla = speiTemporalService.buscarPorId(temporalPK);
                /* if (temporalTabla != null) {
@@ -477,7 +487,6 @@ public class InServiceGeneral {
                 //temporal.setTipopoliza(1);
                 speiTemporalService.guardar(temporal);
 
-
                 // Vamos a registrar el movimiento a cuentaContable(Cargo) para el balance
                 temporal = new SpeiTemporal();
                 temporalPK = new SpeiTemporalPK();
@@ -513,7 +522,6 @@ public class InServiceGeneral {
                 temporal.setIdusuario(Integer.parseInt(tb_usuario.getDato1()));
                 temporal.setSesion(sesion);
                 temporal.setMov(2);
-
                 speiTemporalService.guardar(temporal);
 
                 // Vamos a abonar a TDD si el cliente es CSN
@@ -549,7 +557,8 @@ public class InServiceGeneral {
                         log.info(":::::::::::::::Generando poliza a SAICoop para opa :::::::::::::::::" + opa.getAuxiliarPK());
                         log.info("::::::::::::::::::::::::Ejecutando funcion para procesar registros de:" + tb_usuario.getDato1() + ",sesion:" + sesion, temporalPK.getReferencia(), abono.getId());
 
-                        Thread.sleep(1);
+                        //Thread.sleep(1);
+                        //vamos a aplicar los movimientos
                         aplicados = funcionesSaiService.aplica_movs(Integer.parseInt(tb_usuario.getDato1()), temporal.getSesion(), 1, temporal.getSpeiTemporalPK().getReferencia(), String.valueOf(abono.getId()));
                         log.info("__________total aplicados transferencia spei___________:" + aplicados);
 
@@ -576,14 +585,14 @@ public class InServiceGeneral {
                     }
                     // }
                 }
-                speiTemporalService.eliminar(sesion, abono.getTsLiquidacion() + abono.getClaveRastreo());
+               // speiTemporalService.eliminar(sesion, abono.getTsLiquidacion() + abono.getClaveRastreo());
                 //  log.info("________Elinar temporal::.");
                 //TemporalPk temporalPk = new TemporalPk(Integer.parseInt(tb_usuario.getDato1()),sesion,abono.getTsLiquidacion()+abono.getClaveRastreo());
                 //log.info("::___Llavev generada:"+temporalPk);
                 //registroTemporalService.eliminarPorId(temporalPk);
             }
         } catch (Exception e) {
-            speiTemporalService.eliminar(sesion, abono.getTsLiquidacion() + abono.getClaveRastreo());
+            //speiTemporalService.eliminar(sesion, abono.getTsLiquidacion() + abono.getClaveRastreo());
             log.error("Error al realizar la transferencia spei:" + e.getMessage());
         }
 
@@ -703,7 +712,7 @@ public class InServiceGeneral {
 
                 if (valiResponse.getId() == 999) {
                     AuxiliarPK Apk = null;//new AuxiliarPK(temporal.getIdorigenp(),temporal.getIdproducto(),temporal.getIdauxiliar());
-                    aplicados = 0;// funcionesSaiService.aplica_movs(Integer.parseInt(tb_usuario.getDato1()), temporal.getSesion(), 3, temporal.getReferencia(), sendAbono().getId());
+                    aplicados =  0;//funcionesSaiService.aplica_movs(Integer.parseInt(tb_usuario.getDato1()), temporal.getSesion(), 3, temporal.getReferencia(), sendAbono().getId());
                     if (aplicados <= 0) {
                         if (matriz.getIdorigen() == 30200) {
                             log.info(".........Se volvio a depositar la comision a la TDD.......");
@@ -715,7 +724,7 @@ public class InServiceGeneral {
 
                 }
             }
-            speiTemporalService.eliminar(sesion, String.valueOf(in.getReferenciaNumerica()));
+           // speiTemporalService.eliminar(sesion, String.valueOf(in.getReferenciaNumerica()));
         } catch (Exception e) {
             log.error("Error al realizar transferencia de comision:" + e.getMessage());
             aplicados = 0;
@@ -1213,8 +1222,36 @@ public class InServiceGeneral {
                     }
 
                     if (banderaCredito) {
-                        response.setMensaje("OK");
-                        response.setId(999);
+                        Auxiliar auxiliar = auxiliarService.buscarPorId(opa);
+                        if(auxiliar.getTipoamortizacion() == 5){
+                            String arrayPrestamoCuanto = funcionesSaiService.sai_spei_entrada_prestamo_cuanto(opa,5,null);
+
+                            String[] arrayPartes = arrayPrestamoCuanto.split("\\|");
+                            double montoHipotecario = Double.parseDouble(arrayPartes[0]);
+                            log.info(":::::::::::::::::::::Monto hipotecario:"+montoHipotecario);
+
+                            if(montoHipotecario > 0){
+                                response.setMensaje("OK");
+                                response.setId(999);
+                            }else if(montoHipotecario == 0) {
+                                Double montoRestante = funcionesSaiService.sai_spei_entrada_prestamo_adelanto_exacto(opa,monto);
+                                Double montoRequeridoAdelanto = monto-montoRestante;
+                                log.info(":::::::::::::::Monto adelanto requerido:"+montoRequeridoAdelanto);
+                                Amortizacion amortizacionSiguiente = amortizacionService.buscarSiguienteAmortizacion(opa);
+                                if((montoRequeridoAdelanto > 0 && monto >= montoRequeridoAdelanto) || monto == amortizacionSiguiente.getAbono().doubleValue()){
+                                    response.setMensaje("OK");
+                                    response.setId(999);
+                                }else{
+                                    log.info("::::::::::::::::::Pago Hipotecario no es aceptado,monto requerido como adelanto:"+amortizacionSiguiente.getAbono());
+                                    response.setMensaje("EL PAGO NO ES ACEPTADO POR EL PARTICIPANTE RECEPTOR");
+                                    response.setId(27);
+                                }
+                            }
+
+                        }else{
+                            response.setMensaje("OK");
+                            response.setId(999);
+                        }
                     } else {
                         log.info("..........Prestamo no apto para recibir pagos spei..........");
                         response.setMensaje("Prestamo no apto para recibir pagos spei");

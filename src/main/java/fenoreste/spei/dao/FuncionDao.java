@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import fenoreste.spei.entity.Auxiliar;
 import fenoreste.spei.entity.AuxiliarPK;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -30,8 +31,11 @@ public interface FuncionDao extends JpaRepository<Auxiliar,AuxiliarPK> {
 	@Query(value = "DELETE FROM temporal WHERE idusuario =?1 AND sesion=?2", nativeQuery = true)
 	public int EliminarTemporal(Integer idusuario,String sesion);
 
-	@Query(value="SELECT sai_bankingly_prestamo_cuanto(?1,?2,?3,?4,?5,?6)", nativeQuery=true)
-	public String sai_prestamo_cuanto(Integer idorigenp, Integer idproducto, Integer idauxiliar, Date fecha, Integer tipoamortizacion, String sai);
+	@Query(value="SELECT sai_spei_entrada_prestamo_cuanto(?1,?2,?3,(SELECT date(fechatrabajo) FROM origenes LIMIT 1),?4,?5)", nativeQuery=true)
+	public String sai_prestamo_cuanto(Integer idorigenp, Integer idproducto, Integer idauxiliar, Integer tipoamortizacion, String sai);
+
+	@Query(value = "SELECT sai_spei_entrada_prestamo_adelanto_exacto (?1,?2,?3,(SELECT date(fechatrabajo) FROM origenes LIMIT 1),?4,0.0)",nativeQuery = true)
+	public Double prestamo_adelanto_exacto(Integer idorigenp, Integer idproducto, Integer idauxiliar, BigDecimal monto);
 
 	
 

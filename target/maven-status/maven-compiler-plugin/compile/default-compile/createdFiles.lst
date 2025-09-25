@@ -34,6 +34,7 @@ fenoreste\spei\service\TablaServiceImpl.class
 fenoreste\spei\modelos\ConcPeticionVo.class
 fenoreste\spei\stp\HttpMethods.class
 fenoreste\spei\security\WebSecurityConfig.class
+fenoreste\spei\service\AmortizacionServiceImpl.class
 fenoreste\spei\dao\ProductoDao.class
 fenoreste\spei\dao\FuncionDao.class
 fenoreste\spei\entity\SpeiTemporalPK.class
@@ -51,6 +52,7 @@ fenoreste\spei\entity\PersonaPK.class
 fenoreste\spei\service\ClabeInterbancariaServiceImpl.class
 fenoreste\spei\SpeiApplication.class
 fenoreste\spei\service\ISpeiTemporalService.class
+fenoreste\spei\dao\AmortizacionDao.class
 fenoreste\spei\dao\SpeiTemporalDao.class
 fenoreste\spei\entity\TablaPK.class
 fenoreste\spei\entity\Tarjeta.class
@@ -110,8 +112,10 @@ fenoreste\spei\modelos\OrdenPagoWS.class
 fenoreste\spei\service\PersonaServiceImpl.class
 fenoreste\spei\entity\Sopar.class
 fenoreste\spei\entity\RegistroTemporal.class
+fenoreste\spei\service\IAmortizacionService.class
 fenoreste\spei\service\SoparServiceImpl.class
 fenoreste\spei\Ejec.class
+fenoreste\spei\entity\Amortizacion.class
 fenoreste\spei\service\IProductoService.class
 fenoreste\spei\modelos\EstadoRequestVo.class
 fenoreste\spei\dao\TarjetaDao.class

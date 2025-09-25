@@ -31,16 +31,16 @@ public class AbonoSpei implements Serializable {
 	 private String  cuentaBeneficiario;
 	 private String  rfcCurpBeneficiario;
 	 private String  conceptoPago;
-	 private Integer  referenciaNumerica;
-	 private String  empresa;
-	 private Date fechaentrada;
-	 private Integer responsecode;
-	 private String mensaje_core;
-	 private boolean aplicado;
+	 private Integer  referenciaNumerica=0;
+	 private String  empresa="";
+	 private Date fechaentrada=new Date();
+	 private Integer responsecode=0;
+	 private String mensaje_core="";
+	 private boolean aplicado = false;
 	 private Date fechaProcesada;
 	 private String tsliquidacion;
-	 private boolean retardo;
-	 private boolean stp_ok;
+	 private boolean retardo = false;
+	 private boolean stp_ok = false;
 	 
 	 private static final long serialVersionUID = 1L;
 }

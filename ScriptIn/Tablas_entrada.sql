@@ -57,10 +57,6 @@ CREATE TABLE transferencias_spei_curso
 );
 
 
-
-
-
-
 DROP TABLE IF EXISTS speireibido_duplicados;
 CREATE TABLE speirecibido_duplicados(
      id                      Integer,

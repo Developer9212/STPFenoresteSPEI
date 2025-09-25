@@ -26,7 +26,7 @@ public class TransferenciaQueueProcessor {
                 TransferenciaTask task = null; // <-- Declaración fuera del try
                 try {
                     task = queue.take(); // <-- Puede lanzar InterruptedException
-
+                    System.out.println("::::::::::::::::Realizando trasnferencia:::::::::::::::::");
                     int resultado = transferenciaService.realizarTransferencia(
                             task.getOpa(),
                             task.getRequest(),
