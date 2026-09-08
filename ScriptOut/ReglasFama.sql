@@ -1,6 +1,6 @@
 
 DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='clabe_operaciones';
-INSERT INTO tablas(idtabla,idelemento,nombre,dato1)VALUES('spei_salida','clabe_operaciones','clabe que se usa para todas las operaciones','68686868686');
+INSERT INTO tablas(idtabla,idelemento,nombre,dato1)VALUES('spei_salida','clabe_operaciones','clabe que se usa para todas las operaciones','646180522900000001');
 
 DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='empresa';
 INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_salida','empresa','CAJA_FAMA');

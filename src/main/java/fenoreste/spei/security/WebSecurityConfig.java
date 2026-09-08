@@ -37,6 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/api/dispersion/sendOrder").permitAll()   // <- ruta libre, sin autenticación
                 .antMatchers("/api/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
