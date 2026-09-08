@@ -41,6 +41,8 @@ public class AbonoSpei implements Serializable {
 	 private String tsliquidacion;
 	 private boolean retardo = false;
 	 private boolean stp_ok = false;
+
+	 private boolean encurso = false;
 	 
 	 private static final long serialVersionUID = 1L;
 }

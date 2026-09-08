@@ -12,8 +12,8 @@ public class ConcPeticionVo implements Serializable{
 	  @JsonInclude(value = JsonInclude.Include.NON_NULL)
 	  private Integer fechaOperacion;
       private String firma;
-	  private Integer page;
-	  private String tipoOrden;
+	  private Integer pagina;
+	  //private String tipoOrden;
 	  
 	  
 	  private static final long serialVersionUID = 1L;
