@@ -30,7 +30,7 @@ public class OutController {
 	//Solo caja fama
 	@GetMapping(value = "/sendOrderFama")//, consumes = {MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?>sendOrderFama(@RequestBody RequestLocalDispersionVo inData){
-		log.info("::::::::::::::Vamos a enviar una orden SPEI(Fama)::::::::::::::::::::::"+inData);
+		log.info("::::::::::::::Vamos a enviar una orden SPEI(Fama 1)::::::::::::::::::::::"+inData);
 		ResponseLocalDispersionVo response = outServiceGeneral.sendOrder(inData);
 		return ResponseEntity.status(200).body(response);
 	}
