@@ -80,6 +80,8 @@ public class OutServiceGeneral {
 
     @Autowired
     private ConsumoCsnTDD consumoCsnTDD;
+    @Autowired
+    private IProductoService productoService;
 
     public ResponseLocalDispersionVo sendOrder(RequestLocalDispersionVo order) {
         ResponseLocalDispersionVo dispersion = new ResponseLocalDispersionVo();
@@ -113,7 +115,12 @@ public class OutServiceGeneral {
                             log.error(":::::::::::::::::::::El producto configurado no es el mismo a operar:::::::::::::::::::::::");
                         }
                     } else {
-                        dispersion = validaReglasFama(a, clabe.getClabe(), order, 1);
+                        tbpk = new TablaPK("spei_salida","clabe_operaciones");
+                        tabla = tablaService.buscarPorId(tbpk);
+                        Producto producto = productoService.buscarPorId(opa.getIdproducto());
+                        clabe = clabeInterbancariaService.buscarPorClabe(tabla.getDato1());
+                        log.info(""+clabe);
+                        dispersion = validaReglasFama(a, clabe.getClabe(), order, producto.getTipoproducto());
                         if (dispersion.getId() == 200) {
                             banderaProcesa = true;
                         } else {
@@ -264,15 +271,13 @@ public class OutServiceGeneral {
             Persona persona = personaService.buscarPorId(personaPk);
 
             // Vamos a validar estatus de la clabe interbancaria
-            ClabeInterbancaria cbeInterbancaria = new ClabeInterbancaria();
+            ClabeInterbancaria cbeInterbancaria = clabeInterbancariaService.buscarPorClabe(clabe);
             if (cbeInterbancaria != null) {
                 if (!cbeInterbancaria.isBloqueada()) {
                     if (cbeInterbancaria.isActiva()) {
                         switch (tipoProducto) {
                             case 0://Ahorros
-                                cbeInterbancaria = clabeInterbancariaService.buscarPorId(opa.getAuxiliarPK());
-                                if (cbeInterbancaria != null && cbeInterbancaria.isActiva() && cbeInterbancaria.isAsignada()) {
-                                    if (opa.getSaldo().doubleValue() >= orden.getMonto()) {
+                                 if (opa.getSaldo().doubleValue() >= orden.getMonto()) {
                                         if (opa.getEstatus() == 2) {
                                             log.info("::::::::::Validacion exitosa:::::::::");
                                             validacion.setId(200);
@@ -287,12 +292,6 @@ public class OutServiceGeneral {
                                         validacion.setId(14);
                                         validacion.setError("saldo insuficiente");
                                     }
-                                }else {
-                                    log.info(":::::::::::No existe clabe activa,activa,asignada para opa:"+opa+":::::::");
-                                    validacion.setId(14);
-                                    validacion.setError("saldo insuficiente");
-                                }
-
                                 break;
                             case 1://Inversiones
                                 break;

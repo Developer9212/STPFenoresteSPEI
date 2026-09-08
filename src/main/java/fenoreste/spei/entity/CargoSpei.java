@@ -15,13 +15,10 @@ import java.util.Date;
 @Data
 public class CargoSpei implements Serializable {
 
-    @Id
-    @GeneratedValue(generator="sec_spei_enviado")
-    @SequenceGenerator(name="sec_spei_enviado",sequenceName="sec_spei_enviado", allocationSize=1)
-    private Integer id;
+    @EmbeddedId
+    private SpeiEnviadoPK speiEnviadoPK;
     private String institucioncontraparte;
     private String empresa;
-    private String claverastreo;
     private Integer institucionoperante;
     private double monto;
     private Integer tipopago;
@@ -34,12 +31,8 @@ public class CargoSpei implements Serializable {
     private String cuentabeneficiario;
     private String rfccurpbeneficiario;
     private String conceptopago;
-    private Integer referencianumerica;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaentrada;
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaejecucion;
-    private Integer idorden;
     private boolean aplicado;
     private String estatus;
     @Temporal(TemporalType.TIMESTAMP)
