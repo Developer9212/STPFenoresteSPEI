@@ -1,0 +1,29 @@
+
+DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='clabe_operaciones';
+INSERT INTO tablas(idtabla,idelemento,nombre,dato1)VALUES('spei_salida','clabe_operaciones','clabe que se usa para todas las operaciones','68686868686');
+
+DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='empresa';
+INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_salida','empresa','CAJA_FAMA');
+
+DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='spei_horario_actividad';
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2,dato3) VALUES('spei_salida','horario_actividad','06:00','17:00','1|2|3|4|5');
+
+DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='cuenta';
+INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_salida','cuenta','20407160101068');
+
+DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='usuario';
+INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('spei_salida','usuario','999');
+
+
+
+
+
+
+
+DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='cuenta_iva_comision';
+INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('spei_salida','cuenta_iva_comision','20407090101004');
+
+DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento ='cuenta_comision';
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES ('spei_salida','cuenta_comisio','40309010101014','5.00');
+
+

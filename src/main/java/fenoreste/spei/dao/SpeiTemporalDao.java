@@ -4,14 +4,11 @@ package fenoreste.spei.dao;
 import java.util.List;
 
 import fenoreste.spei.entity.SpeiTemporalPK;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import fenoreste.spei.entity.SpeiTemporal;
-import org.springframework.data.repository.query.Param;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.transaction.Transactional;
 

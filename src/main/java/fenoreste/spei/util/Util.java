@@ -1,7 +1,7 @@
 package fenoreste.spei.util;
 
-import fenoreste.spei.modelos.OpaDTO;
-import fenoreste.spei.modelos.OgsDTO;
+import fenoreste.spei.modeloEntrada.OpaDTO;
+import fenoreste.spei.modeloEntrada.OgsDTO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,7 +10,6 @@ public class Util {
     public OpaDTO opa(String cadena){
         OpaDTO opa=new OpaDTO();
         try {
-            System.out.println("sooooooooooooooooooooooo:"+cadena);
             opa.setIdorigenp(Integer.parseInt(cadena.substring(0, 6)));
             System.out.println(cadena.substring(0, 6));
             opa.setIdproducto(Integer.parseInt(cadena.substring(6, 11)));

@@ -1,7 +1,7 @@
 package fenoreste.spei.colaProcesor;
 
 import fenoreste.spei.entity.Auxiliar;
-import fenoreste.spei.modelos.request;
+import fenoreste.spei.modeloEntrada.request;
 import fenoreste.spei.service.InServiceGeneral;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class TransferenciaQueueProcessor {
                 TransferenciaTask task = null; // <-- Declaración fuera del try
                 try {
                     task = queue.take(); // <-- Puede lanzar InterruptedException
-
+                    System.out.println("::::::::::::::::Realizando trasnferencia:::::::::::::::::");
                     int resultado = transferenciaService.realizarTransferencia(
                             task.getOpa(),
                             task.getRequest(),
@@ -39,7 +39,7 @@ public class TransferenciaQueueProcessor {
                     if (task != null) {
                         task.getFuture().completeExceptionally(e);
                     }
-                    //e.printStackTrace(); // Opcional: loguear el error
+                    e.printStackTrace(); // Opcional: loguear el error
                 }
             }
         });

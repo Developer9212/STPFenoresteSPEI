@@ -42,6 +42,10 @@ CREATE TABLE speirecibido
     primary key (id,claverastreo,tsliquidacion)
 );
 
+/*Para mitras
+  ALTER TABLE speirecibido ADD column tsliquidacion text;
+  */
+
 
 
 DROP TABLE IF EXISTS transferencias_spei_curso;
@@ -55,10 +59,6 @@ CREATE TABLE transferencias_spei_curso
     monto           numeric,
     cargoabono       integer
 );
-
-
-
-
 
 
 DROP TABLE IF EXISTS speireibido_duplicados;

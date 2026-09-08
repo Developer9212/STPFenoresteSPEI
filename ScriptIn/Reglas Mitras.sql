@@ -63,6 +63,9 @@ INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','stppat
 DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='consulta_saldo_stppath';
 INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','consulta_saldo_stppath','/efws/API','https://efws-dev.stpmex.com');
 
+DELETE FROM TABLAS WHERE idtabla='conciliacion' AND idelemento='datos_firma';
+INSERT INTO TABLAS(idtabla,idelemento,dato1,dato2,dato3) VALUES('conciliacion','datos_firma','caja_mitras_qa','cajamitras2025.','mitras.jks');
+
 /*
  curl --header "Content-Type: application/json"    -H "Authorization: Basic $(echo -n 'speitest:speitest' | base64)"   --request POST   --data '{{
     "id": 56,

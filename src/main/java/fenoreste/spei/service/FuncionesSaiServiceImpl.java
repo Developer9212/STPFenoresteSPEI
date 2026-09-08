@@ -1,12 +1,12 @@
 package fenoreste.spei.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import fenoreste.spei.dao.FuncionDao;
 import fenoreste.spei.entity.AuxiliarPK;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -73,14 +73,18 @@ public class FuncionesSaiServiceImpl implements IFuncionesSaiService {
 	}
 
 	@Override
-	public String sai_bankingly_prestamo_cuanto(AuxiliarPK opa, Date fecha, Integer tipoamortizacion, String saiAuxiliar) {
+	public String sai_spei_entrada_prestamo_cuanto(AuxiliarPK opa, Integer tipoamortizacion, String saiAuxiliar) {
 		return funcionesDao.sai_prestamo_cuanto(opa.getIdorigenp(),
 				                                opa.getIdproducto(),
 				                                opa.getIdauxiliar(),
-				                                fecha,
 				                                tipoamortizacion,
 												saiAuxiliar
 		                          );
+	}
+
+	@Override
+	public Double sai_spei_entrada_prestamo_adelanto_exacto(AuxiliarPK opa, Double monto) {
+		return funcionesDao.prestamo_adelanto_exacto(opa.getIdorigenp(),opa.getIdproducto(),opa.getIdauxiliar(),new BigDecimal(monto));
 	}
 
 

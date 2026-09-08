@@ -1,18 +1,13 @@
 package fenoreste.spei.controller;
 
-import fenoreste.spei.modelos.EstadoOrdenVo;
-import fenoreste.spei.modelos.ResponseLocalDispersionVo;
+import fenoreste.spei.modeloEntrada.ResponseLocalDispersionVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import fenoreste.spei.modelos.RequestLocalDispersionVo;
+import fenoreste.spei.modeloEntrada.RequestLocalDispersionVo;
 import fenoreste.spei.service.OutServiceGeneral;
 
 @RestController
@@ -30,6 +25,14 @@ public class OutController {
 		ResponseLocalDispersionVo response = outServiceGeneral.sendOrder(inData);
 		return ResponseEntity.status(200).body(response);
 		
+	}
+
+	//Solo caja fama
+	@GetMapping(value = "/sendOrderFama")//, consumes = {MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?>sendOrderFama(@RequestBody RequestLocalDispersionVo inData){
+		log.info("::::::::::::::Vamos a enviar una orden SPEI(Fama)::::::::::::::::::::::"+inData);
+		ResponseLocalDispersionVo response = outServiceGeneral.sendOrder(inData);
+		return ResponseEntity.status(200).body(response);
 	}
 
 	/*

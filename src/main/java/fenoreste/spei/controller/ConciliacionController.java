@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import fenoreste.spei.modelos.ConcResultadoVo;
-import fenoreste.spei.modelos.ConsultaSaldoPet;
-import fenoreste.spei.modelos.SaldoResultadoVo;
+import fenoreste.spei.modeloEntrada.ConcResultadoVo;
+import fenoreste.spei.modeloEntrada.SaldoResultadoVo;
 import fenoreste.spei.service.InServiceGeneral;
 
 @RestController
@@ -25,10 +24,9 @@ public class ConciliacionController {
 	
 	@GetMapping()
 	public ResponseEntity<?> conciliacion(@RequestParam(name = "page",defaultValue = "0")int page,
-										  @RequestParam(name="tipoorden",defaultValue ="E")String tipoOrden,
 										  @RequestParam(name = "fecha",defaultValue = "0")Integer fecha) {
 		
-		ConcResultadoVo conciliacion = inServiceGeneral.conciliacion(page,tipoOrden,fecha);
+		ConcResultadoVo conciliacion = inServiceGeneral.conciliacion(page,fecha);
 		if(conciliacion.getCodigo() == 200) {
 		   return ResponseEntity.status(HttpStatus.ACCEPTED).body(conciliacion);
 		}else {			
@@ -38,7 +36,7 @@ public class ConciliacionController {
 	
 	
 	@GetMapping(value="/consultaSaldo")
-	public ResponseEntity<?> consultaSaldon(@RequestParam(name = "clabe",defaultValue = "0")String clabe,
+	public ResponseEntity<?> consultaSaldo(@RequestParam(name = "clabe",defaultValue = "0")String clabe,
 										  @RequestParam(name="fecha",defaultValue = "0")Integer  fecha) {
 		
 		SaldoResultadoVo consulta = inServiceGeneral.consultaSaldo(clabe,fecha);

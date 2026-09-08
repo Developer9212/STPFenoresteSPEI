@@ -1,7 +1,7 @@
 package fenoreste.spei.colaProcesor;
 
 import fenoreste.spei.entity.Auxiliar;
-import fenoreste.spei.modelos.request;
+import fenoreste.spei.modeloEntrada.request;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -24,5 +24,7 @@ public class TransferenciaTask {
     public request getRequest() { return abono; }
     public int getTipoOp() { return tipoOp; }
     public int getCargoAbono() { return cargoAbono; }
-    public CompletableFuture<Integer> getFuture() { return future; }
+    public CompletableFuture<Integer> getFuture() {
+        return future;
+    }
 }

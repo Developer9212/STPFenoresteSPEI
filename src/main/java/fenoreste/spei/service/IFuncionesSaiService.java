@@ -12,5 +12,6 @@ public interface IFuncionesSaiService {
     public String sai_auxiliar(AuxiliarPK pk);
     public Date dateServidorBase();
     public void eliminaTemporal(Integer idusuario,String sesion);
-    public String sai_bankingly_prestamo_cuanto(AuxiliarPK opa,Date fecha,Integer tipoamortizacion,String saiAuxiliar);
+    public String sai_spei_entrada_prestamo_cuanto(AuxiliarPK opa,Integer tipoamortizacion,String saiAuxiliar);
+    public Double sai_spei_entrada_prestamo_adelanto_exacto (AuxiliarPK opa,Double monto);
 }

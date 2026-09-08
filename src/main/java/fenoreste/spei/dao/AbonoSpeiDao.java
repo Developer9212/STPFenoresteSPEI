@@ -1,7 +1,5 @@
 package fenoreste.spei.dao;
 
-import java.util.List;
-
 import fenoreste.spei.entity.AbonoSpeiPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 
