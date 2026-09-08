@@ -1,4 +1,4 @@
-package fenoreste.spei.modelos;
+package fenoreste.spei.modeloEntrada;
 
 import lombok.Data;
 

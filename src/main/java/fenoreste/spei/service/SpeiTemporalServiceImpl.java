@@ -4,14 +4,11 @@ package fenoreste.spei.service;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
 import fenoreste.spei.entity.SpeiTemporalPK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Temporal;
 import org.springframework.stereotype.Service;
 
 import fenoreste.spei.dao.SpeiTemporalDao;

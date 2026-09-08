@@ -1,4 +1,4 @@
-package fenoreste.spei.modelos;
+package fenoreste.spei.modeloSalida;
 
 import java.io.Serializable;
 

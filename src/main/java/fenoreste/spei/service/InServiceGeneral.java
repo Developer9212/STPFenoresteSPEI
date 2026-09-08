@@ -28,12 +28,12 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import fenoreste.spei.consumo.ConsumoCsnTDD;
-import fenoreste.spei.modelos.ConcPeticionVo;
-import fenoreste.spei.modelos.ConcResultadoVo;
-import fenoreste.spei.modelos.ConsultaSaldoPet;
-import fenoreste.spei.modelos.SaldoResultadoVo;
-import fenoreste.spei.modelos.request;
-import fenoreste.spei.modelos.response;
+import fenoreste.spei.modeloEntrada.ConcPeticionVo;
+import fenoreste.spei.modeloEntrada.ConcResultadoVo;
+import fenoreste.spei.modeloEntrada.ConsultaSaldoPet;
+import fenoreste.spei.modeloEntrada.SaldoResultadoVo;
+import fenoreste.spei.modeloEntrada.request;
+import fenoreste.spei.modeloEntrada.response;
 import fenoreste.spei.stp.HttpMethods;
 import lombok.extern.slf4j.Slf4j;
 
@@ -103,7 +103,7 @@ public class InServiceGeneral {
 
     @Autowired
     private TransferenciaQueueProcessor queueProcessor;
-    ;
+
 
 
     Gson json = new Gson();
@@ -154,6 +154,7 @@ public class InServiceGeneral {
         operacion.setFechaentrada(new Date());
         operacion.setTsliquidacion(in.getTsLiquidacion());
         operacion.setResponsecode(57);
+        operacion.setEncurso(false);
 
         operacion.setAplicado(false);
 
@@ -163,9 +164,11 @@ public class InServiceGeneral {
         log.info("Se guardo la operacion");
         int transferenciaSpei = 0;
         if (abono != null) {
+            AbonoSpeiDuplicado abonoSpeiDuplicado = new AbonoSpeiDuplicado();
+            abonoSpeiDuplicado.setAbonoSpeiPK(abonoSpeiPK);
             //if(!abono.isRetardo() && !abono.isAplicado() && !abono.isStp_ok()){
             log.info("::::::::::::::Se encuentra ya un registro con la claves:" + abonoSpeiPK + "::::::: nos aseguraremos que es la misma operacion en curso");
-            if (Objects.equals(abono.getReferenciaNumerica(), in.getReferenciaNumerica()) && Objects.equals(abono.getMonto(), in.getMonto()) && Objects.equals(abono.getAbonoSpeiPK().getId(), in.getId()) && !abono.isStp_ok()) {
+            if (Objects.equals(abono.getReferenciaNumerica(), in.getReferenciaNumerica()) && Objects.equals(abono.getMonto(), in.getMonto()) && Objects.equals(abono.getAbonoSpeiPK().getId(), in.getId()) && !abono.isStp_ok() && !abono.isEncurso()) {
                 log.info("Abono:" + abono);
                 if (abono.isAplicado() && abono.isStp_ok()) {
                     log.info(":::::::::::::::Es la misma pero ya fue aplicada,nada por hacer::::::::::::::::::");
@@ -182,23 +185,21 @@ public class InServiceGeneral {
                         resp.setMensaje("confirmar");
                         resp.setCodigo(200);
                     } else {
-                        System.out.println("ssisiss");
                         if (!abono.getMensaje_core().replace(" ", "").trim().equalsIgnoreCase("RECHAZADOPORTIMEOUT")) {
-                            System.out.println("siisisisis2");
                             operar = true;
                         } else {
-                            System.out.println("::elseddd");
                             log.info(":::::::::La operacion ya esta aplicada con rechazo por timeout:::::::::::::::");
                             resp.setId(1);
                         }
                     }
                 }
             } else {
-                log.info(":::::::::::Operacion con mismas llaves ya esta registrada(aplicada o en devolucion:::::");
+                log.info(":::::::::::Operacion con mismas llaves ya esta registrada(en curso,aplicada o en devolucion:::::");
                 resp.setId(1);
             }
-            //}
+
         } else {
+            operacion.setEncurso(true);
             abonoSpeiService.guardar(operacion);
             operar = true;
         }
@@ -284,6 +285,7 @@ public class InServiceGeneral {
                                                         operacion.setFechaProcesada(new Date());
                                                         operacion.setResponsecode(0);
                                                         operacion.setMensaje_core("Terminado con exito");
+                                                        operacion.setEncurso(false);
                                                         resp.setCodigo(200);
                                                         abonoSpeiService.guardar(operacion);
                                                         exit = true;
@@ -296,11 +298,13 @@ public class InServiceGeneral {
                                                         resp.setMensaje("confirmar");
                                                         resp.setCodigo(200);
                                                         operacion.setResponsecode(0);
+                                                        operacion.setEncurso(false);
                                                         abonoSpeiService.guardar(operacion);
                                                         exit = true;
                                                     } else {
                                                         operacion.setRetardo(false);
                                                         operacion.setAplicado(false);
+                                                        operacion.setEncurso(false);
                                                         operacion.setMensaje_core("Rechazado por timeout");
                                                         resp.setId(20);
                                                         resp.setMensaje("devolver");
@@ -424,7 +428,6 @@ public class InServiceGeneral {
             TemporalTranferenciaCurso curso = transferenciaCursoService.buscarPorId(pk);
 
             if (curso != null) {
-                log.info(":::::::::::::::::Entro aqui::::::::::");
                 System.out.println("::::::::::::::Operacion registrada con anterioridad::::::::::::::");
                 aplicados = 1009;
             } else {
@@ -524,6 +527,8 @@ public class InServiceGeneral {
                 temporal.setMov(2);
                 speiTemporalService.guardar(temporal);
 
+
+
                 // Vamos a abonar a TDD si el cliente es CSN
                 boolean banderaAlestra = false;//Solo mis compas de CSN
                 if (matriz.getIdorigen() == 30200) {
@@ -585,14 +590,14 @@ public class InServiceGeneral {
                     }
                     // }
                 }
-               // speiTemporalService.eliminar(sesion, abono.getTsLiquidacion() + abono.getClaveRastreo());
+               speiTemporalService.eliminar(sesion, abono.getTsLiquidacion() + abono.getClaveRastreo());
                 //  log.info("________Elinar temporal::.");
                 //TemporalPk temporalPk = new TemporalPk(Integer.parseInt(tb_usuario.getDato1()),sesion,abono.getTsLiquidacion()+abono.getClaveRastreo());
                 //log.info("::___Llavev generada:"+temporalPk);
                 //registroTemporalService.eliminarPorId(temporalPk);
             }
         } catch (Exception e) {
-            //speiTemporalService.eliminar(sesion, abono.getTsLiquidacion() + abono.getClaveRastreo());
+            speiTemporalService.eliminar(sesion, abono.getTsLiquidacion() + abono.getClaveRastreo());
             log.error("Error al realizar la transferencia spei:" + e.getMessage());
         }
 
@@ -724,7 +729,7 @@ public class InServiceGeneral {
 
                 }
             }
-           // speiTemporalService.eliminar(sesion, String.valueOf(in.getReferenciaNumerica()));
+            speiTemporalService.eliminar(sesion, String.valueOf(in.getReferenciaNumerica()));
         } catch (Exception e) {
             log.error("Error al realizar transferencia de comision:" + e.getMessage());
             aplicados = 0;
@@ -734,25 +739,38 @@ public class InServiceGeneral {
         return aplicados;
     }
 
-    public ConcResultadoVo conciliacion(Integer page, String tipoOrden, Integer fecha) {
+    public ConcResultadoVo conciliacion(Integer page,Integer fecha) {
         ConcResultadoVo resultado = new ConcResultadoVo();
         try {
             // Buscamos la empresa
             TablaPK tbPk = new TablaPK("stp", "empresa");
             Tabla tabla = tablasService.buscarPorId(tbPk);
             ConcPeticionVo conciliacionPet = new ConcPeticionVo();
-            conciliacionPet.setPage(page);
-            conciliacionPet.setTipoOrden(tipoOrden);
+            conciliacionPet.setPagina(page);
+            //conciliacionPet.setTipoOrden(tipoOrden);
             if (fecha > 0) {
                 conciliacionPet.setFechaOperacion(fecha);
             }
             if (tabla != null) {
                 conciliacionPet.setEmpresa(tabla.getDato1());
-                String firma = firmaPeticion(1, conciliacionPet, null, fecha);
-                conciliacionPet.setFirma(firma);
-                String peticion = json.toJson(conciliacionPet);
+                String firma = "";//
+                String peticion = "";
                 //System.out.println("Peticion conciliacion::::::::::::::::::::::::::::::::" + peticion);
-                String resultadoConciliacion = httpMethods.conciliacion(peticion);
+
+                String resultadoConciliacion = "";
+                if(fecha == 0){
+                   firma =  firmaPeticion(1, conciliacionPet, null, fecha);
+                   conciliacionPet.setFirma(firma);
+                   peticion = json.toJson(conciliacionPet);
+                   resultadoConciliacion = httpMethods.conciliacion(peticion);
+                }else{
+                   firma =firmaPeticion(1, conciliacionPet, null, fecha);
+                   conciliacionPet.setFechaOperacion(fecha);
+                   conciliacionPet.setFirma(firma);
+                   peticion = json.toJson(conciliacionPet);
+                   resultadoConciliacion = httpMethods.conciliacionHistorica(peticion);
+                }
+
                 //System.out.println("Resultado conciliacion:::::::::::::::::::::::::::::::" + resultadoConciliacion);
                 resultado = json.fromJson(resultadoConciliacion, ConcResultadoVo.class);
                 if (resultado.getEstado() == 0) {
@@ -771,10 +789,6 @@ public class InServiceGeneral {
         return resultado;
     }
 
-    public ConcResultadoVo conciliacionHis(ConcPeticionVo conciliacionPet) {
-
-        return null;
-    }
 
     public SaldoResultadoVo consultaSaldo(String clabes, Integer fecha) {
         SaldoResultadoVo resultadoConsulta = new SaldoResultadoVo();
@@ -1282,11 +1296,12 @@ public class InServiceGeneral {
             if (operacion == 1) {
                 sB.append("||");
                 sB.append(conciliacion.getEmpresa()).append("|");
-                sB.append(conciliacion.getTipoOrden()).append("|");
+                //sB.append(conciliacion.getTipoOrden()).append("|");
+
                 if (fecha > 0) {
-                    sB.append(fecha);
+                    sB.append(fecha).append("|");
                 }
-                sB.append("||");
+                sB.append("|");
 
             } else if (operacion == 2) {
                 sB.append("||");
@@ -1301,7 +1316,9 @@ public class InServiceGeneral {
                 log.info(sB.toString());
             }
             String cadena = sB.toString();
+            log.warn("::::::::::::::::Cadena a firmar::::::::"+cadena);
             firmada = sign(cadena);
+            log.debug("::::::::::::::::firmada:"+firmada);
 
         } catch (Exception e) {
             log.info("Error al firmar peticion:" + e.getMessage());
@@ -1312,12 +1329,12 @@ public class InServiceGeneral {
     // Consigo mi firma
     public String sign(String cadena) throws Exception {
         String firmaCod;
-        TablaPK tbPk = new TablaPK(idtabla, "datos_firma");
+        TablaPK tbPk = new TablaPK("conciliacion", "datos_firma");
         Tabla tabla = tablasService.buscarPorId(tbPk);
 
         // Direccion de mi keystore local
-        String fileName = ruta() + System.getProperty("file.separator") + System.getProperty("file.separator") + tabla.getDato3();// "/claves/caja_mitras.jks";caja_mitras.jks para mitras
-        String password = tabla.getDato2();//"fenoreste2024";// "12345678";//"fenoreste2023";  fenoreste2024. para mitras
+        String fileName = ruta() + tabla.getDato3();// "/claves/caja_mitras.jks";caja_mitras.jks para mitras
+        String password = tabla.getDato2();//"fenoreste2024";// "12345678";//"fenoreste2023";  fenoreste2024 para mitras
         String alias = tabla.getDato1();//"caja_mitras"; //caja_mitras el alias para mitras
         try {
             String data = cadena;
@@ -1329,7 +1346,9 @@ public class InServiceGeneral {
             Base64.Encoder encoder = Base64.getEncoder();
             firmaCod = encoder.encodeToString(firma.sign());
         } catch (InvalidKeyException | SignatureException | NoSuchAlgorithmException e) {
+            log.error(":::::::::::::::Error al construir firma:"+e.getMessage());
             throw new Exception("Exceptions" + e.getMessage(), e.getCause());
+
         }
         return firmaCod;
     }

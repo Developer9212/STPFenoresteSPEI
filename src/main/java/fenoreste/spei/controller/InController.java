@@ -1,15 +1,13 @@
 package fenoreste.spei.controller;
 
-import fenoreste.spei.modelos.request;
-import fenoreste.spei.modelos.response;
+import fenoreste.spei.modeloEntrada.request;
+import fenoreste.spei.modeloEntrada.response;
 import fenoreste.spei.service.IFuncionesSaiService;
 import fenoreste.spei.service.InServiceGeneral;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -22,14 +20,6 @@ public class InController {
 
 	@Autowired
 	private IFuncionesSaiService saiService;
-
-	// Endpoint de prueba para verificar conexión al servidor
-	@GetMapping
-	public ResponseEntity<Date> test() {
-		Date date = saiService.dateServidorBase();
-		log.info("Prueba de conexión, fecha desde BD: {}", date);
-		return ResponseEntity.ok(date);
-	}
 
 	// Endpoint para enviar abono
 	@PostMapping
@@ -64,4 +54,6 @@ public class InController {
 			return ResponseEntity.status(500).body(responseSendAbono);
 		}
 	}
+
+
 }

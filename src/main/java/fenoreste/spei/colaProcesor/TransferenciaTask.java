@@ -1,7 +1,7 @@
 package fenoreste.spei.colaProcesor;
 
 import fenoreste.spei.entity.Auxiliar;
-import fenoreste.spei.modelos.request;
+import fenoreste.spei.modeloEntrada.request;
 
 import java.util.concurrent.CompletableFuture;
 

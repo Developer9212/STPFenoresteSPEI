@@ -1,4 +1,4 @@
-package fenoreste.spei.modelos;
+package fenoreste.spei.modeloEntrada;
 
 import java.io.Serializable;
 
@@ -9,8 +9,8 @@ public class RequestLocalDispersionVo implements Serializable{
     
 	private String opaCliente;
 	private Double monto;
-	private String institucionContraparte;
-	private String nombreBeneficiario;
+	private String banco;
+	private String beneficiario;
 	private String rfcCurpBeneficiario;
 	private String conceptoPago;
 	private String cuentaBeneficiario;

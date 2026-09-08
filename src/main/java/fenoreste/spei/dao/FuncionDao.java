@@ -8,7 +8,6 @@ import fenoreste.spei.entity.Auxiliar;
 import fenoreste.spei.entity.AuxiliarPK;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 
 public interface FuncionDao extends JpaRepository<Auxiliar,AuxiliarPK> {

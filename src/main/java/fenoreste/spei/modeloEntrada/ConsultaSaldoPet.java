@@ -1,4 +1,4 @@
-package fenoreste.spei.modelos;
+package fenoreste.spei.modeloEntrada;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

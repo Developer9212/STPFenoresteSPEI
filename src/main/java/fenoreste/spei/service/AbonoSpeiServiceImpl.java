@@ -1,7 +1,5 @@
 package fenoreste.spei.service;
 
-import java.util.List;
-
 import fenoreste.spei.dao.AbonoSpeiDuplicadoDao;
 import fenoreste.spei.entity.AbonoSpeiDuplicado;
 import fenoreste.spei.entity.AbonoSpeiPK;

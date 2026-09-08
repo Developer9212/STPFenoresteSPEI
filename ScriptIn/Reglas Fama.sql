@@ -10,7 +10,7 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_entrada','usuario','500
   2.- dato2 = password
 */
 DELETE FROM tablas WHERE idtabla = 'spei_entrada' AND idelemento='usuario_ws';
-INSERT INTO tablas(idtabla,idelemento,dato1,dato2)VALUES('spei_entrada','usuario_ws','famatest','famatest');
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2)VALUES('spei_entrada','usuario_ws','spei_produccion','spei_produccion');
 
 /*Monto minimo a operar como entrada*/
 DELETE FROM tablas WHERE idtabla = 'spei_entrada' AND idelemento='monto_minimo';
@@ -55,7 +55,9 @@ DELETE FROM tablas WHERE idtabla='stp' AND idelemento='cuenta_concentradora';
 INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('stp','cuenta_concentradora','646180522900000001');
 
 DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='stppath';
-INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','stppath','/efws/API/V2','https://efws-dev.stpmex.com');
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','stppath','/consultasws/API','https://prod.stpmex.com:7002');
+
+
 
 DELETE FROM tablas WHERE idtabla='conciliacion' AND idelemento='consulta_saldo_stppath';
 INSERT INTO tablas(idtabla,idelemento,dato1,dato2) VALUES('conciliacion','consulta_saldo_stppath','/efws/API','https://efws-dev.stpmex.com');

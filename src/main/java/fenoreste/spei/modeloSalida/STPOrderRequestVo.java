@@ -1,4 +1,4 @@
-package fenoreste.spei.modelos;
+package fenoreste.spei.modeloSalida;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ public class STPOrderRequestVo implements Serializable{
 	private String longitud;
 	private String firma;
 
-	
+
 	
 	private static final long serialVersionUID = 1L;
 }

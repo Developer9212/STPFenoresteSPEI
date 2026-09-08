@@ -15,6 +15,8 @@ public class AuxiliarServiceImpl implements IAuxiliarService{
 	
 	@Override
 	public Auxiliar buscarPorId(AuxiliarPK pk) {
+
+
 		return auxiliarDao.findById(pk).orElse(null);
 	}
 
