@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class ClabeInterbancaria implements Serializable{
      
 	 @EmbeddedId
-	 AuxiliarPK auxPk;
+	 private AuxiliarPK auxPk;
 	 private String clabe;
 	 @Temporal(TemporalType.TIMESTAMP)
 	 private Date fecha_hora; 

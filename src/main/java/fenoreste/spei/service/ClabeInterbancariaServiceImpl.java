@@ -15,6 +15,7 @@ public class ClabeInterbancariaServiceImpl implements IClabeInterbancariaService
 	
 	@Override
 	public ClabeInterbancaria buscarPorId(AuxiliarPK pk) {
+		System.out.printf("aqui"+pk);
 		return clabeInterbancariaDao.findById(pk).orElse(null);
 	}
 

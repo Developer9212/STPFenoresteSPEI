@@ -15,12 +15,10 @@ public class AuxiliarPK implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
      
-	 @Column(name = "idorigenp", nullable = false)
+	@Column(name = "idorigenp", nullable = false)
     private Integer idorigenp;
-	
-	 @Column(name = "idproducto",nullable = false)
+	@Column(name = "idproducto",nullable = false)
     private Integer idproducto;
-	
 	@Column(name = "idauxiliar" , nullable = false)
     private Integer idauxiliar;
     

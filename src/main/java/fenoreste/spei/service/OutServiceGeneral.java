@@ -679,11 +679,11 @@ public class OutServiceGeneral {
                             Random rnd = new Random();
                             //Busco empresa
                             TablaPK tbpk = new TablaPK(idtabla, "empresa");
-                            Tabla empresa = tablaService.buscarPorId(tbpk);
-                            String claveRastreo = empresa.getDato1() + fechaActual + String.valueOf(rnd.nextInt(500000000 - 4 + 2) + 5);
+                            Tabla tabla = tablaService.buscarPorId(tbpk);
+                            String claveRastreo = tabla.getDato1() + fechaActual + String.valueOf(rnd.nextInt(500000000 - 4 + 2) + 5);
 
                             ordenEnviada.setInstitucionContraparte(institucionDestino.getIdbanco());
-                            ordenEnviada.setEmpresa(empresa.getDato1().trim());
+                            ordenEnviada.setEmpresa(tabla.getDato1().trim());
                             ordenEnviada.setClaveRastreo(claveRastreo.trim());
                             ordenEnviada.setMonto(String.valueOf(orden.getMonto()));
                             //Institucion operante es fijo para STP
@@ -697,15 +697,22 @@ public class OutServiceGeneral {
                                     + valida_caracteres_speciales(persona.getApmaterno().trim()));// + p.getApmaterno().trim());
 
                             //Busco la clabe interbancaria
-                            ClabeInterbancaria clabe = clabeInterbancariaService.buscarPorId(auxiliar.getAuxiliarPK());
+                            log.info("::::::::auxilair:"+auxiliar.getAuxiliarPK());
+                            tbpk = new TablaPK(idtabla,"clabe_operaciones");
+                            tabla = tablaService.buscarPorId(tbpk);
+                            ClabeInterbancaria clabe = clabeInterbancariaService.buscarPorClabe(tabla.getDato1());
+                            log.info("paso!:"+clabe);
                             if (clabe.isActiva()) {
+                                log.info("sadadsad");
                                 ordenEnviada.setCuentaOrdenante(clabe.getClabe().trim());
                                 ordenEnviada.setRfcCurpOrdenante(persona.getCurp().trim());
                                 ordenEnviada.setTipoCuentaBeneficiario(40);
+                                log.info(":FSdfsfsfsdf");
                                 orden.setBeneficiario(valida_caracteres_speciales(orden.getBeneficiario().trim()));
                                 ordenEnviada.setCuentaBeneficiario(orden.getCuentaBeneficiario().trim().replace(" ", ""));
                                 ordenEnviada.setRfcCurpBeneficiario(orden.getRfcCurpBeneficiario().trim());
                                 int referenciaNumerica = rnd.nextInt(300000 - 8 + 1) + 7;
+                                log.info("sisdifjdifsdjf");
                                 orden.setConceptoPago(valida_caracteres_speciales(orden.getConceptoPago().trim()));
                                 ordenEnviada.setReferenciaNumerica(referenciaNumerica);
                                 //lo utilizo para darle la numeracion que la documentacion me pide
