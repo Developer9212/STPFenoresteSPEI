@@ -184,9 +184,8 @@ public class OutServiceGeneral {
                                     log.info("Orden preparar a enviar:" + ordenValida);
                                     String response = httpMethods.enviarOrdenSpei(ordenHTTP.toString());
                                     STPDispersionResponseVo re = json.fromJson(response, STPDispersionResponseVo.class);
-                                    STPResultadoVo rt = new STPResultadoVo();
-                                    rt.setId(267778);
-                                    re.setResultado(rt);
+                                    //STPResultadoVo rt = new STPResultadoVo();
+                                    //re.setResultado(rt);
                                     log.info("::::::Respuesta al enviar orden::::::::" + re);
                                     speiEnviadoPK.setClaveRastreo(ordenValida.getClaveRastreo());
                                     speiEnviadoPK.setIdorden(re.getResultado().getId());
@@ -214,10 +213,10 @@ public class OutServiceGeneral {
                                         speiSalida.setAplicado(true);
                                         speiSalida.setFechaejecucion(new Date());
                                         speiSalida.setNombrebeneficiario(ordenValida.getNombreBeneficiario());
-                                        dispersion.setId(rt.getId());
+                                        dispersion.setId(re.getResultado().getId());
                                         dispersion.setError("OK");
                                         //vamos a persistir en el core
-                                        int operaciones = procesarPoliza(a, order, rt.getId() + "" + ordenValida.getReferenciaNumerica(), 1);
+                                        int operaciones = procesarPoliza(a, order, re.getResultado().getId() + "" + ordenValida.getReferenciaNumerica(), 1);
 
                                     } else {
                                         dispersion.setId(0);
@@ -1063,9 +1062,12 @@ public class OutServiceGeneral {
     public String sign(String cadena) throws Exception {
         String firmaCod;
         // Direccion de mi keystore local
-        String fileName = ruta() + "fenoreste.jks";
-        String password = "fenoreste2024";
-        String alias = "fenoreste";
+        //Dato1 alias,dato2 ruta certificado,dato3 nombre llavero,dato4 contraseña llavero
+        tb_pk = new TablaPK(idtabla,"datos_certificado");
+        Tabla tabla = tablaService.buscarPorId(tb_pk);
+        String fileName = ruta(tabla.getDato2()) + tabla.getDato3()+".jks";
+        String password = tabla.getDato4();
+        String alias = tabla.getDato1();
         try {
             String data = cadena;
             Signature firma = Signature.getInstance("SHA256withRSA");
@@ -1109,10 +1111,10 @@ public class OutServiceGeneral {
     }
 
     //Parao obtener la ruta del servidor
-    public static String ruta() {
+    public static String ruta(String ruta) {
         String home = System.getProperty("user.home");
         String separador = System.getProperty("file.separator");
-        String actualRuta = home + separador + "emisor-adquiriente" + separador + "cert-properties" + separador;
+        String actualRuta = home + separador +ruta;
         return actualRuta;
     }
 

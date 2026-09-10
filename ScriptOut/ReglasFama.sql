@@ -17,6 +17,12 @@ INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('spei_salida','usuario','999
 DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='stppath';
 INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_salida','stppath','https://demo.stpmex.com/speiws/rest');
 
+//Datos certificado Dato1 alias,dato2 ruta certificado,dato3 nombre llavero,dato4 contraseña llavero
+DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='datos_certificado';
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2,dato3,dato4)VALUES('spei_salida','datos_certificado','caja-fama-qa','Certificados/speisalida/','famaQa','cajafamaqa');
+
+
+
 
 
 
