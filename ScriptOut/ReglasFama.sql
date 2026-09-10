@@ -14,6 +14,8 @@ INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_salida','cuenta','20407
 DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='usuario';
 INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('spei_salida','usuario','999');
 
+DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='stppath';
+INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_salida','stppath','https://demo.stpmex.com/speiws/rest');
 
 
 
