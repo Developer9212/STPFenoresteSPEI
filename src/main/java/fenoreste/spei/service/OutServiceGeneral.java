@@ -139,7 +139,7 @@ public class OutServiceGeneral {
                             speiSalida.setNombrebeneficiario(order.getBeneficiario());
                             speiSalida.setRfccurpbeneficiario(order.getRfcCurpBeneficiario());
                             speiSalida.setConceptopago(order.getConceptoPago());
-                            speiSalida.setIdorden(0);
+                            speiSalida.setIdorden89(0);
                             speiSalida.setEstatus("No enviado....");
                             speiSalida.setFechaentrada(new Date());
                             cargoSpeiService.guardarCargoSpei(speiSalida);
