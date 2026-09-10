@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS clave_instituciones;
 CREATE TABLE clave_instituciones(
-id INTEGER,
+idbanco INTEGER,
 nombre TEXT,
-PRIMARY KEY(id));
+PRIMARY KEY(idbanco));
 
 INSERT INTO clave_instituciones VALUES(2001 ,'BANXICO');
 INSERT INTO clave_instituciones VALUES(37006,'BANCOMEXT');
@@ -98,9 +98,12 @@ CREATE TABLE speienviado(
     fecha timestamp with time zone,
     idorden numeric,
     referencianumerica numeric,
-    claverastero text,
+    claverastreo text,
     institucioncontraparte varchar(30),
     empresa varchar(20),
+    institucionoperante varchar(60),
+    monto numeric,
+    tipopago numeric,
     tipocuentaordenante numeric,
     nombreordenante text,
     cuentaordenante text,
@@ -109,7 +112,7 @@ CREATE TABLE speienviado(
     nombrebeneficiario text,
     cuentabeneficiario varchar(20),
     rfccurpbeneficiario text,
-    conceptoppago text,
+    conceptopago text,
     fechaejecucion timestamp with time zone,
     aplicado boolean,
     estatus varchar(20),
