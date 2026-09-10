@@ -91,3 +91,28 @@ INSERT INTO clave_instituciones VALUES(90902,'INDEVAL');
 INSERT INTO clave_instituciones VALUES(90903,'CoDi Valida');
 INSERT INTO clave_instituciones VALUES(90814,'SANTANDER2');
 INSERT INTO clave_instituciones VALUES(846,'GEM-STP');
+
+
+DROP TABLE IF EXISTS speienviado;
+CREATE TABLE speienviado(
+    fecha timestamp with time zone,
+    idorden numeric,
+    referencianumerica numeric,
+    claverastero text,
+    institucioncontraparte varchar(30),
+    empresa varchar(20),
+    tipocuentaordenante numeric,
+    nombreordenante text,
+    cuentaordenante text,
+    rfccurpordenante text,
+    tipocuentabeneficiario numeric,
+    nombrebeneficiario text,
+    cuentabeneficiario varchar(20),
+    rfccurpbeneficiario text,
+    conceptoppago text,
+    fechaejecucion timestamp with time zone,
+    aplicado boolean,
+    estatus varchar(20),
+    fecha_actualizacion_estado timestamp with time zone,
+    mensaje_core text
+);

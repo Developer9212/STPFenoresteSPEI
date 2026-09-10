@@ -132,16 +132,18 @@ public class OutServiceGeneral {
                     if (banderaProcesa) {
                         if (clabe != null) {
                             //Guardamos la operacion de salida para tener registros
+                            SpeiEnviadoPK speiEnviadoPK = new SpeiEnviadoPK();
+                            speiEnviadoPK.setIdorden(0);
+                            speiEnviadoPK.setFecha(new Date());
                             CargoSpei speiSalida = new CargoSpei();
+                            speiSalida.setSpeiEnviadoPK(speiEnviadoPK);
                             speiSalida.setCuentabeneficiario(order.getCuentaBeneficiario());
                             speiSalida.setMonto(order.getMonto());
                             speiSalida.setInstitucioncontraparte(order.getBanco());
                             speiSalida.setNombrebeneficiario(order.getBeneficiario());
                             speiSalida.setRfccurpbeneficiario(order.getRfcCurpBeneficiario());
                             speiSalida.setConceptopago(order.getConceptoPago());
-                            speiSalida.setIdorden89(0);
                             speiSalida.setEstatus("No enviado....");
-                            speiSalida.setFechaentrada(new Date());
                             cargoSpeiService.guardarCargoSpei(speiSalida);
 
 
@@ -186,12 +188,16 @@ public class OutServiceGeneral {
                                     rt.setId(267778);
                                     re.setResultado(rt);
                                     log.info("::::::Respuesta al enviar orden::::::::" + re);
-                                    speiSalida.setClaverastreo(ordenValida.getClaveRastreo());
+                                    speiEnviadoPK.setClaveRastreo(ordenValida.getClaveRastreo());
+                                    speiEnviadoPK.setIdorden(re.getResultado().getId());
+                                    speiEnviadoPK.setReferenciaNumerica(ordenValida.getReferenciaNumerica());
+                                    //speiSalida.setClaverastreo(ordenValida.getClaveRastreo());
+                                    speiSalida.setSpeiEnviadoPK(speiEnviadoPK);
                                     speiSalida.setNombreordenante(ordenValida.getNombreOrdenante());
-                                    speiSalida.setIdorden(re.getResultado().getId());
+                                    //speiSalida.setIdorden(re.getResultado().getId());
                                     speiSalida.setNombrebeneficiario(ordenValida.getNombreBeneficiario());
                                     speiSalida.setTipocuentaordenante(ordenValida.getTipoCuentaOrdenante());
-                                    speiSalida.setReferencianumerica(ordenValida.getReferenciaNumerica());
+                                    //speiSalida.setReferencianumerica(ordenValida.getReferenciaNumerica());
                                     speiSalida.setEmpresa(ordenValida.getEmpresa());
                                     speiSalida.setInstitucionoperante(ordenValida.getInstitucionOperante());
                                     speiSalida.setTipocuentaordenante(ordenValida.getTipoCuentaOrdenante());
@@ -203,14 +209,11 @@ public class OutServiceGeneral {
 
 
                                     if (String.valueOf(re.getResultado().getId()).length() > 3) {
-                                        speiSalida.setClaverastreo(ordenValida.getClaveRastreo());
                                         speiSalida.setNombreordenante(ordenValida.getNombreOrdenante());
                                         speiSalida.setEstatus("Enviado.....");
-                                        speiSalida.setIdorden(re.getResultado().getId());
                                         speiSalida.setAplicado(true);
                                         speiSalida.setFechaejecucion(new Date());
                                         speiSalida.setNombrebeneficiario(ordenValida.getNombreBeneficiario());
-
                                         dispersion.setId(rt.getId());
                                         dispersion.setError("OK");
                                         //vamos a persistir en el core
