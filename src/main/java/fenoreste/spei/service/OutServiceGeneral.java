@@ -173,7 +173,8 @@ public class OutServiceGeneral {
 
                                     ordenHTTP.put("latitud", "25.647914");
                                     ordenHTTP.put("longitud", "-100.290778");
-                                    //ordenHTTP.put("nombreOrdenante", ordenValida.getNombreOrdenante());
+                                    ordenHTTP.put("nombreOrdenante", ordenValida.getNombreOrdenante());
+                                    ordenHTTP.put("rfcCurpOrdenante", ordenValida.getRfcCurpOrdenante());
                                     //ordenHTTP.put("nombreParticipanteIndirecto", ordenValida.getNombreParticipanteIndirecto());
                                     //ordenHTTP.put("cuentaParticipanteIndirecto", ordenValida.getCuentaParticipanteIndirecto());
                                     // ordenHTTP.put("rfcParticipanteIndirecto", ordenValida.getRfcParticipanteIndirecto());
@@ -691,7 +692,7 @@ public class OutServiceGeneral {
                             //Institucion operante es fijo para STP
                             ordenEnviada.setInstitucionOperante(90646);
                             //Tipo pago es fijo (1.-Tercero-Tercero)
-                            ordenEnviada.setTipoPago(30);//Cambio de 1 a 30 El 08/04/2024
+                            ordenEnviada.setTipoPago(1);//Cambio de 1 a 30 El 08/04/2024
                             //Estatico porque solo se manejan cuentas clabe
                             ordenEnviada.setTipoCuentaOrdenante(40);
                             ordenEnviada.setNombreOrdenante(valida_caracteres_speciales(persona.getNombre().trim())/*p.getNombre().trim()*/ + " "
