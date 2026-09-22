@@ -19,7 +19,7 @@ INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_salida','stppath','http
 
 //Datos certificado Dato1 alias,dato2 ruta certificado,dato3 nombre llavero,dato4 contraseña llavero
 DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='datos_certificado';
-INSERT INTO tablas(idtabla,idelemento,dato1,dato2,dato3,dato4)VALUES('spei_salida','datos_certificado','caja-fama-qa','Certificados/speisalida/','famaQa','cajafamaqa');
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2,dato3,dato4)VALUES('spei_salida','datos_certificado','cajafamaqa1','Certificados/speisalida/','llaveprivada','cajafama');
 
 
 

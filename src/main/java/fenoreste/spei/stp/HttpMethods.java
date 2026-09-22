@@ -50,6 +50,7 @@ public class HttpMethods {
 
     public String enviarOrdenSpei(String requestPeticion) {
         String resultado = "";
+        log.info("Peticion hacia STP:"+requestPeticion);
         try {
             JSONObject json = new JSONObject();
             client = new OkHttpClient.Builder()
@@ -60,6 +61,7 @@ public class HttpMethods {
 
             body = RequestBody.create(mediaType, requestPeticion);
             String url = formaUrl(1) + endpointRegistraOrden;
+            log.info(url);
             System.out.println("Url a consumir:" + url);
             request = new Request.Builder()
                     .url(url)

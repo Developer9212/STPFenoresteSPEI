@@ -166,13 +166,13 @@ public class OutServiceGeneral {
                                     ordenHTTP.put("claveRastreo", ordenValida.getClaveRastreo());
                                     ordenHTTP.put("monto", ordenValida.getMonto());
                                     ordenHTTP.put("tipoCuentaBeneficiario", ordenValida.getTipoCuentaBeneficiario());
-                                    ordenHTTP.put("institucionContraparte", ordenValida.getInstitucionContraparte().toString());
+                                    ordenHTTP.put("institucionContraparte", ordenValida.getInstitucionContraparte());
                                     ordenHTTP.put("tipoPago", ordenValida.getTipoPago());
                                     ordenHTTP.put("cuentaOrdenante", ordenValida.getCuentaOrdenante());
                                     ordenHTTP.put("empresa", ordenValida.getEmpresa().trim());
 
-                                    ordenHTTP.put("latitud", ordenValida.getEmpresa().trim());
-                                    ordenHTTP.put("longitud", ordenValida.getEmpresa().trim());
+                                    ordenHTTP.put("latitud", "25.647914");
+                                    ordenHTTP.put("longitud", "-100.290778");
                                     //ordenHTTP.put("nombreOrdenante", ordenValida.getNombreOrdenante());
                                     //ordenHTTP.put("nombreParticipanteIndirecto", ordenValida.getNombreParticipanteIndirecto());
                                     //ordenHTTP.put("cuentaParticipanteIndirecto", ordenValida.getCuentaParticipanteIndirecto());
@@ -181,7 +181,7 @@ public class OutServiceGeneral {
 
 
                                     //CargoSpei cargoSpei = cargoSpeiService.guardarCargoSpei();
-                                    log.info("Orden preparar a enviar:" + ordenValida);
+                                    log.info("Orden preparar a enviar:" + ordenHTTP.getString("latitud"));
                                     String response = httpMethods.enviarOrdenSpei(ordenHTTP.toString());
                                     STPDispersionResponseVo re = json.fromJson(response, STPDispersionResponseVo.class);
                                     //STPResultadoVo rt = new STPResultadoVo();
@@ -660,12 +660,13 @@ public class OutServiceGeneral {
         try {
             Date now = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
             String fechaActual = sdf.format(now).replace("/", "");
 
             //Primero busco el folio que esta intentando hacer la orden SPEI
             AuxiliarPK auxiliarPK = new AuxiliarPK(opa.getIdorigenp(), opa.getIdproducto(), opa.getIdauxiliar());
             Auxiliar auxiliar = auxiliarService.buscarPorId(auxiliarPK);
-
+            log.info("Formateado:"+sdf1.format(new Date()));
             if (auxiliar != null) {
                 if (auxiliar.getEstatus() == 2) {
                     PersonaPK personaPK = new PersonaPK(auxiliar.getIdorigen(), auxiliar.getIdgrupo(), auxiliar.getIdsocio());
@@ -683,8 +684,10 @@ public class OutServiceGeneral {
 
                             ordenEnviada.setInstitucionContraparte(institucionDestino.getIdbanco());
                             ordenEnviada.setEmpresa(tabla.getDato1().trim());
+                            ordenEnviada.setConceptoPago(orden.getConceptoPago());
                             ordenEnviada.setClaveRastreo(claveRastreo.trim());
                             ordenEnviada.setMonto(String.valueOf(orden.getMonto()));
+
                             //Institucion operante es fijo para STP
                             ordenEnviada.setInstitucionOperante(90646);
                             //Tipo pago es fijo (1.-Tercero-Tercero)
@@ -707,13 +710,14 @@ public class OutServiceGeneral {
                                 ordenEnviada.setRfcCurpOrdenante(persona.getCurp().trim());
                                 ordenEnviada.setTipoCuentaBeneficiario(40);
                                 log.info(":FSdfsfsfsdf");
-                                orden.setBeneficiario(valida_caracteres_speciales(orden.getBeneficiario().trim()));
+                                ordenEnviada.setNombreBeneficiario(valida_caracteres_speciales(orden.getBeneficiario().trim()));
                                 ordenEnviada.setCuentaBeneficiario(orden.getCuentaBeneficiario().trim().replace(" ", ""));
                                 ordenEnviada.setRfcCurpBeneficiario(orden.getRfcCurpBeneficiario().trim());
                                 int referenciaNumerica = rnd.nextInt(300000 - 8 + 1) + 7;
                                 log.info("sisdifjdifsdjf");
                                 orden.setConceptoPago(valida_caracteres_speciales(orden.getConceptoPago().trim()));
                                 ordenEnviada.setReferenciaNumerica(referenciaNumerica);
+                                ordenEnviada.setFechaOperacion(sdf1.format(new Date()));
                                 //lo utilizo para darle la numeracion que la documentacion me pide
                                 DecimalFormat df1 = new DecimalFormat("#.00");
                                 df1.setMaximumFractionDigits(2);
@@ -950,10 +954,12 @@ public class OutServiceGeneral {
     public String firmarEnviarOrden(OrdenPagoWS oPW) {
         StringBuilder sB = new StringBuilder();
         String firma = "";
+        log.info("Cadena Pago:"+oPW);
         try {
+            log.info(oPW.getFechaOperacion());
             sB.append("||");
-            sB.append(oPW.getInstitucionContraparte()).append("|");
-            sB.append(oPW.getEmpresa()).append("|");
+            sB.append(oPW.getInstitucionContraparte() == null ? "" : oPW.getInstitucionContraparte()).append("|");
+            sB.append(oPW.getEmpresa() == null ? "" : oPW.getEmpresa()).append("|");
             sB.append(oPW.getFechaOperacion() == null ? "" : oPW.getFechaOperacion()).append("|");
             sB.append(oPW.getFolioOrigen() == null ? "" : oPW.getFolioOrigen()).append("|");
             sB.append(oPW.getClaveRastreo() == null ? "" : oPW.getClaveRastreo()).append("|");
@@ -989,8 +995,9 @@ public class OutServiceGeneral {
             String cadena = sB.toString();
 
             System.out.println("Cadena formada enviar orden:" + cadena);
+            String cadenaf= "||90646|CAJA_FAMA|||123456789|90646|20.00|1|40|Nombre Ordenante|CAJA_FAMA|ND|40|Nombre Beneficiario|646180110400000007|ND||||||Prueba REST||||||123456||||||||";
 
-            String firmaSincodificar = sign(cadena);
+            String firmaSincodificar = sign(cadenaf);
             firma = firmaSincodificar;
         } catch (Exception e) {
             e.printStackTrace();
@@ -1068,6 +1075,8 @@ public class OutServiceGeneral {
         String fileName = ruta(tabla.getDato2()) + tabla.getDato3()+".jks";
         String password = tabla.getDato4();
         String alias = tabla.getDato1();
+
+        log.info("Datos:"+fileName+",contraseña:"+password+",alias:"+alias);
         try {
             String data = cadena;
             Signature firma = Signature.getInstance("SHA256withRSA");
