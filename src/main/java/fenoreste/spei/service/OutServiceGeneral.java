@@ -181,7 +181,7 @@ public class OutServiceGeneral {
                                     ordenHTTP.put("rfcCurpBeneficiario", ordenValida.getRfcCurpBeneficiario());
                                     ordenHTTP.put("conceptoPago", ordenValida.getConceptoPago());
                                     ordenHTTP.put("institucionOperante", String.valueOf(ordenValida.getInstitucionOperante()));
-                                    ordenHTTP.put("referenciaNumerica", "138476");//String.valueOf(ordenValida.getReferenciaNumerica()));
+                                    ordenHTTP.put("referenciaNumerica",String.valueOf(ordenValida.getReferenciaNumerica()));
                                     ordenHTTP.put("claveRastreo",ordenValida.getClaveRastreo());
                                     ordenHTTP.put("monto","100.00");// ordenValida.getMonto());
                                     ordenHTTP.put("tipoCuentaBeneficiario", String.valueOf(ordenValida.getTipoCuentaBeneficiario()));
@@ -198,8 +198,7 @@ public class OutServiceGeneral {
                                     //ordenHTTP.put("nombreParticipanteIndirecto", ordenValida.getNombreParticipanteIndirecto());
                                     //ordenHTTP.put("cuentaParticipanteIndirecto", ordenValida.getCuentaParticipanteIndirecto());
                                     // ordenHTTP.put("rfcParticipanteIndirecto", ordenValida.getRfcParticipanteIndirecto());
-                                    String f = "Dnf5XvVC9h5ymMGhS93IJu2uQrjxM47tJJ8Lrc5hmbue9cgCZ1nj0/ZMYvb3LxuM1VXgMumArJyIAHcQ6sVNY3Qz9FhU+3nDR01E4y8XmV8DC+z4HJHsNPZwh3LVTXQu8c0xEWrHT6oiiIps23TWgIBPlp6Vw7VWM3NBpy1pVSsoR3b7duPvnMq6W9lpmcVOD3N8PkIsHH+x6/GEjGHjK+qslx81epdGxA1cx3v00cYQk7mEv4XBbJydkwuzJRtUnu7gASypfA3+zkDqnnPHTRIcD+LJ/VbB13rgNh1Gj2hbYxkFqMJj2rhU/3r9mqofSeeC9ob0p55Zs9UHUH1Fg==";
-                                    ordenValida.setMonto("100.00");
+                                    ordenValida.setMonto(ordenValida.getMonto());
                                     ordenHTTP.put("firma",firmarEnviarOrden(ordenValida));
 
 
