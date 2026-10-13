@@ -50,7 +50,53 @@ public class HttpMethods {
 
     public String enviarOrdenSpei(String requestPeticion) {
         String resultado = "";
+        String p = "{\n" +
+                "  \"claveRastreo\": \"20260928429640702\",\n" +
+                "  \"conceptoPago\": \"Pago\",\n" +
+                "  \"cuentaBeneficiario\": \"646180110400000007\",\n" +
+                "  \"fechaOperacion\": \"20260929\",\n" +
+                "  \"cuentaOrdenante\": \"646180522900000001\",\n" +
+                "  \"empresa\": \"CAJA_FAMA\",\n" +
+                "  \"firma\": \"GDnf5XvVC9h5ymMGhS93IJu2uQrjxM47tJJ8Lrc5hmbue9cgCZ1nj0/ZMYvb3LxuM1VXgMumArJyIAHcQ6sVNY3Qz9FhU+3nDR01E4y8XmV8DC+z4HJHsNPZwh3LVTXQu8c0xEWrHT6oiiIps23TWgIBPlp6Vw7VWM3NBpy1pVSsoR3b7duPvnMq6W9lpmcVOD3N8PkIsHH+x6/GEjGHjK+qslx81epdGxA1cx3v00cYQk7mEv4XBbJydkwuzJRtUnu7gASypfA3+zkDqnnPHTRIcD+LJ/VbB13rgNh1Gj2hbYxkFqMJj2rhU/3r9mqofSeeC9ob0p55Zs9UHUH1Fg==\",\n" +
+                "  \"institucionContraparte\": \"90646\",\n" +
+                "  \"institucionOperante\": \"90646\",\n" +
+                "  \"latitud\": \"25.647914\",\n" +
+                "  \"longitud\": \"-100.290778\",\n" +
+                "  \"monto\": \"1000.00\",\n" +
+                "  \"nombreBeneficiario\": \"maria antonia munoz ortiz\",\n" +
+                "  \"nombreOrdenante\": \"CajaFama\",\n" +
+                "  \"referenciaNumerica\": \"138476\",\n" +
+                "  \"rfcCurpBeneficiario\": \"LOFJ790906HNLPLN08\",\n" +
+                "  \"rfcCurpOrdenante\": \"ND\",\n" +
+                "  \"tipoCuentaBeneficiario\": \"40\",\n" +
+                "  \"tipoCuentaOrdenante\": \"40\",\n" +
+                "  \"tipoPago\": \"1\"\n" +
+                "}";
+
+        String p1="{\n" +
+                "  \"claveRastreo\": \"202609284296407021\",\n" +
+                "  \"conceptoPago\": \"Pago\",\n" +
+                "  \"cuentaBeneficiario\": \"646180110400000007\",\n" +
+                "  \"fechaOperacion\": \"20260929\",\n" +
+                "  \"cuentaOrdenante\": \"646180522900000001\",\n" +
+                "  \"empresa\": \"CAJA_FAMA\",\n" +
+                "  \"firma\": \"egFvPu2i9ve42cR7++9+wWb64Qmf+fOvZzYFeeKgFTD8ZTrpisC1sIWHj4oIxQdqPg1TksE1bkCMGuvL+xpQoui6l8A/aYcFRyeP3mzr21EwC8zS7orr5g9AnotPUqV3ZQPOvJUkkTCW7FR1yjN4EMghvAsviTJirJY5XEBBl0UVD/DSVdD/DPNpbvwmo4BbRjtl5jH+6nfV5KI0eEhtWEWqPEDnxVpu/yhM1VzUbC2pQS695SYT2EElEyP1CLGS6hSwU7DUPea/bA/Or84xAGM5uSQppYsUFPtIrMpf6LFHuqs1PMmLGrDntRml6DsGCLGRnzczdk7JTm/gQgwPIQ==\",\n" +
+                "  \"institucionContraparte\": \"90646\",\n" +
+                "  \"institucionOperante\": \"90646\",\n" +
+                "  \"latitud\": \"25.647914\",\n" +
+                "  \"longitud\": \"-100.290778\",\n" +
+                "  \"monto\": \"1000.00\",\n" +
+                "  \"nombreBeneficiario\": \"maria antonia munoz ortiz\",\n" +
+                "  \"nombreOrdenante\": \"CajaFama\",\n" +
+                "  \"referenciaNumerica\": \"138476\",\n" +
+                "  \"rfcCurpBeneficiario\": \"LOFJ790906HNLPLN08\",\n" +
+                "  \"rfcCurpOrdenante\": \"ND\",\n" +
+                "  \"tipoCuentaBeneficiario\": \"40\",\n" +
+                "  \"tipoCuentaOrdenante\": \"40\",\n" +
+                "  \"tipoPago\": \"1\"\n" +
+                "}";
         log.info("Peticion hacia STP:"+requestPeticion);
+        log.info("Peticion hacia P:"+p1);
         try {
             JSONObject json = new JSONObject();
             client = new OkHttpClient.Builder()
