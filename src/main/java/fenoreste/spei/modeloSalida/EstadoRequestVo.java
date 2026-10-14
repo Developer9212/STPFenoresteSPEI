@@ -10,8 +10,10 @@ public class EstadoRequestVo implements Serializable{
 	 private Integer id;
 	 private String empresa;
 	 private String folioOrigen;
+	 private String claveRastreo;
 	 private String estado;//LIQUIDADO, CANCELADO, DEVUELTO
 	 private String causaDevolucion;
+	 private String tsLiquidacion;
 
 	 private static final long serialVersionUID = 1L;
 }

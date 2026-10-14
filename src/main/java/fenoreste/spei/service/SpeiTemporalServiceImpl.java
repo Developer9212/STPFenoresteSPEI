@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import fenoreste.spei.entity.SpeiTemporalPK;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import fenoreste.spei.dao.SpeiTemporalDao;
 import fenoreste.spei.entity.SpeiTemporal;
 
 @Service
+@Slf4j
 public class SpeiTemporalServiceImpl implements ISpeiTemporalService {
 
     @Autowired
@@ -43,7 +45,7 @@ public class SpeiTemporalServiceImpl implements ISpeiTemporalService {
                 ") ON CONFLICT (idorigenp,idproducto,idauxiliar,idoperacion, referencia) DO NOTHING";*/
 
 
-       String  sql = "INSERT INTO spei_entrada_temporal_cola_guardado (" +
+      /* String  sql = "INSERT INTO spei_entrada_temporal_cola_guardado (" +
                 "idorigenp,idproducto,idauxiliar,idoperacion, referencia, aplicado, idusuario, sesion," +
                 "idorigen, idgrupo, idsocio, acapital, io_pag, io_cal, im_pag, im_cal, aiva," +
                 "saldodiacum, abonifio, idcuenta, ivaio_pag, ivaio_cal, ivaim_pag, ivaim_cal, mov," +
@@ -62,6 +64,8 @@ public class SpeiTemporalServiceImpl implements ISpeiTemporalService {
                 " AND t.idoperacion = :idoperacion" +
                 " AND t.referencia  = :referencia)";
 
+
+        System.out.println("Tu insert:"+sql);
 
         entityManager.createNativeQuery(sql)
                 .setParameter("idorigenp", mov.getSpeiTemporalPK().getIdorigenp())
@@ -102,7 +106,80 @@ public class SpeiTemporalServiceImpl implements ISpeiTemporalService {
 
                 .setParameter("tipopoliza", mov.getTipopoliza())
                 .setParameter("esentrada", mov.isEsentrada())
-                .executeUpdate();
+                .executeUpdate();*/
+
+
+        String sql =
+                "INSERT INTO spei_entrada_temporal_cola_guardado ( " +
+                        "idorigenp, idproducto, idauxiliar, idoperacion, referencia, aplicado, idusuario, sesion, " +
+                        "idorigen, idgrupo, idsocio, acapital, io_pag, io_cal, im_pag, im_cal, aiva, " +
+                        "saldodiacum, abonifio, idcuenta, ivaio_pag, ivaio_cal, ivaim_pag, ivaim_cal, mov, " +
+                        "tipomov, diasvencidos, montovencido, idorigena, huella_valida, concepto_mov, " +
+                        "fe_nom_archivo, fe_xml, sai_aux, poliza_generada, tipopoliza, esentrada) " +
+                        "SELECT :idorigenp, :idproducto, :idauxiliar, :idoperacion, :referencia, :aplicado, :idusuario, :sesion, " +
+                        ":idorigen, :idgrupo, :idsocio, :acapital, :io_pag, :io_cal, :im_pag, :im_cal, :aiva, " +
+                        ":saldodiacum, :abonifio, :idcuenta, :ivaio_pag, :ivaio_cal, :ivaim_pag, :ivaim_cal, :mov, " +
+                        ":tipomov, :diasvencidos, :montovencido, :idorigena, :huella_valida, :concepto_mov, " +
+                        ":fe_nom_archivo, :fe_xml, :sai_aux, :poliza_generada, :tipopoliza, :esentrada " +
+                        "WHERE NOT EXISTS ( " +
+                        "  SELECT 1 " +
+                        "  FROM spei_entrada_temporal_cola_guardado t " +
+                        "  WHERE t.idorigenp   = :idorigenp " +
+                        "  AND t.idproducto    = :idproducto " +
+                        "  AND t.idauxiliar    = :idauxiliar " +
+                        "  AND t.idoperacion   = :idoperacion " +
+                        "  AND t.referencia    = :referencia)";
+
+        try {
+            int filas = entityManager.createNativeQuery(sql)
+                    .setParameter("idorigenp", mov.getSpeiTemporalPK().getIdorigenp())
+                    .setParameter("idproducto", mov.getSpeiTemporalPK().getIdproducto())
+                    .setParameter("idauxiliar", mov.getSpeiTemporalPK().getIdauxiliar())
+                    .setParameter("idoperacion", mov.getSpeiTemporalPK().getIdoperacion())
+                    .setParameter("referencia", mov.getSpeiTemporalPK().getReferencia())
+                    .setParameter("aplicado", mov.isAplicado())
+                    .setParameter("idusuario", mov.getIdusuario())
+                    .setParameter("sesion", mov.getSesion())
+                    .setParameter("idorigen", mov.getIdorigen())
+                    .setParameter("idgrupo", mov.getIdgrupo())
+                    .setParameter("idsocio", mov.getIdsocio())
+                    .setParameter("acapital", mov.getAcapital())
+                    .setParameter("io_pag", mov.getIo_pag())
+                    .setParameter("io_cal", mov.getIo_cal())
+                    .setParameter("im_pag", mov.getIm_pag())
+                    .setParameter("im_cal", mov.getIm_cal())
+                    .setParameter("aiva", mov.getAiva())
+                    .setParameter("saldodiacum", mov.getSaldodiacum())
+                    .setParameter("abonifio", mov.getAbonifio())
+                    .setParameter("idcuenta", mov.getIdcuenta())
+                    .setParameter("ivaio_pag", mov.getIvaio_pag())
+                    .setParameter("ivaio_cal", mov.getIvaio_cal())
+                    .setParameter("ivaim_pag", mov.getIvaim_pag())
+                    .setParameter("ivaim_cal", mov.getIvaim_cal())
+                    .setParameter("mov", mov.getMov())
+                    .setParameter("tipomov", mov.getTipomov())
+                    .setParameter("diasvencidos", mov.getDiasvencidos())
+                    .setParameter("montovencido", mov.getMontovencido())
+                    .setParameter("idorigena", mov.getIdorigena())
+                    .setParameter("huella_valida", mov.isHuella_valida())
+                    .setParameter("concepto_mov", mov.getConcepto_mov())
+                    .setParameter("fe_nom_archivo", mov.getFe_nom_archivo())
+                    .setParameter("fe_xml", mov.getFe_xml())
+                    .setParameter("sai_aux", mov.getSai_aux())
+                    .setParameter("poliza_generada", mov.getPoliza_generada())
+                    .setParameter("tipopoliza", mov.getTipopoliza())
+                    .setParameter("esentrada", mov.isEsentrada())
+                    .executeUpdate();
+
+            if (filas == 0) {
+                log.warn("No se insertó: ya existe el registro {}", mov.getSpeiTemporalPK());
+            } else {
+                log.info("Registro insertado: {}", mov.getSpeiTemporalPK());
+            }
+        } catch (RuntimeException e) {
+            log.error("Error guardando SPEI temporal {}", mov.getSpeiTemporalPK(), e);
+            throw e; // no lo tragues, para que la transacción haga rollback visible
+        }
     }
 
 

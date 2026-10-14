@@ -1,6 +1,7 @@
 package fenoreste.spei.controller;
 
 import fenoreste.spei.modeloEntrada.ResponseLocalDispersionVo;
+import fenoreste.spei.modeloSalida.EstadoRequestVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,7 +25,6 @@ public class OutController {
 		log.info("::::::::::::::Vamos a enviar una orden SPEI::::::::::::::::::::::"+inData);
 		ResponseLocalDispersionVo response = outServiceGeneral.sendOrder(inData);
 		return ResponseEntity.status(200).body(response);
-		
 	}
 
 	//Solo caja fama
@@ -32,6 +32,14 @@ public class OutController {
 	public ResponseEntity<?>sendOrderFama(@RequestBody RequestLocalDispersionVo inData){
 		log.info("::::::::::::::Vamos a enviar una orden SPEI(Fama 1)::::::::::::::::::::::"+inData);
 		ResponseLocalDispersionVo response = outServiceGeneral.sendOrder(inData);
+		return ResponseEntity.status(200).body(response);
+	}
+
+
+	@PostMapping(value = "/cambio/estado",consumes = {MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?>sendOrder(@RequestBody EstadoRequestVo estadoRequestVo){
+		log.info("::::::::::::::Cambio estado orden:::::::::::::::::::::::"+estadoRequestVo);
+		//ResponseLocalDispersionVo response = outServiceGeneral.sendOrder(inData);
 		return ResponseEntity.status(200).body(response);
 	}
 
