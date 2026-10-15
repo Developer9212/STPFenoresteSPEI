@@ -318,10 +318,13 @@ public class OutServiceGeneral {
                 if(estadoRequestVo.equals("D") || estadoRequestVo.equals("CN")){
                     AuxiliarPK auxiliarPK = new AuxiliarPK(cargoSpei.getIdorigenp(),cargoSpei.getIdproducto(),cargoSpei.getIdauxiliar());
                     Auxiliar a = auxiliarService.buscarPorId(auxiliarPK);
-                    int operaciones = procesarPoliza(a, order, re.getResultado().getId() + "" + ordenValida.getReferenciaNumerica(), 1);
+                    RequestLocalDispersionVo orden = new RequestLocalDispersionVo();
+                    orden.setMonto(cargoSpei.getMonto());
+                    orden.setConceptoPago(String.valueOf(cargoSpei.getSpeiEnviadoPK().getIdorden()));
+                    int operaciones = procesarPoliza(a, orden, String.valueOf(cargoSpei.getSpeiEnviadoPK().getReferenciaNumerica()), 2);
+
+
                 }
-
-
             }
 
 
@@ -639,11 +642,7 @@ public class OutServiceGeneral {
                 temporal.setConcepto_mov("SPEI SALIDA REF:"+orden.getConceptoPago());
                 temporal.setEsentrada(false);
             } else if (tipoop == 2) {
-                temporal.setConcepto_mov("SPEI SALIDA: Retroceso por timeout");
-                temporal.setEsentrada(true);
-            } else if (tipoop == 3) {
-                log.info("Error poliza de retroceso");
-                temporal.setConcepto_mov("SPEI SALIDA: Retroceso por falla general");
+                temporal.setConcepto_mov("SPEI SALIDA: Ajuste");
                 temporal.setEsentrada(true);
             }
             temporal.setAcapital(orden.getMonto());
@@ -679,10 +678,7 @@ public class OutServiceGeneral {
                 temporal.setConcepto_mov("SPEI SALIDA REF:"+orden.getConceptoPago());
                 temporal.setEsentrada(true);
             } else if (tipoop == 2) {
-                temporal.setConcepto_mov("SPEI SALIDA: Retroceso por timeout");
-                temporal.setEsentrada(false);
-            } else if (tipoop == 3) {
-                temporal.setConcepto_mov("SPEI ENTRADA: Retroceso por falla general");
+                temporal.setConcepto_mov("SPEI SALIDA: Ajuste");
                 temporal.setEsentrada(false);
             }
             temporal.setAcapital(orden.getMonto());
@@ -723,7 +719,7 @@ public class OutServiceGeneral {
 
             }
 
-            //speiTemporalService.eliminar(sesion, String.valueOf(orden.getReferenciaNumerica()));
+            //speiTemporalService.eliminar(temporal.getSesion(), String.valueOf(orden.get.getReferenciaNumerica()));
 
         } catch (Exception e) {
             log.error("Error al realizar la transferencia spei:" + e.getMessage());
