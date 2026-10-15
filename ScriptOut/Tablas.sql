@@ -99,6 +99,9 @@ CREATE TABLE speienviado(
     idorden numeric,
     referencianumerica numeric,
     claverastreo text,
+    idorigenp     integer,
+    idproducto    integer,
+    idauxiliar    integer,
     institucioncontraparte varchar(30),
     empresa varchar(20),
     institucionoperante varchar(60),
@@ -119,3 +122,17 @@ CREATE TABLE speienviado(
     fecha_actualizacion_estado timestamp with time zone,
     mensaje_core text
 );
+
+
+ DROP TABLE IF EXISTS estadosordenspei;
+ CREATE TABLE estadosordenspei(
+     id integer,
+   	 empresa varchar(30),
+   	 folioorigen text,
+   	 claverastreo text,
+   	 estado varchar(30),
+   	 causadevolucion text,
+   	 tsliquidacion text,
+     fechaactualizacion timestamp without time zone
+
+ );

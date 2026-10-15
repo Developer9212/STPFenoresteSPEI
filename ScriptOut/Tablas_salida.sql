@@ -5,6 +5,9 @@ CREATE TABLE speienviado(
                             institucioncontraparte text,
                             empresa                text,
                             claverastreo           text,
+                            idorigenp              integer,
+                            idproducto             integer,
+                            idauxiliar             integer,
                             institucionoperante    integer,
                             monto                  numeric,
                             tipopago               integer,
@@ -46,6 +49,6 @@ create sequence sec_spei_enviado
    	 estado varchar(30),
    	 causadevolucion text,
    	 tsliquidacion text,
-   	 fechaactualizacion
+     fechaactualizacion timestamp without time zone
 
  );

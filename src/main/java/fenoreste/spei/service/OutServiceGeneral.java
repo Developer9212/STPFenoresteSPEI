@@ -299,11 +299,15 @@ public class OutServiceGeneral {
 
 
     public JSONObject cambioEstado(EstadoRequestVo estadoRequestVo){
-        JsonObject jsonObject = new JsonObject();
+        JSONObject jsonObject = new JSONObject();
         try{
+            System.out.println("si lelga");
             EstadoSpei estadoSpei = new EstadoSpei();
-            CargoSpei cargoSpei = cargoSpeiService.buscarCargoSpei(estadoRequestVo.getId());
+            System.out.println("fmldsflsdfmdls");
+            CargoSpei cargoSpei = cargoSpeiService.buscarPorIdOrdenClaveRastreo(estadoRequestVo.getId(), estadoRequestVo.getClaveRastreo());
+            System.out.println("dlfmslfmdslfmdslfmsdflsmfldsmf1:"+cargoSpei);
             if(cargoSpei != null){
+                System.out.println("siii");
                 estadoSpei.setId(cargoSpei.getSpeiEnviadoPK().getIdorden());
                 estadoSpei.setClaverastreo(cargoSpei.getSpeiEnviadoPK().getClaveRastreo());
                 estadoSpei.setEstado(estadoRequestVo.getEstado());
@@ -314,26 +318,28 @@ public class OutServiceGeneral {
                 estadoSpei.setCausadevolucion(estadoRequestVo.getCausaDevolucion());
                 estadoSpeiService.guardar(estadoSpei);
 
+                System.out.println("pasa pasa pasa");
+                jsonObject.put("mensaje","recibido");
+                System.out.println("pasooo");
+
                 //Si es una devolucion o cancelacion tenemos que realizar ajuste con un abono al cargo anterior
-                if(estadoRequestVo.equals("D") || estadoRequestVo.equals("CN")){
+                if(estadoRequestVo.getEstado().equals("D") || estadoRequestVo.getEstado().equals("CN")){
                     AuxiliarPK auxiliarPK = new AuxiliarPK(cargoSpei.getIdorigenp(),cargoSpei.getIdproducto(),cargoSpei.getIdauxiliar());
                     Auxiliar a = auxiliarService.buscarPorId(auxiliarPK);
                     RequestLocalDispersionVo orden = new RequestLocalDispersionVo();
                     orden.setMonto(cargoSpei.getMonto());
                     orden.setConceptoPago(String.valueOf(cargoSpei.getSpeiEnviadoPK().getIdorden()));
                     int operaciones = procesarPoliza(a, orden, String.valueOf(cargoSpei.getSpeiEnviadoPK().getReferenciaNumerica()), 2);
-
-
                 }
             }
 
 
 
         }catch (Exception e){
-
+            log.info("Error al actualizar orden spei:"+e.getMessage());
         }
 
-
+       return jsonObject;
     }
 
 
@@ -391,8 +397,8 @@ public class OutServiceGeneral {
             }
 
         } catch (Exception e) {
-            log.info("....Error al validar reglas CSN..." + validacion.getError());
-            validacion.setError("Error al validar reglas CSN");
+            log.info("....Error al validar reglas Fama..." + validacion.getError());
+            validacion.setError("Error al validar reglas Fama");
         }
         return validacion;
     }
@@ -642,6 +648,7 @@ public class OutServiceGeneral {
                 temporal.setConcepto_mov("SPEI SALIDA REF:"+orden.getConceptoPago());
                 temporal.setEsentrada(false);
             } else if (tipoop == 2) {
+                System.out.println("AJustesssssssss");
                 temporal.setConcepto_mov("SPEI SALIDA: Ajuste");
                 temporal.setEsentrada(true);
             }
