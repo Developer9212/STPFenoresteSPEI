@@ -21,6 +21,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Random;
 
+import com.google.gson.JsonObject;
 import fenoreste.spei.consumo.ConsumoCsnTDD;
 import fenoreste.spei.entity.*;
 import fenoreste.spei.modeloEntrada.*;
@@ -61,6 +62,9 @@ public class OutServiceGeneral {
     private ITarjetaService tarjetaService;
     @Autowired
     private ISpeiTemporalService speiTemporalService;
+
+    @Autowired
+    private IEstadoSpeiService estadoSpeiService;
 
 
     @Autowired
@@ -291,6 +295,42 @@ public class OutServiceGeneral {
             log.info("Error al enviar orden:" + e.getMessage());
         }
         return dispersion;
+    }
+
+
+    public JSONObject cambioEstado(EstadoRequestVo estadoRequestVo){
+        JsonObject jsonObject = new JsonObject();
+        try{
+            EstadoSpei estadoSpei = new EstadoSpei();
+            CargoSpei cargoSpei = cargoSpeiService.buscarCargoSpei(estadoRequestVo.getId());
+            if(cargoSpei != null){
+                estadoSpei.setId(cargoSpei.getSpeiEnviadoPK().getIdorden());
+                estadoSpei.setClaverastreo(cargoSpei.getSpeiEnviadoPK().getClaveRastreo());
+                estadoSpei.setEstado(estadoRequestVo.getEstado());
+                estadoSpei.setFechaactualizacion(new Date());
+                estadoSpei.setFolioorigen(estadoRequestVo.getFolioOrigen());
+                estadoSpei.setEmpresa(estadoRequestVo.getEmpresa());
+                estadoSpei.setTsliquidacion(estadoRequestVo.getTsLiquidacion());
+                estadoSpei.setCausadevolucion(estadoRequestVo.getCausaDevolucion());
+                estadoSpeiService.guardar(estadoSpei);
+
+                //Si es una devolucion o cancelacion tenemos que realizar ajuste con un abono al cargo anterior
+                if(estadoRequestVo.equals("D") || estadoRequestVo.equals("CN")){
+                    AuxiliarPK auxiliarPK = new AuxiliarPK(cargoSpei.getIdorigenp(),cargoSpei.getIdproducto(),cargoSpei.getIdauxiliar());
+                    Auxiliar a = auxiliarService.buscarPorId(auxiliarPK);
+                    int operaciones = procesarPoliza(a, order, re.getResultado().getId() + "" + ordenValida.getReferenciaNumerica(), 1);
+                }
+
+
+            }
+
+
+
+        }catch (Exception e){
+
+        }
+
+
     }
 
 
@@ -572,7 +612,6 @@ public class OutServiceGeneral {
         int aplicados = 0;
         try {
 
-            String sesion = funcionesSaiService.session();
             matriz = origenService.buscarMatriz();
             // Buscamos tabla para idcuenta
             tb_pk = new TablaPK(idtabla, "cuenta");
@@ -592,21 +631,20 @@ public class OutServiceGeneral {
             temporal.setIdorigen(opa.getIdorigen());
             temporal.setIdgrupo(opa.getIdgrupo());
             temporal.setIdsocio(opa.getIdsocio());
-            temporal.setEsentrada(false);
             //temporal.setIdorigenp(opa.getAuxiliarPK().getIdorigenp());
             //temporal.setIdproducto(opa.getAuxiliarPK().getIdproducto());
             //temporal.setIdauxiliar(opa.getAuxiliarPK().getIdauxiliar());
             //temporal.setReferencia(String.valueOf(referencia));
             if (tipoop == 1) {
                 temporal.setConcepto_mov("SPEI SALIDA REF:"+orden.getConceptoPago());
-                //  temporal.setEsentrada(false);
+                temporal.setEsentrada(false);
             } else if (tipoop == 2) {
                 temporal.setConcepto_mov("SPEI SALIDA: Retroceso por timeout");
-                //temporal.setEsentrada(true);
+                temporal.setEsentrada(true);
             } else if (tipoop == 3) {
                 log.info("Error poliza de retroceso");
                 temporal.setConcepto_mov("SPEI SALIDA: Retroceso por falla general");
-                //temporal.setEsentrada(false);
+                temporal.setEsentrada(true);
             }
             temporal.setAcapital(orden.getMonto());
             temporal.setIdusuario(Integer.parseInt(tb_usuario.getDato1()));
@@ -634,19 +672,18 @@ public class OutServiceGeneral {
             temporal.setIdorigen(opa.getIdorigen());
             System.out.println("i1");
             temporal.setIdgrupo(opa.getIdgrupo());
-            temporal.setEsentrada(true);
             System.out.println("i2");
             temporal.setIdsocio(opa.getIdsocio());
             System.out.println("sigue");
             if (tipoop == 1) {
                 temporal.setConcepto_mov("SPEI SALIDA REF:"+orden.getConceptoPago());
-                //temporal.setEsentrada(true);
+                temporal.setEsentrada(true);
             } else if (tipoop == 2) {
                 temporal.setConcepto_mov("SPEI SALIDA: Retroceso por timeout");
-                //temporal.setEsentrada(false);
+                temporal.setEsentrada(false);
             } else if (tipoop == 3) {
                 temporal.setConcepto_mov("SPEI ENTRADA: Retroceso por falla general");
-                //temporal.setEsentrada(true);
+                temporal.setEsentrada(false);
             }
             temporal.setAcapital(orden.getMonto());
             //temporal.setReferencia(referencia));

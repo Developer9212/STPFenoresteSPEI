@@ -3,6 +3,8 @@ package fenoreste.spei.controller;
 import fenoreste.spei.modeloEntrada.ResponseLocalDispersionVo;
 import fenoreste.spei.modeloSalida.EstadoRequestVo;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +39,16 @@ public class OutController {
 
 
 	@PostMapping(value = "/cambio/estado",consumes = {MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?>sendOrder(@RequestBody EstadoRequestVo estadoRequestVo){
+	public ResponseEntity<?>sendOrder(@RequestBody EstadoRequestVo estadoRequestVo) {
 		log.info("::::::::::::::Cambio estado orden:::::::::::::::::::::::"+estadoRequestVo);
 		//ResponseLocalDispersionVo response = outServiceGeneral.sendOrder(inData);
-		return ResponseEntity.status(200).body(response);
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put("mensaje",new Object());
+		}catch (Exception e) {
+		   log.info("::::Error al manejar Json:"+e.getMessage());
+		}
+		return ResponseEntity.status(200).body(jsonObject);
 	}
 
 	/*

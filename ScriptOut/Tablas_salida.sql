@@ -34,3 +34,18 @@ create sequence sec_spei_enviado
     increment by 1
     maxvalue 99999
     minvalue 1;
+
+
+
+ DROP TABLE IF EXISTS estadosordenspei;
+ CREATE TABLE estadosordenspei(
+     id integer,
+   	 empresa varchar(30),
+   	 folioorigen text,
+   	 claverastreo text,
+   	 estado varchar(30),
+   	 causadevolucion text,
+   	 tsliquidacion text,
+   	 fechaactualizacion
+
+ );

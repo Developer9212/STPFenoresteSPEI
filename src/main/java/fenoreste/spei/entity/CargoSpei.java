@@ -17,6 +17,9 @@ public class CargoSpei implements Serializable {
 
     @EmbeddedId
     private SpeiEnviadoPK speiEnviadoPK;
+    private Integer idorigenp;
+    private Integer idproducto;
+    private Integer idauxiliar;
     private String institucioncontraparte;
     private String empresa;
     private Integer institucionoperante;
