@@ -1,13 +1,14 @@
 
 DROP TABLE IF EXISTS speienviado;
 CREATE TABLE speienviado(
-                            id                     integer,
-                            institucioncontraparte text,
-                            empresa                text,
+                            idorden                integer,
+                            referencianumerica     integer,
                             claverastreo           text,
                             idorigenp              integer,
                             idproducto             integer,
                             idauxiliar             integer,
+                            institucioncontraparte text,
+                            empresa                text,
                             institucionoperante    integer,
                             monto                  numeric,
                             tipopago               integer,
@@ -20,16 +21,14 @@ CREATE TABLE speienviado(
                             cuentabeneficiario     text,
                             rfccurpbeneficiario    text,
                             conceptopago           text,
-                            referencianumerica     integer,
-                            fechaentrada           timestamp without time zone,
-                            fechaejecucion         timestamp without time zone,
-                            idorden                integer,
+                            fecha          timestamp without time zone,
                             aplicado               boolean default false,
                             estatus                text,
-                            mensaje_core           text,
                             fecha_actualizacion_estado timestamp without time zone,
+                            mensaje_core           text
 
-                primary key (id)
+
+                primary key (idorden,referencianumerica,claverastreo)
 );
 
 create sequence sec_spei_enviado

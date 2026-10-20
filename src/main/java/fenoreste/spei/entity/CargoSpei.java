@@ -35,7 +35,7 @@ public class CargoSpei implements Serializable {
     private String rfccurpbeneficiario;
     private String conceptopago;
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaejecucion;
+    private Date fecha;
     private boolean aplicado;
     private String estatus;
     @Temporal(TemporalType.TIMESTAMP)

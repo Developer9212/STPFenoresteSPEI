@@ -19,7 +19,5 @@ public class SpeiEnviadoPK implements Serializable {
     private static final long SerialVersionUID = 1L;
     private  Integer idorden;
     private Integer referenciaNumerica;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha;
     private String claveRastreo;
 }

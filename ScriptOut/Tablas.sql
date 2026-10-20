@@ -95,33 +95,36 @@ INSERT INTO clave_instituciones VALUES(846,'GEM-STP');
 
 DROP TABLE IF EXISTS speienviado;
 CREATE TABLE speienviado(
-    fecha timestamp with time zone,
-    idorden numeric,
-    referencianumerica numeric,
-    claverastreo text,
-    idorigenp     integer,
-    idproducto    integer,
-    idauxiliar    integer,
-    institucioncontraparte varchar(30),
-    empresa varchar(20),
-    institucionoperante varchar(60),
-    monto numeric,
-    tipopago numeric,
-    tipocuentaordenante numeric,
-    nombreordenante text,
-    cuentaordenante text,
-    rfccurpordenante text,
-    tipocuentabeneficiario numeric,
-    nombrebeneficiario text,
-    cuentabeneficiario varchar(20),
-    rfccurpbeneficiario text,
-    conceptopago text,
-    fechaejecucion timestamp with time zone,
-    aplicado boolean,
-    estatus varchar(20),
-    fecha_actualizacion_estado timestamp with time zone,
-    mensaje_core text
+                            idorden                integer,
+                            referencianumerica     integer,
+                            claverastreo           text,
+                            idorigenp              integer,
+                            idproducto             integer,
+                            idauxiliar             integer,
+                            institucioncontraparte text,
+                            empresa                text,
+                            institucionoperante    integer,
+                            monto                  numeric,
+                            tipopago               integer,
+                            tipocuentaordenante    integer,
+                            nombreordenante        text,
+                            cuentaordenante        text,
+                            rfccurpordenante       text,
+                            tipocuentabeneficiario integer,
+                            nombrebeneficiario     text,
+                            cuentabeneficiario     text,
+                            rfccurpbeneficiario    text,
+                            conceptopago           text,
+                            fecha          timestamp without time zone,
+                            aplicado               boolean default false,
+                            estatus                text,
+                            fecha_actualizacion_estado timestamp without time zone,
+                            mensaje_core           text
+
+
+                primary key (idorden,referencianumerica,claverastreo)
 );
+
 
 
  DROP TABLE IF EXISTS estadosordenspei;

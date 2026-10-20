@@ -138,9 +138,9 @@ public class OutServiceGeneral {
                         if (clabe != null) {
                             //Guardamos la operacion de salida para tener registros
                             SpeiEnviadoPK speiEnviadoPK = new SpeiEnviadoPK();
-                            speiEnviadoPK.setIdorden(0);
-                            speiEnviadoPK.setFecha(new Date());
                             CargoSpei speiSalida = new CargoSpei();
+                            /*speiEnviadoPK.setIdorden(0);
+                            speiEnviadoPK.setFecha(new Date());
                             speiSalida.setSpeiEnviadoPK(speiEnviadoPK);
                             speiSalida.setCuentabeneficiario(order.getCuentaBeneficiario());
                             speiSalida.setMonto(order.getMonto());
@@ -149,10 +149,10 @@ public class OutServiceGeneral {
                             speiSalida.setRfccurpbeneficiario(order.getRfcCurpBeneficiario());
                             speiSalida.setConceptopago(order.getConceptoPago());
                             speiSalida.setEstatus("No enviado....");
-                            cargoSpeiService.guardarCargoSpei(speiSalida);
+                            cargoSpeiService.guardarCargoSpei(speiSalida);*/
 
 
-                            // Institutcion contraparte(Banco receptor)
+                            // Institucion contraparte(Banco receptor)
                             Banco banco = bancoService.buscarNombre(order.getBanco().trim());
                             if (banco != null) {
                                 //Validamos y creamos la orden a enviar
@@ -230,14 +230,16 @@ public class OutServiceGeneral {
                                     speiSalida.setRfccurpbeneficiario(ordenValida.getRfcCurpBeneficiario());
                                     speiSalida.setNombrebeneficiario(ordenValida.getNombreBeneficiario());
                                     speiSalida.setConceptopago(ordenValida.getConceptoPago());
-
+                                    speiSalida.setIdorigenp(a.getAuxiliarPK().getIdorigenp());
+                                    speiSalida.setIdproducto(a.getAuxiliarPK().getIdproducto());
+                                    speiSalida.setIdauxiliar(a.getAuxiliarPK().getIdauxiliar());
+                                    speiSalida.setMonto(order.getMonto());
 
                                     if (String.valueOf(re.getResultado().getId()).length() > 3) {
-                                        System.out.println("SIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
                                         speiSalida.setNombreordenante(ordenValida.getNombreOrdenante());
                                         //speiSalida.setEstatus("Enviado.....");
                                         speiSalida.setAplicado(true);
-                                        speiSalida.setFechaejecucion(new Date());
+                                        speiSalida.setFecha(new Date());
                                         speiSalida.setNombrebeneficiario(ordenValida.getNombreBeneficiario());
 
                                         //vamos a persistir en el core
@@ -304,7 +306,7 @@ public class OutServiceGeneral {
             System.out.println("si lelga");
             EstadoSpei estadoSpei = new EstadoSpei();
             System.out.println("fmldsflsdfmdls");
-            CargoSpei cargoSpei = cargoSpeiService.buscarPorIdOrdenClaveRastreo(estadoRequestVo.getId(), estadoRequestVo.getClaveRastreo());
+            CargoSpei cargoSpei = cargoSpeiService.buscarPorIdOrdenClaveRastreo(estadoRequestVo.getId(), estadoRequestVo.getClaveRastreo().trim());
             System.out.println("dlfmslfmdslfmdslfmsdflsmfldsmf1:"+cargoSpei);
             if(cargoSpei != null){
                 System.out.println("siii");
@@ -318,12 +320,15 @@ public class OutServiceGeneral {
                 estadoSpei.setCausadevolucion(estadoRequestVo.getCausaDevolucion());
                 estadoSpeiService.guardar(estadoSpei);
 
+                cargoSpei.setFecha_actualizacion_estado(estadoSpei.getFechaactualizacion());
+                cargoSpeiService.guardarCargoSpei(cargoSpei);
                 System.out.println("pasa pasa pasa");
                 jsonObject.put("mensaje","recibido");
                 System.out.println("pasooo");
 
                 //Si es una devolucion o cancelacion tenemos que realizar ajuste con un abono al cargo anterior
                 if(estadoRequestVo.getEstado().equals("D") || estadoRequestVo.getEstado().equals("CN")){
+                    System.out.println(cargoSpei.getIdorigenp()+","+cargoSpei.getIdproducto());
                     AuxiliarPK auxiliarPK = new AuxiliarPK(cargoSpei.getIdorigenp(),cargoSpei.getIdproducto(),cargoSpei.getIdauxiliar());
                     Auxiliar a = auxiliarService.buscarPorId(auxiliarPK);
                     RequestLocalDispersionVo orden = new RequestLocalDispersionVo();
@@ -620,18 +625,26 @@ public class OutServiceGeneral {
     private int procesarPoliza(Auxiliar opa, RequestLocalDispersionVo orden, String referencia, int tipoop) {
         int aplicados = 0;
         try {
-
+            log.info("Vamos a generar poliza:"+orden.getMonto());
             matriz = origenService.buscarMatriz();
             // Buscamos tabla para idcuenta
             tb_pk = new TablaPK(idtabla, "cuenta");
             Tabla tb_cuenta_contable = tablaService.buscarPorId(tb_pk);
             tb_pk = new TablaPK(idtabla, "usuario");
             tb_usuario = tablaService.buscarPorId(tb_pk);
-
+            log.info("p1");
             SpeiTemporalPK temporalPk = new SpeiTemporalPK();
-            temporalPk.setIdorigenp(opa.getAuxiliarPK().getIdorigenp());
-            temporalPk.setIdproducto(opa.getAuxiliarPK().getIdproducto());
-            temporalPk.setIdauxiliar(opa.getAuxiliarPK().getIdauxiliar());
+
+            System.out.println("P1");
+            Producto producto= productoService.buscarPorId(opa.getAuxiliarPK().getIdproducto());
+            if(tipoop == 2 && (producto.getTipoproducto() == 2 || producto.getTipoproducto()==1)){
+
+            }else{
+                temporalPk.setIdorigenp(opa.getAuxiliarPK().getIdorigenp());
+                temporalPk.setIdproducto(opa.getAuxiliarPK().getIdproducto());
+                temporalPk.setIdauxiliar(opa.getAuxiliarPK().getIdauxiliar());
+            }
+
             temporalPk.setIdoperacion(BigInteger.valueOf(Integer.parseInt(orden.getConceptoPago())));
             temporalPk.setReferencia(referencia);
             // Vamos a registrar movimiento a producto abono(Abono)
@@ -648,7 +661,6 @@ public class OutServiceGeneral {
                 temporal.setConcepto_mov("SPEI SALIDA REF:"+orden.getConceptoPago());
                 temporal.setEsentrada(false);
             } else if (tipoop == 2) {
-                System.out.println("AJustesssssssss");
                 temporal.setConcepto_mov("SPEI SALIDA: Ajuste");
                 temporal.setEsentrada(true);
             }
@@ -660,8 +672,11 @@ public class OutServiceGeneral {
             temporal.setMov(1);
             temporal.setTipomov(2);
             temporal.setTipopoliza(3);
-            log.info("::::::::::::::::Procesando poliza::::::::::::::::"+temporal);
             speiTemporalService.guardar(temporal);
+            log.info("::::::::::::::::::Terminamos de guardar el cargo a opera:::::::::::::::::::");
+
+
+
 
             // Vamos a registrar el movimiento a cuentaContable(Cargo) para el balance
             System.out.println("Guardando abono a cuenta");
@@ -771,7 +786,7 @@ public class OutServiceGeneral {
 
                             ordenEnviada.setClaveRastreo(claveRastreo.trim());
                             ordenEnviada.setConceptoPago(orden.getConceptoPago());
-                            ordenEnviada.setInstitucionContraparte(90646);//institucionDestino.getIdbanco());
+                            ordenEnviada.setInstitucionContraparte(institucionDestino.getIdbanco());
                             ordenEnviada.setEmpresa(tabla.getDato1().trim());
 
                             //Institucion operante es fijo para STP
@@ -792,10 +807,11 @@ public class OutServiceGeneral {
                             log.info("paso!:"+clabe);
                             if (clabe.isActiva()) {
                                 log.info("sadadsad");
-                                ordenEnviada.setCuentaOrdenante("646180522900000001");//clabe.getClabe().trim());
-                                ordenEnviada.setRfcCurpOrdenante("ND");//persona.getCurp().trim());
+                                ordenEnviada.setCuentaOrdenante(clabe.getClabe().trim());
+                                ordenEnviada.setRfcCurpOrdenante(persona.getCurp().trim());
                                 ordenEnviada.setTipoCuentaBeneficiario(40);
                                 ordenEnviada.setNombreBeneficiario(valida_caracteres_speciales(orden.getBeneficiario().trim()));
+                                //Solo para pruebas usar esa cuenta 
                                 ordenEnviada.setCuentaBeneficiario("646180110400000007");//orden.getCuentaBeneficiario().trim().replace(" ", ""));
                                 ordenEnviada.setRfcCurpBeneficiario(orden.getRfcCurpBeneficiario().trim());
                                 int referenciaNumerica = rnd.nextInt(300000 - 8 + 1) + 7;
@@ -803,7 +819,7 @@ public class OutServiceGeneral {
                                 orden.setConceptoPago(valida_caracteres_speciales(orden.getConceptoPago().trim()));
                                 ordenEnviada.setReferenciaNumerica(referenciaNumerica);
 
-                                ordenEnviada.setFechaOperacion(sdf1.format(new Date()));
+                                ordenEnviada.setFechaOperacion(sdf1.format(origenService.buscarMatriz().getFechatrabajo()));
                                 //lo utilizo para darle la numeracion que la documentacion me pide
                                 DecimalFormat df1 = new DecimalFormat("#.00");
                                 df1.setMaximumFractionDigits(2);
