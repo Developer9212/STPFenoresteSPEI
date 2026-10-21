@@ -638,7 +638,7 @@ public class OutServiceGeneral {
             System.out.println("P1");
             Producto producto= productoService.buscarPorId(opa.getAuxiliarPK().getIdproducto());
             if(tipoop == 2 && (producto.getTipoproducto() == 2 || producto.getTipoproducto()==1)){
-
+                    //sdfkdjmfk
             }else{
                 temporalPk.setIdorigenp(opa.getAuxiliarPK().getIdorigenp());
                 temporalPk.setIdproducto(opa.getAuxiliarPK().getIdproducto());
