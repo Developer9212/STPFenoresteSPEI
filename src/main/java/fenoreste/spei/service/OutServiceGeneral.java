@@ -638,7 +638,17 @@ public class OutServiceGeneral {
             System.out.println("P1");
             Producto producto= productoService.buscarPorId(opa.getAuxiliarPK().getIdproducto());
             if(tipoop == 2 && (producto.getTipoproducto() == 2 || producto.getTipoproducto()==1)){
-                    //sdfkdjmfk
+                tb_pk = new TablaPK(idtabla, "producto_resumidero");
+                Tabla tb_resumidero = tablaService.buscarPorId(tb_pk);
+                PersonaPK personaPK = new PersonaPK();
+                personaPK.setIdorigen(opa.getIdorigen());
+                personaPK.setIdgrupo(opa.getIdgrupo());
+                personaPK.setIdsocio(opa.getIdsocio());
+                Persona persona = personaService.buscarPorId(personaPK);
+                Auxiliar aux_resumidero = auxiliarService.buscarPorOgsProducto(persona.getPk(),Integer.parseInt(tb_resumidero.getDato1()));
+                temporalPk.setIdorigenp(aux_resumidero.getAuxiliarPK().getIdorigenp());
+                temporalPk.setIdproducto(aux_resumidero.getAuxiliarPK().getIdproducto());
+                temporalPk.setIdauxiliar(aux_resumidero.getAuxiliarPK().getIdauxiliar());
             }else{
                 temporalPk.setIdorigenp(opa.getAuxiliarPK().getIdorigenp());
                 temporalPk.setIdproducto(opa.getAuxiliarPK().getIdproducto());
@@ -674,8 +684,6 @@ public class OutServiceGeneral {
             temporal.setTipopoliza(3);
             speiTemporalService.guardar(temporal);
             log.info("::::::::::::::::::Terminamos de guardar el cargo a opera:::::::::::::::::::");
-
-
 
 
             // Vamos a registrar el movimiento a cuentaContable(Cargo) para el balance

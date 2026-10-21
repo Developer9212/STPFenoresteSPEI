@@ -1,5 +1,6 @@
 package fenoreste.spei.service;
 
+import fenoreste.spei.entity.PersonaPK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,13 @@ public class AuxiliarServiceImpl implements IAuxiliarService{
 	
 	@Override
 	public Auxiliar buscarPorId(AuxiliarPK pk) {
-
-
 		return auxiliarDao.findById(pk).orElse(null);
 	}
+
+	@Override
+	public Auxiliar buscarPorOgsProducto(PersonaPK personaPK, Integer idProducto) {
+		return auxiliarDao.buscarPorOgsProducto(personaPK.getIdorigen(),personaPK.getIdgrupo(),personaPK.getIdsocio(), idProducto);
+	}
+
 
 }
