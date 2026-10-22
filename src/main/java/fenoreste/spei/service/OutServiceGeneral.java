@@ -380,8 +380,38 @@ public class OutServiceGeneral {
                                     }
                                 break;
                             case 1://Inversiones
+                                if (opa.getSaldo().doubleValue() >= orden.getMonto()) {
+                                    if (opa.getEstatus() == 2) {
+                                        log.info("::::::::::Validacion exitosa:::::::::");
+                                        validacion.setId(200);
+
+                                    } else {
+                                        log.info("::::::::::Estatus folio auxiliar invalido:::::::::.");
+                                        validacion.setId(14);
+                                        validacion.setError("Estatus invalido");
+                                    }
+                                } else {
+                                    log.info(":::::::::::Saldo insuficiente para procesar la transaccion::::::::");
+                                    validacion.setId(14);
+                                    validacion.setError("saldo insuficiente");
+                                }
                                 break;
                             case 2://Prestamos
+                                if (opa.getMontoautorizado().doubleValue() >= orden.getMonto()) {
+                                    if (opa.getEstatus() == 2 || opa.getEstatus() == 1) {
+                                        log.info("::::::::::Validacion exitosa:::::::::");
+                                        validacion.setId(200);
+
+                                    } else {
+                                        log.info("::::::::::Estatus folio auxiliar invalido:::::::::.");
+                                        validacion.setId(14);
+                                        validacion.setError("Estatus invalido");
+                                    }
+                                } else {
+                                    log.info(":::::::::::Saldo insuficiente para procesar la transaccion::::::::");
+                                    validacion.setId(14);
+                                    validacion.setError("saldo insuficiente");
+                                }
                                 break;
                         }
                     } else {

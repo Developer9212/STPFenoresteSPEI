@@ -21,7 +21,8 @@ INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_salida','stppath','http
 DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='datos_certificado';
 INSERT INTO tablas(idtabla,idelemento,dato1,dato2,dato3,dato4)VALUES('spei_salida','datos_certificados','CAJA_FAMA','Certificados/speisalida/','llaveprivada','cajafama');
 
-
+DELETE FROM TABLAS WHERE idtabla = 'spei_salida' AND idelemento='producto_resumidero';
+INSERT INTO TABLAS(idtabla,idelemento,dato1) VALUES('spei_salida','producto_resumidero','115');
 
 
 
