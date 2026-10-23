@@ -303,13 +303,9 @@ public class OutServiceGeneral {
     public JSONObject cambioEstado(EstadoRequestVo estadoRequestVo){
         JSONObject jsonObject = new JSONObject();
         try{
-            System.out.println("si lelga");
             EstadoSpei estadoSpei = new EstadoSpei();
-            System.out.println("fmldsflsdfmdls");
             CargoSpei cargoSpei = cargoSpeiService.buscarPorIdOrdenClaveRastreo(estadoRequestVo.getId(), estadoRequestVo.getClaveRastreo().trim());
-            System.out.println("dlfmslfmdslfmdslfmsdflsmfldsmf1:"+cargoSpei);
             if(cargoSpei != null){
-                System.out.println("siii");
                 estadoSpei.setId(cargoSpei.getSpeiEnviadoPK().getIdorden());
                 estadoSpei.setClaverastreo(cargoSpei.getSpeiEnviadoPK().getClaveRastreo());
                 estadoSpei.setEstado(estadoRequestVo.getEstado());
@@ -322,9 +318,8 @@ public class OutServiceGeneral {
 
                 cargoSpei.setFecha_actualizacion_estado(estadoSpei.getFechaactualizacion());
                 cargoSpeiService.guardarCargoSpei(cargoSpei);
-                System.out.println("pasa pasa pasa");
                 jsonObject.put("mensaje","recibido");
-                System.out.println("pasooo");
+
 
                 //Si es una devolucion o cancelacion tenemos que realizar ajuste con un abono al cargo anterior
                 if(estadoRequestVo.getEstado().equals("D") || estadoRequestVo.getEstado().equals("CN")){
@@ -336,6 +331,8 @@ public class OutServiceGeneral {
                     orden.setConceptoPago(String.valueOf(cargoSpei.getSpeiEnviadoPK().getIdorden()));
                     int operaciones = procesarPoliza(a, orden, String.valueOf(cargoSpei.getSpeiEnviadoPK().getReferenciaNumerica()), 2);
                 }
+            }else{
+                jsonObject.put("mensaje","No se encontro operacion con idoperacion:"+estadoRequestVo.getId()+" y claverastreo:"+estadoRequestVo.getClaveRastreo());
             }
 
 
@@ -662,10 +659,7 @@ public class OutServiceGeneral {
             Tabla tb_cuenta_contable = tablaService.buscarPorId(tb_pk);
             tb_pk = new TablaPK(idtabla, "usuario");
             tb_usuario = tablaService.buscarPorId(tb_pk);
-            log.info("p1");
             SpeiTemporalPK temporalPk = new SpeiTemporalPK();
-
-            System.out.println("P1");
             Producto producto= productoService.buscarPorId(opa.getAuxiliarPK().getIdproducto());
             if(tipoop == 2 && (producto.getTipoproducto() == 2 || producto.getTipoproducto()==1)){
                 tb_pk = new TablaPK(idtabla, "producto_resumidero");
@@ -713,27 +707,23 @@ public class OutServiceGeneral {
             temporal.setTipomov(2);
             temporal.setTipopoliza(3);
             speiTemporalService.guardar(temporal);
-            log.info("::::::::::::::::::Terminamos de guardar el cargo a opera:::::::::::::::::::");
+            log.info("::::::::::::::::::Terminamos de guardar el cargo a opa:::::::::::::::::::");
 
 
             // Vamos a registrar el movimiento a cuentaContable(Cargo) para el balance
-            System.out.println("Guardando abono a cuenta");
+            System.out.println(":::::::::Guardando abono a cuenta:::::::");
             temporalPk.setIdoperacion(BigInteger.valueOf(Integer.parseInt(orden.getConceptoPago())));
             temporalPk.setIdorigenp(0);
             temporalPk.setIdproducto(0);
             temporalPk.setIdauxiliar(0);
             temporal = new SpeiTemporal();
             temporal.setSpeiTemporalPK(temporalPk);
-            System.out.println("i-3");
             System.out.println("Cuenta contable:" + tb_cuenta_contable);
             temporal.setIdcuenta(tb_cuenta_contable.getDato1());
-            System.out.println("i0");
             temporal.setIdorigen(opa.getIdorigen());
-            System.out.println("i1");
             temporal.setIdgrupo(opa.getIdgrupo());
-            System.out.println("i2");
             temporal.setIdsocio(opa.getIdsocio());
-            System.out.println("sigue");
+
             if (tipoop == 1) {
                 temporal.setConcepto_mov("SPEI SALIDA REF:"+orden.getConceptoPago());
                 temporal.setEsentrada(true);
@@ -805,7 +795,6 @@ public class OutServiceGeneral {
             //Primero busco el folio que esta intentando hacer la orden SPEI
             AuxiliarPK auxiliarPK = new AuxiliarPK(opa.getIdorigenp(), opa.getIdproducto(), opa.getIdauxiliar());
             Auxiliar auxiliar = auxiliarService.buscarPorId(auxiliarPK);
-            log.info("Formateado:"+sdf1.format(new Date()));
             if (auxiliar != null) {
                 if (auxiliar.getEstatus() == 2) {
                     PersonaPK personaPK = new PersonaPK(auxiliar.getIdorigen(), auxiliar.getIdgrupo(), auxiliar.getIdsocio());
@@ -838,13 +827,10 @@ public class OutServiceGeneral {
                                     + valida_caracteres_speciales(persona.getApmaterno().trim()));// + p.getApmaterno().trim());
 
                             //Busco la clabe interbancaria
-                            log.info("::::::::auxilair:"+auxiliar.getAuxiliarPK());
                             tbpk = new TablaPK(idtabla,"clabe_operaciones");
                             tabla = tablaService.buscarPorId(tbpk);
                             ClabeInterbancaria clabe = clabeInterbancariaService.buscarPorClabe(tabla.getDato1());
-                            log.info("paso!:"+clabe);
                             if (clabe.isActiva()) {
-                                log.info("sadadsad");
                                 ordenEnviada.setCuentaOrdenante(clabe.getClabe().trim());
                                 ordenEnviada.setRfcCurpOrdenante(persona.getCurp().trim());
                                 ordenEnviada.setTipoCuentaBeneficiario(40);
@@ -853,7 +839,6 @@ public class OutServiceGeneral {
                                 ordenEnviada.setCuentaBeneficiario("646180110400000007");//orden.getCuentaBeneficiario().trim().replace(" ", ""));
                                 ordenEnviada.setRfcCurpBeneficiario(orden.getRfcCurpBeneficiario().trim());
                                 int referenciaNumerica = rnd.nextInt(300000 - 8 + 1) + 7;
-                                log.info("sisdifjdifsdjf");
                                 orden.setConceptoPago(valida_caracteres_speciales(orden.getConceptoPago().trim()));
                                 ordenEnviada.setReferenciaNumerica(referenciaNumerica);
 
@@ -921,11 +906,9 @@ public class OutServiceGeneral {
                     PersonaPK personaPK = new PersonaPK(auxiliar.getIdorigen(), auxiliar.getIdgrupo(), auxiliar.getIdsocio());
                     Persona persona = personaService.buscarPorId(personaPK);
                     if (persona != null) {
-                        System.out.println("si persona");
                         //Vamos a buscar el banco receptor
                         Banco institucionDestino = bancoService.buscarNombre(orden.getBanco().trim());
                         if (institucionDestino != null) {
-                            System.out.println("si banco");
                             //Genero la clave de rastreo
                             Random rnd = new Random();
                             //Busco empresa
@@ -952,7 +935,6 @@ public class OutServiceGeneral {
 
                             //Busco la clabe interbancaria
                             ClabeInterbancaria clabe = clabeInterbancariaService.buscarPorId(auxiliar.getAuxiliarPK());
-                            System.out.println("dmdlfm");
                             if (clabe.isActiva()) {
                                 System.out.println("dentro");
                                 ordenEnviada.setCuentaOrdenante(clabe.getClabe().trim());
@@ -1209,17 +1191,14 @@ public class OutServiceGeneral {
     // Consigo mi firma
     public String sign(String cadena) throws Exception {
         String firmaCod;
+        System.out.println("Vamos a general firmaa::::::::::::::::::::::::::");
         // Direccion de mi keystore local
         //Dato1 alias,dato2 ruta certificado,dato3 nombre llavero,dato4 contraseña llavero
         tb_pk = new TablaPK(idtabla,"datos_certificado");
         Tabla tabla = tablaService.buscarPorId(tb_pk);
         String fileName = ruta(tabla.getDato2()) + tabla.getDato3()+".jks";
-
-        log.info("Rutaaaaaaaaaaaaaaaaaa:"+fileName);
         String password = tabla.getDato4();
         String alias = tabla.getDato1();
-
-        log.info("Datos:"+fileName+",contraseña:"+password+",alias:"+alias);
         try {
             String data = cadena;
             Signature firma = Signature.getInstance("SHA256withRSA");

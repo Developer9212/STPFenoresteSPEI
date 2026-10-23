@@ -119,7 +119,7 @@ CREATE TABLE speienviado(
                             aplicado               boolean default false,
                             estatus                text,
                             fecha_actualizacion_estado timestamp without time zone,
-                            mensaje_core           text
+                            mensaje_core           text,
 
 
                 primary key (idorden,referencianumerica,claverastreo)

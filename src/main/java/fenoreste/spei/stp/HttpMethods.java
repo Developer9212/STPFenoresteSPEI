@@ -55,10 +55,14 @@ public class HttpMethods {
 
         try {
             JSONObject json = new JSONObject();
+
+
             client = new OkHttpClient.Builder()
                     .connectTimeout(20, java.util.concurrent.TimeUnit.SECONDS) // Tiempo de espera para establecer la conexión
                     .readTimeout(20, java.util.concurrent.TimeUnit.SECONDS)    // Tiempo de espera para la lectura de datos
                     .build();
+
+            client = sslUtil.OKHttpClientModificado();
             mediaType = MediaType.parse("application/json");
 
             body = RequestBody.create(mediaType, requestPeticion);

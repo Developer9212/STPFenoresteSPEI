@@ -9,7 +9,7 @@ DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='spei_horario_acti
 INSERT INTO tablas(idtabla,idelemento,dato1,dato2,dato3) VALUES('spei_salida','horario_actividad','06:00','17:00','1|2|3|4|5');
 
 DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='cuenta';
-INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_salida','cuenta','20407160101068');
+INSERT INTO tablas(idtabla,idelemento,dato1)VALUES('spei_salida','cuenta','10102020102016');//20407160101068
 
 DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='usuario';
 INSERT INTO tablas(idtabla,idelemento,dato1) VALUES('spei_salida','usuario','999');
@@ -19,7 +19,7 @@ INSERT INTO tablas(idtabla,idelemento,dato2)VALUES('spei_salida','stppath','http
 
 //Datos certificado Dato1 alias,dato2 ruta certificado,dato3 nombre llavero,dato4 contraseña llavero
 DELETE FROM tablas WHERE idtabla='spei_salida' AND idelemento='datos_certificado';
-INSERT INTO tablas(idtabla,idelemento,dato1,dato2,dato3,dato4)VALUES('spei_salida','datos_certificados','CAJA_FAMA','Certificados/speisalida/','llaveprivada','cajafama');
+INSERT INTO tablas(idtabla,idelemento,dato1,dato2,dato3,dato4)VALUES('spei_salida','datos_certificado','CAJA_FAMA','Certificados/speisalida/','llaveprivada','cajafama');
 
 DELETE FROM TABLAS WHERE idtabla = 'spei_salida' AND idelemento='producto_resumidero';
 INSERT INTO TABLAS(idtabla,idelemento,dato1) VALUES('spei_salida','producto_resumidero','115');

@@ -2,16 +2,22 @@ package fenoreste.spei.controller;
 
 import fenoreste.spei.modeloEntrada.ResponseLocalDispersionVo;
 import fenoreste.spei.modeloSalida.EstadoRequestVo;
+import fenoreste.spei.util.GeolocalizacionServer;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import fenoreste.spei.modeloEntrada.RequestLocalDispersionVo;
 import fenoreste.spei.service.OutServiceGeneral;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -20,7 +26,10 @@ import fenoreste.spei.service.OutServiceGeneral;
 public class OutController {
 	
 	@Autowired
-	private OutServiceGeneral outServiceGeneral;	
+	private OutServiceGeneral outServiceGeneral;
+
+	@Autowired
+	private GeolocalizacionServer geolocalizacionServer;
 
 	@PostMapping(value = "/sendOrder",consumes = {MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?>sendOrder(@RequestBody RequestLocalDispersionVo inData){
@@ -50,6 +59,22 @@ public class OutController {
 		   log.info("::::Error al manejar Json:"+e.getMessage());
 		}
 		return ResponseEntity.status(200).body(jsonObject.toString());
+	}
+
+	@GetMapping("/geolocalizacion")
+	public ResponseEntity<?> obtenerGeolocalizacion() {
+		try {
+			Map<String, Object> ubicacion =
+					geolocalizacionServer.obtenerUbicacionServidor("af94cfd9993e51");
+
+			return ResponseEntity.ok(ubicacion);
+
+		} catch (IOException | IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+					.body(Collections.singletonMap(
+							"error",
+							"No fue posible obtener la geolocalizacion del servidor"));
+		}
 	}
 
 	/*
