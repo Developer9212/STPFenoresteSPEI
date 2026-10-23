@@ -189,18 +189,20 @@ public class OutServiceGeneral {
                                     ordenHTTP.put("rfcCurpBeneficiario", ordenValida.getRfcCurpBeneficiario());
                                     ordenHTTP.put("conceptoPago", ordenValida.getConceptoPago());
                                     ordenHTTP.put("institucionOperante", String.valueOf(ordenValida.getInstitucionOperante()));
-                                    ordenHTTP.put("referenciaNumerica",String.valueOf(ordenValida.getReferenciaNumerica()));
-                                    ordenHTTP.put("claveRastreo",ordenValida.getClaveRastreo());
+                                    ordenHTTP.put("referenciaNumerica", String.valueOf(ordenValida.getReferenciaNumerica()));
+                                    ordenHTTP.put("claveRastreo", ordenValida.getClaveRastreo());
                                     ordenHTTP.put("tipoCuentaBeneficiario", String.valueOf(ordenValida.getTipoCuentaBeneficiario()));
                                     ordenHTTP.put("institucionContraparte", String.valueOf(ordenValida.getInstitucionContraparte()));
                                     ordenHTTP.put("tipoPago", String.valueOf(ordenValida.getTipoPago()));
                                     ordenHTTP.put("cuentaOrdenante", ordenValida.getCuentaOrdenante());
                                     ordenHTTP.put("empresa", ordenValida.getEmpresa().trim());
-                                    ordenHTTP.put("fechaOperacion",ordenValida.getFechaOperacion());
+                                    ordenHTTP.put("fechaOperacion", ordenValida.getFechaOperacion());
 
-                                    geolocalizacionServer.obtenerUbicacionServidor("")
-                                    ordenHTTP.put("latitud", "25.647914");
-                                    ordenHTTP.put("longitud", "-100.290778");
+                                    GeolocalizacionVo geolocalizacionVo = new GeolocalizacionVo();
+                                    geolocalizacionVo = geolocalizacionServer.obtenerUbicacionServidor("");
+
+                                    ordenHTTP.put("latitud", geolocalizacionVo.getLatitud());
+                                    ordenHTTP.put("longitud", geolocalizacionVo.getLongitud());
                                     ordenHTTP.put("nombreOrdenante", ordenValida.getNombreOrdenante());
                                     ordenHTTP.put("rfcCurpOrdenante", ordenValida.getRfcCurpOrdenante());
                                     ordenHTTP.put("monto",ordenValida.getMonto());

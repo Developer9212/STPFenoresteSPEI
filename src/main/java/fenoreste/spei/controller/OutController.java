@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,9 @@ public class OutController {
 	private OutServiceGeneral outServiceGeneral;
     @Autowired
     private GeolocalizacionServer geolocalizacionServer;
+
+	@Value("${geolocalizacion.ipinfo.token}")
+	private String token;
 
 
 	@PostMapping(value = "/sendOrder",consumes = {MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -66,7 +70,7 @@ public class OutController {
 	public ResponseEntity<?> obtenerGeolocalizacion() {
 		try {
 			GeolocalizacionVo geolocalizacionVo = new GeolocalizacionVo();
-			geolocalizacionVo = geolocalizacionServer.obtenerUbicacionServidor("af94cfd9993e51");
+			geolocalizacionVo = geolocalizacionServer.obtenerUbicacionServidor(token);
 
 			return ResponseEntity.ok(geolocalizacionVo);
 
