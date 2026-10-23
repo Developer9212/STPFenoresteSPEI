@@ -26,6 +26,7 @@ import fenoreste.spei.consumo.ConsumoCsnTDD;
 import fenoreste.spei.entity.*;
 import fenoreste.spei.modeloEntrada.*;
 import fenoreste.spei.modeloSalida.*;
+import fenoreste.spei.util.GeolocalizacionServer;
 import fenoreste.spei.util.Util;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,9 @@ public class OutServiceGeneral {
 
     @Autowired
     private IEstadoSpeiService estadoSpeiService;
+
+    @Autowired
+    private GeolocalizacionServer geolocalizacionServer;
 
 
     @Autowired
@@ -194,6 +198,7 @@ public class OutServiceGeneral {
                                     ordenHTTP.put("empresa", ordenValida.getEmpresa().trim());
                                     ordenHTTP.put("fechaOperacion",ordenValida.getFechaOperacion());
 
+                                    geolocalizacionServer.obtenerUbicacionServidor("")
                                     ordenHTTP.put("latitud", "25.647914");
                                     ordenHTTP.put("longitud", "-100.290778");
                                     ordenHTTP.put("nombreOrdenante", ordenValida.getNombreOrdenante());

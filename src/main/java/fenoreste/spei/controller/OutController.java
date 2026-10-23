@@ -2,6 +2,7 @@ package fenoreste.spei.controller;
 
 import fenoreste.spei.modeloEntrada.ResponseLocalDispersionVo;
 import fenoreste.spei.modeloSalida.EstadoRequestVo;
+import fenoreste.spei.modeloSalida.GeolocalizacionVo;
 import fenoreste.spei.util.GeolocalizacionServer;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
@@ -27,9 +28,9 @@ public class OutController {
 	
 	@Autowired
 	private OutServiceGeneral outServiceGeneral;
+    @Autowired
+    private GeolocalizacionServer geolocalizacionServer;
 
-	@Autowired
-	private GeolocalizacionServer geolocalizacionServer;
 
 	@PostMapping(value = "/sendOrder",consumes = {MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?>sendOrder(@RequestBody RequestLocalDispersionVo inData){
@@ -64,10 +65,10 @@ public class OutController {
 	@GetMapping("/geolocalizacion")
 	public ResponseEntity<?> obtenerGeolocalizacion() {
 		try {
-			Map<String, Object> ubicacion =
-					geolocalizacionServer.obtenerUbicacionServidor("af94cfd9993e51");
+			GeolocalizacionVo geolocalizacionVo = new GeolocalizacionVo();
+			geolocalizacionVo = geolocalizacionServer.obtenerUbicacionServidor("af94cfd9993e51");
 
-			return ResponseEntity.ok(ubicacion);
+			return ResponseEntity.ok(geolocalizacionVo);
 
 		} catch (IOException | IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_GATEWAY)

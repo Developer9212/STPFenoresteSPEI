@@ -3,6 +3,7 @@ package fenoreste.spei.util;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import fenoreste.spei.modeloSalida.GeolocalizacionVo;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -21,8 +22,10 @@ public class GeolocalizacionServer {
             .readTimeout(10, TimeUnit.SECONDS)
             .build();
 
-    public Map<String, Object> obtenerUbicacionServidor(String token)
+    public GeolocalizacionVo obtenerUbicacionServidor(String token)
             throws IOException {
+
+        GeolocalizacionVo geolocalizacionVo = new GeolocalizacionVo();
 
         String url = "https://ipinfo.io/json?token=" + token;
 
@@ -46,33 +49,31 @@ public class GeolocalizacionServer {
             JsonObject json = JsonParser.parseString(
                     response.body().string()).getAsJsonObject();
 
-            Map<String, Object> resultado = new LinkedHashMap<String, Object>();
-
-            resultado.put("ip", json.has("ip")
+            geolocalizacionVo.setIp(json.has("ip")
                     ? json.get("ip").getAsString() : null);
 
-            resultado.put("ciudad", json.has("city")
-                    ? json.get("city").getAsString() : null);
-
-            resultado.put("region", json.has("region")
+            geolocalizacionVo.setCiudad(json.has("region")
                     ? json.get("region").getAsString() : null);
 
-            resultado.put("pais", json.has("country")
+            geolocalizacionVo.setPais(json.has("pais")
+                    ? json.get("pais").getAsString() : null);
+
+            geolocalizacionVo.setCountry(json.has("country")
                     ? json.get("country").getAsString() : null);
 
+            geolocalizacionVo.setCiudad(json.has("city")
+                    ? json.get("city").getAsString() : null);
             if (json.has("loc") && !json.get("loc").isJsonNull()) {
                 String[] coordenadas =
                         json.get("loc").getAsString().split(",");
 
                 if (coordenadas.length == 2) {
-                    resultado.put("latitud",
-                            Double.parseDouble(coordenadas[0]));
-                    resultado.put("longitud",
-                            Double.parseDouble(coordenadas[1]));
+                    geolocalizacionVo.setLatitud(Double.parseDouble(coordenadas[0]));
+                    geolocalizacionVo.setLongitud(Double.parseDouble(coordenadas[1]));
                 }
             }
 
-            return resultado;
+            return geolocalizacionVo;
         }
     }
 }
