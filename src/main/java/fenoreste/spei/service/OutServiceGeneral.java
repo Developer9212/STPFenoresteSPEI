@@ -30,6 +30,7 @@ import fenoreste.spei.util.GeolocalizacionServer;
 import fenoreste.spei.util.Util;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -76,6 +77,9 @@ public class OutServiceGeneral {
 
     @Autowired
     private HttpMethods httpMethods;
+
+    @Value("${geolocalizacion.ipinfo.token}")
+    private String token;
 
     private String idtabla = "spei_salida";
     TablaPK tb_pk = null;
@@ -199,7 +203,7 @@ public class OutServiceGeneral {
                                     ordenHTTP.put("fechaOperacion", ordenValida.getFechaOperacion());
 
                                     GeolocalizacionVo geolocalizacionVo = new GeolocalizacionVo();
-                                    geolocalizacionVo = geolocalizacionServer.obtenerUbicacionServidor("");
+                                    geolocalizacionVo = geolocalizacionServer.obtenerUbicacionServidor(token);
 
                                     ordenHTTP.put("latitud", geolocalizacionVo.getLatitud());
                                     ordenHTTP.put("longitud", geolocalizacionVo.getLongitud());
